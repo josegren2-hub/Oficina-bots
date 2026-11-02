@@ -1,7 +1,7 @@
 import {makePersonita,PERSONITAS} from './personitas.js';import {iniciarMando,fichaMando} from './mando.js';iniciarMando();
 const PERS_ON=!new URLSearchParams(location.search).has('robots');
 import * as THREE from 'three';import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';import {MeshoptDecoder} from 'three/examples/jsm/libs/meshopt_decoder.module.js';import * as SkU from 'three/examples/jsm/utils/SkeletonUtils.js';import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';import {N8AOPass} from 'n8ao';import './estilo.css';
-const COL={trabajando:'#3B82F6',esperando:'#22C55E',pausa:'#9CA3AF'},TXT={trabajando:'Trabajando ahora',esperando:'Activo',pausa:'En pausa'},EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
+const COL={trabajando:'#3B82F6',esperando:'#9CA3AF',pausa:'#4B5563',te:'#F97316'},TXT={trabajando:'Trabajando ahora',esperando:'Disponible',pausa:'En pausa',te:'Te espera'};const TE=id=>!!window.__teEspera?.has(id);const EK=b=>TE(b.id)?'te':b.estado,EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ini=n=>n.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
 const movil=()=>innerWidth<700;
@@ -176,7 +176,7 @@ function meta(o){const e=o.data.estado,s=o.seat;if(o.spot){ocupado.delete(o.spot
  else{const libres=CAFE.filter(c=>!ocupado.has(c));const c=libres[Math.floor(Math.random()*libres.length)]||CAFE[0];ocupado.add(c);o.spot=c;ir(o,[...c.via,c.p],{ry:c.ry,sit:c.sit,cup:c.cup});}
  o.wait=10+Math.random()*12;}
 var DPIN=0;
-function burbuja(o){const b=o.data;o.el.className='pin '+b.estado;o.el.innerHTML=`${AV[b.id]?`<img src="${AV[b.id]}" alt="">`:`<i style="background:#${o.col.toString(16).padStart(6,'0')}">${ini(b.nombre)}</i>`}<span class="sd"></span>`;}
+function burbuja(o){const b=o.data;o.el.className='pin '+EK(b);o.el.innerHTML=`${AV[b.id]?`<img src="${AV[b.id]}" alt="">`:`<i style="background:#${o.col.toString(16).padStart(6,'0')}">${ini(b.nombre)}</i>`}<span class="sd"></span>`;}
 const listo=cargaModelos.then(()=>{colocar();calibrar();});
 // ---------- paneles ----------
 // ---------- paneles ----------
@@ -185,22 +185,22 @@ const avHTML=(b,c)=>AV[b.id]?`<img class="av" src="${AV[b.id]}">`:`<div class="a
 const regs=[];function log(t){regs.unshift(`[${hora()}] ${t}`);regs.length=Math.min(regs.length,30);$('ult').textContent=regs[0];}
 function renderPaneles(){const L=[...bots.values()].map(o=>o.data),act=L.filter(b=>b.estado==='trabajando').length;
  $('activos').textContent=`${act}/${L.length} activos`;
- $('lista').innerHTML=L.map(b=>`<div class="f" data-id="${b.id}">${avHTML(b)}<div><b>${esc(b.nombre)}</b><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}</div></div><span class="d" style="background:${COL[b.estado]}"></span></div>`).join('');
- $('eq').innerHTML=L.map(b=>`<div class="f" data-id="${b.id}"><span class="d" style="margin:0;background:${COL[b.estado]}"></span><b>${esc(b.nombre)}</b><span class="s" style="margin-left:auto">${TXT[b.estado]}</span></div>`).join('');
- const c={trabajando:0,esperando:0,pausa:0};L.forEach(b=>c[b.estado]++);const mx=Math.max(...hist,1),w=200,h=34;
+ $('lista').innerHTML=L.map(b=>`<div class="f" data-id="${b.id}">${avHTML(b)}<div><b>${esc(b.nombre)}</b><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}</div></div><span class="d e-${EK(b)}"></span></div>`).join('');
+ $('eq').innerHTML=L.map(b=>`<div class="f" data-id="${b.id}"><span class="d e-${EK(b)}" style="margin:0"></span><b>${esc(b.nombre)}</b><span class="s" style="margin-left:auto">${TXT[EK(b)]}</span></div>`).join('');
+ const c={trabajando:0,esperando:0,pausa:0,te:0};L.forEach(b=>c[b.estado]++);L.forEach(b=>{if(TE(b.id))c.te++;});const mx=Math.max(...hist,1),w=200,h=34;
  const pts=hist.map((v,i)=>`${(i/Math.max(hist.length-1,1))*w},${h-2-(v/mx)*(h-6)}`).join(' ');
- $('resumen').innerHTML=`<div style="display:flex;justify-content:space-between"><span><span class="acc">${c.trabajando}</span> trabajando</span><span style="color:#F59E0B">${c.esperando} esperan</span><span>${c.pausa} pausa</span></div><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#10B981" stroke-width="2"/></svg><div class="s">Actividad reciente · act. ${esc(hora(window.__act))}</div>`;}
+ $('resumen').innerHTML=`<div style="display:flex;justify-content:space-between"><span><span class="acc">${c.trabajando}</span> trabajando</span>${c.te?`<span style="color:#F97316">${c.te} te esperan</span>`:`<span>${c.esperando} disponibles</span>`}<span>${c.pausa} pausa</span></div><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#10B981" stroke-width="2"/></svg><div class="s">Actividad reciente · act. ${esc(hora(window.__act))}</div>`;}
 const irA=id=>{const o=bots.get(id);if(!o)return;const p=new THREE.Vector3();o.g.getWorldPosition(p);p.y+=.8;volar(p,8,new THREE.Vector3(.45,.75,.6).normalize());if(movil())document.body.classList.remove('abiertos');};
 for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f');if(el)irA(el.dataset.id)};
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
-function abrirFicha(id){const b=bots.get(id).data;const _h=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[b.estado]};font-weight:700;margin:6px 0">${EMO[b.estado]} ${TXT[b.estado]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;const _m=fichaMando(id,_h.replace(/<div class="s" style="margin-top:8px">Toca fuera para cerrar<\/div>/,''));$('ficha').innerHTML=(_m||_h)+'<button class="cerrar" aria-label="Cerrar">✕</button>';$('ficha').style.display='block';$('ficha').scrollTop=0;}
+function abrirFicha(id){const b=bots.get(id).data;const _h=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[EK(b)]};font-weight:700;margin:6px 0">${TE(b.id)?'🟠':EMO[b.estado]} ${TXT[EK(b)]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;const _m=fichaMando(id,_h.replace(/<div class="s" style="margin-top:8px">Toca fuera para cerrar<\/div>/,''));$('ficha').innerHTML=(_m||_h)+'<button class="cerrar" aria-label="Cerrar">✕</button>';$('ficha').style.display='block';$('ficha').scrollTop=0;}
 // ---------- datos ----------
 async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
  j.bots.forEach((b,i)=>{if(!TXT[b.estado])b.estado='esperando';let o=bots.get(b.id);
   if(!o){o=makeBot(b,i);bots.set(b.id,o);meta(o);burbuja(o);}else if(o.data.estado!==b.estado||o.data.frase!==b.frase){if(o.data.estado!==b.estado){log(`${b.nombre}: ${TXT[o.data.estado]} → ${TXT[b.estado]} · ${b.frase}`);o.data=b;meta(o);}o.data=b;burbuja(o);}else o.data=b;});
  hist.push([...bots.values()].filter(o=>o.data.estado==='trabajando').length);if(hist.length<2)hist.unshift(hist[0]);if(hist.length>30)hist.shift();
  if(!regs.length)log(`Oficina actualizada · ${hist.at(-1)} bots trabajando`);renderPaneles();}catch(e){console.warn(e)}}
-cargar();setInterval(cargar,60000);{const l=document.createElement('div');l.id='leyenda';l.className='glass';l.innerHTML='<span><i style="background:#22C55E"></i>Activo</span><span><i class="pul" style="background:#3B82F6"></i>Trabajando</span><span><i style="background:#9CA3AF"></i>En pausa</span>';document.body.appendChild(l);}$('pisos').style.display='none';$('bedif').style.display='none';
+window.__repintar=()=>{bots.forEach(o=>burbuja(o));renderPaneles();};cargar();setInterval(cargar,60000);{const l=document.createElement('div');l.id='leyenda';l.className='glass';l.innerHTML='<span class="lte"><i class="pulo" style="background:#F97316"></i>Te espera</span><span><i class="pul" style="background:#3B82F6"></i>Trabajando</span><span><i style="background:#4B5563"></i>En pausa</span><span class="s0">Sin punto: disponible</span>';document.body.appendChild(l);}$('pisos').style.display='none';$('bedif').style.display='none';
 $('ult').textContent='Cargando muebles y personajes…';
 // ---------- tap vs arrastre (la cámara la maneja OrbitControls) ----------
 const ptrs=new Map();let st=null,moved=false;

@@ -8,8 +8,9 @@ async function traer(){const r=await fetch('./mando.enc?t='+Date.now());if(!r.ok
 async function derivar(pw,enc){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
  return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(enc.salt),iterations:enc.iter,hash:'SHA-256'},k,{name:'AES-GCM',length:256},true,['decrypt']);}
 async function abrir(key,enc){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(enc.iv)},key,b64(enc.ct));return JSON.parse(new TextDecoder().decode(pt));}
-async function refrescar(){try{const enc=await traer();MANDO=await abrir(KEY,enc);pintarPanel();}catch(e){}}
-function listo(){document.body.classList.add('mando');$('#mpanelb').hidden=false;$('#msalir').hidden=false;pintarPanel();setInterval(refrescar,5*60e3);}
+async function refrescar(){try{const enc=await traer();MANDO=await abrir(KEY,enc);marcarTE();pintarPanel();}catch(e){}}
+function marcarTE(){window.__teEspera=new Set(MANDO.bots.filter(b=>pendOK(b).length).map(b=>b.id));window.__repintar?.();}
+function listo(){marcarTE();document.body.classList.add('mando');$('#mpanelb').hidden=false;$('#msalir').hidden=false;pintarPanel();setInterval(refrescar,5*60e3);}
 const $=s=>document.querySelector(s);
 export async function iniciarMando(){
  const ui=document.createElement('div');ui.innerHTML=`
@@ -31,14 +32,23 @@ export async function iniciarMando(){
 }
 // ---------- ficha detallada ----------
 const OKR=/\bOK\b|autoriz|decid|aprueb|visto bueno|revis|elegir|opini|firma|confirm/i;const necesitaOK=t=>OKR.test(t||'');
-const ir=(b,t='Abrir chat')=>b.agente?`<a class="mir" href="grokbot://app/v1/agent?id=${encodeURIComponent(b.agente)}">${t} →</a>`:'';
+const PRE='Desde el Centro de mando — ';
+const mItem=(x,k)=>PRE+(k?'quiero trabajar en este pendiente':'quiero revisar/autorizar este pendiente')+`: "${x}". ¿Qué necesitas de mí para avanzar?`;
+const mLista=b=>{const a=pendOK(b);return a.length?PRE+'quiero revisar/autorizar estos pendientes:\n'+a.map(x=>`• "${x}"`).join('\n')+'\n¿Qué necesitas de mí para avanzar?':''};
+const ir=(b,t='Abrir chat',msg,cls='')=>{if(msg===undefined)msg=mLista(b);return b.agente?`<a class="mir ${cls}" href="grokbot://app/v1/agent?id=${encodeURIComponent(b.agente)}" data-bot="${E(b.nombre)}" data-copia="${E(msg)}">${t} →</a>`:''};
+const btnsItem=(b,x)=>' '+ir(b,'Ir a autorizar',mItem(x))+' '+ir(b,'Trabajar en esto',mItem(x,1),'mtr');
+function copiar(t){let ok=false;try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);ok=document.execCommand('copy');ta.remove();}catch(e){}
+ try{navigator.clipboard?.writeText(t).catch(()=>{});}catch(e){}return ok;}
+function toast(m){let d=document.getElementById('mtoast');if(!d){d=document.createElement('div');d.id='mtoast';document.body.appendChild(d);}d.textContent=m;d.classList.add('on');clearTimeout(d._t);d._t=setTimeout(()=>d.classList.remove('on'),1300);}
+document.addEventListener('click',e=>{const a=e.target.closest('a.mir');if(!a)return;e.preventDefault();e.stopPropagation();const t=a.dataset.copia;
+ if(t){copiar(t);toast('Copiado: pega y envía en el chat de '+a.dataset.bot);}window.__ultimoCopiado=t;const h=a.href;setTimeout(()=>{window.__abrirEnlace?window.__abrirEnlace(h):location.href=h;},t?1200:0);},true);
 const pendOK=b=>[...new Set([b.pendiente,...(b.pendientes||[])].filter(necesitaOK))];
-const lista=(a,b)=>a&&a.length?'<ul>'+a.map(x=>`<li>${E(x)}${b&&necesitaOK(x)?' '+ir(b,'Ir a autorizar'):''}</li>`).join('')+'</ul>':SD;
+const lista=(a,b)=>a&&a.length?'<ul>'+a.map(x=>`<li>${E(x)}${b&&necesitaOK(x)?btnsItem(b,x):''}</li>`).join('')+'</ul>':SD;
 function barras(dia,dias=14){const out=[];let mx=1;const hoy=new Date();for(let i=dias-1;i>=0;i--){const d=new Date(hoy-i*864e5);const k=d.toLocaleDateString('en-CA',{timeZone:'America/Chihuahua'});const v=dia?.[k]||[0,0];out.push([k,v]);mx=Math.max(mx,v[0]+v[1]);}
  return `<div class="mbars">${out.map(([k,v])=>`<div title="${k}: ${v[0]} peticiones, ${v[1]} respuestas"><i style="height:${(v[0]+v[1])/mx*100}%"></i><s style="height:${v[0]/mx*100}%"></s></div>`).join('')}</div><div class="mleg"><span><s></s> peticiones de Rob</span><span><i></i> respuestas del bot</span> · últimos ${dias} días</div>`;}
 export function fichaMando(id,base){if(!MANDO)return null;const b=MANDO.bots.find(x=>x.id===id);if(!b)return null;
  const esp=b.estado==='esperando'&&b.pendiente;const st=b.stats||{};
- const tabs={Ahora:`<h4>En qué está</h4><p>${b.tarea?E(b.tarea):SD}</p><h4>${esp?'Esperando':'Pendiente principal'}</h4><p>${b.pendiente?E(b.pendiente):SD}${necesitaOK(b.pendiente)?' '+ir(b,'Ir a autorizar'):''}</p>${esp?'<p class="s">De: Rob (según el reporte del supervisor)</p>':''}
+ const tabs={Ahora:`<h4>En qué está</h4><p>${b.tarea?E(b.tarea):SD}</p><h4>${esp?'Esperando':'Pendiente principal'}</h4><p>${b.pendiente?E(b.pendiente):SD}${necesitaOK(b.pendiente)?btnsItem(b,b.pendiente):''}</p>${esp?'<p class="s">De: Rob (según el reporte del supervisor)</p>':''}
    <h4>Lo último que trabajó</h4>${b.ultimo?`<p class="s">${fh(b.ultimo.t)}</p><p>${E(b.ultimo.txt)}</p>`:SD}<p class="s">Supervisor: última actividad ${E(b.sup_ultima||'sin datos')}</p>`,
   Pendientes:`<h4>Pendientes (reporte del supervisor)</h4>${lista(b.pendientes,b)}`,
   Historial:`${(b.historial||[]).length?'<ol class="mtl">'+b.historial.map(h=>`<li><b>${fh(h.t)}</b>${E(h.txt)}</li>`).join('')+'</ol>':SD}${b.rutinas?'<h4>Corridas de rutinas</h4><ol class="mtl">'+b.rutinas.map(h=>`<li><b>${E(h.t)}</b>${E(h.txt)}${h.err&&h.err!=='ninguno'?` <em>(${E(h.err)})</em>`:''}</li>`).join('')+'</ol>':''}`,
@@ -59,7 +69,7 @@ function pintarPanel(){const p=$('#mpanel');if(!p||!MANDO)return;const B=MANDO.b
  p.innerHTML=`<div class="mt">📊 Centro de mando <button class="mx" onclick="this.closest('#mpanel').hidden=true">✕</button></div><p class="s">Datos al ${fh(MANDO.generado)}</p>
  <div class="mkpi">${['trabajando','esperando','pausa','inactivo'].filter(e=>c[e]).map(e=>`<div><b style="color:${CE[e]}">${c[e]}</b>${EST[e]}</div>`).join('')}</div>
  <div class="mtabs"><button data-t="0" class="on">Por autorizar</button><button data-t="4">Esperan algo</button><button data-t="1">Actividad</button><button data-t="2">Línea de tiempo</button><button data-t="3">Fuentes</button></div>
- <div class="mtab" data-p="0"><p class="s">Pendientes por autorizar (se autorizan en el chat de cada bot)</p>${aut.length?aut.map(([b,it])=>`<div class="maut"><div class="mt2"><b>${E(b.nombre)}</b>${ir(b,'Ir a autorizar')}</div><ul>${it.map(x=>`<li>${E(x)}</li>`).join('')}</ul></div>`).join(''):SD}</div><div class="mtab" data-p="4" hidden>${esp.length?'<ul class="mesp">'+esp.map(b=>`<li><b>${E(b.nombre)}</b> ${E(b.pendiente)} ${ir(b)}</li>`).join('')+'</ul>':SD}</div>
+ <div class="mtab" data-p="0"><p class="s">Pendientes por autorizar (se autorizan en el chat de cada bot)</p>${aut.length?aut.map(([b,it])=>`<div class="maut"><div class="mt2"><b>${E(b.nombre)}</b>${ir(b,'Ir a autorizar')}</div><ul>${it.map(x=>`<li>${E(x)}${btnsItem(b,x)}</li>`).join('')}</ul></div>`).join(''):SD}</div><div class="mtab" data-p="4" hidden>${esp.length?'<ul class="mesp">'+esp.map(b=>`<li><b>${E(b.nombre)}</b> ${E(b.pendiente)} ${ir(b)}</li>`).join('')+'</ul>':SD}</div>
  <div class="mtab" data-p="1" hidden><p class="s">Peticiones de Rob por bot, últimos 14 días</p>${tot.map(([b,v])=>`<div class="mrow"><span>${E(b.nombre)}</span><div><i style="width:${v/mx*100}%"></i></div><b>${v}</b></div>`).join('')}</div>
  <div class="mtab" data-p="2" hidden><ol class="mtl">${tl.map(h=>`<li><b>${fh(h.t)} · ${E(h.n)}</b>${E(h.txt)}</li>`).join('')}</ol></div>
  <div class="mtab" data-p="3" hidden><ul>${Object.entries(MANDO.fuentes||{}).map(([k,v])=>`<li><b>${E(k)}:</b> ${E(v)}</li>`).join('')}</ul></div>`;}
