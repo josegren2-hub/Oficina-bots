@@ -31,7 +31,7 @@ export async function iniciarMando(){
  if(g){try{const enc=await traer();if(enc.salt!==g.salt)throw 0;KEY=await crypto.subtle.importKey('raw',b64(g.k),'AES-GCM',true,['decrypt']);MANDO=await abrir(KEY,enc);$('#mlock').remove();listo();}catch(e){localStorage.removeItem(LS);}}
 }
 // ---------- ficha detallada ----------
-const OKR=/\bOK\b|autoriz|decid|aprueb|visto bueno|revis|elegir|opini|firma|confirm/i;const necesitaOK=t=>OKR.test(t||'');
+const OKR=/tu OK|tu visto bueno|autorices|apruebes|decidas|que elijas|que le confirmes|tu aprobaci|tu autorizaci|tu decisi|espera tu/i;const necesitaOK=t=>OKR.test(t||'');
 const PRE='Desde el Centro de mando — ';
 const mItem=(x,k)=>PRE+(k?'quiero trabajar en este pendiente':'quiero revisar/autorizar este pendiente')+`: "${x}". ¿Qué necesitas de mí para avanzar?`;
 const mLista=b=>{const a=pendOK(b);return a.length?PRE+'quiero revisar/autorizar estos pendientes:\n'+a.map(x=>`• "${x}"`).join('\n')+'\n¿Qué necesitas de mí para avanzar?':''};
@@ -39,16 +39,16 @@ const ir=(b,t='Abrir chat',msg,cls='')=>{if(msg===undefined)msg=mLista(b);return
 const btnsItem=(b,x)=>' '+ir(b,'Ir a autorizar',mItem(x))+' '+ir(b,'Trabajar en esto',mItem(x,1),'mtr');
 function copiar(t){let ok=false;try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);ok=document.execCommand('copy');ta.remove();}catch(e){}
  try{navigator.clipboard?.writeText(t).catch(()=>{});}catch(e){}return ok;}
-function toast(m){let d=document.getElementById('mtoast');if(!d){d=document.createElement('div');d.id='mtoast';document.body.appendChild(d);}d.textContent=m;d.classList.add('on');clearTimeout(d._t);d._t=setTimeout(()=>d.classList.remove('on'),1300);}
+function toast(m){let d=document.getElementById('mtoast');if(!d){d=document.createElement('div');d.id='mtoast';document.body.appendChild(d);}d.textContent=m;d.classList.add('on');clearTimeout(d._t);d._t=setTimeout(()=>d.classList.remove('on'),2700);}
 document.addEventListener('click',e=>{const a=e.target.closest('a.mir');if(!a)return;e.preventDefault();e.stopPropagation();const t=a.dataset.copia;
- if(t){copiar(t);toast('Copiado: pega y envía en el chat de '+a.dataset.bot);}window.__ultimoCopiado=t;const h=a.href;setTimeout(()=>{window.__abrirEnlace?window.__abrirEnlace(h):location.href=h;},t?1200:0);},true);
-const pendOK=b=>[...new Set([b.pendiente,...(b.pendientes||[])].filter(necesitaOK))];
-const lista=(a,b)=>a&&a.length?'<ul>'+a.map(x=>`<li>${E(x)}${b&&necesitaOK(x)?btnsItem(b,x):''}</li>`).join('')+'</ul>':SD;
+ if(t){copiar(t);toast('Copiado: pega y envía en el chat de '+a.dataset.bot);}window.__ultimoCopiado=t;const h=a.href;const go=()=>{window.__abrirEnlace?window.__abrirEnlace(h):location.href=h;};if(t)requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(go,2500)));else go();},true);
+const pendOK=b=>[...new Set(b.ok||[])];
+const lista=(a,b)=>a&&a.length?'<ul>'+a.map(x=>`<li>${E(x)}${b&&(b.ok||[]).includes(x)?btnsItem(b,x):''}</li>`).join('')+'</ul>':SD;
 function barras(dia,dias=14){const out=[];let mx=1;const hoy=new Date();for(let i=dias-1;i>=0;i--){const d=new Date(hoy-i*864e5);const k=d.toLocaleDateString('en-CA',{timeZone:'America/Chihuahua'});const v=dia?.[k]||[0,0];out.push([k,v]);mx=Math.max(mx,v[0]+v[1]);}
  return `<div class="mbars">${out.map(([k,v])=>`<div title="${k}: ${v[0]} peticiones, ${v[1]} respuestas"><i style="height:${(v[0]+v[1])/mx*100}%"></i><s style="height:${v[0]/mx*100}%"></s></div>`).join('')}</div><div class="mleg"><span><s></s> peticiones de Rob</span><span><i></i> respuestas del bot</span> · últimos ${dias} días</div>`;}
 export function fichaMando(id,base){if(!MANDO)return null;const b=MANDO.bots.find(x=>x.id===id);if(!b)return null;
  const esp=b.estado==='esperando'&&b.pendiente;const st=b.stats||{};
- const tabs={Ahora:`<h4>En qué está</h4><p>${b.tarea?E(b.tarea):SD}</p><h4>${esp?'Esperando':'Pendiente principal'}</h4><p>${b.pendiente?E(b.pendiente):SD}${necesitaOK(b.pendiente)?btnsItem(b,b.pendiente):''}</p>${esp?'<p class="s">De: Rob (según el reporte del supervisor)</p>':''}
+ const tabs={Ahora:`<h4>En qué está</h4><p>${b.tarea?E(b.tarea):SD}</p><h4>${esp?'Esperando':'Pendiente principal'}</h4><p>${b.pendiente?E(b.pendiente):SD}${(b.ok||[]).includes(b.pendiente)?btnsItem(b,b.pendiente):''}</p>${esp?'<p class="s">De: Rob (según el reporte del supervisor)</p>':''}
    <h4>Lo último que trabajó</h4>${b.ultimo?`<p class="s">${fh(b.ultimo.t)}</p><p>${E(b.ultimo.txt)}</p>`:SD}<p class="s">Supervisor: última actividad ${E(b.sup_ultima||'sin datos')}</p>`,
   Pendientes:`<h4>Pendientes (reporte del supervisor)</h4>${lista(b.pendientes,b)}`,
   Historial:`${(b.historial||[]).length?'<ol class="mtl">'+b.historial.map(h=>`<li><b>${fh(h.t)}</b>${E(h.txt)}</li>`).join('')+'</ol>':SD}${b.rutinas?'<h4>Corridas de rutinas</h4><ol class="mtl">'+b.rutinas.map(h=>`<li><b>${E(h.t)}</b>${E(h.txt)}${h.err&&h.err!=='ninguno'?` <em>(${E(h.err)})</em>`:''}</li>`).join('')+'</ol>':''}`,

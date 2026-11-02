@@ -68,3 +68,4 @@ body.mando #ficha{width:min(440px,calc(100% - 16px));max-height:calc(100% - 40px
 .pin.esperando .sd{background:transparent;border-color:rgba(229,231,235,.8);display:none}.pin.pausa .sd{background:#4B5563}.pin.te .sd{background:#F97316;animation:pulo 1.6s infinite}
 @keyframes pulo{0%{box-shadow:0 0 0 0 rgba(249,115,22,.65)}100%{box-shadow:0 0 0 6px rgba(249,115,22,0)}}#leyenda .pulo{animation:pulo 1.6s infinite}
 #leyenda .lte{display:none}body.mando #leyenda .lte{display:flex}#leyenda .s0{color:#9CA3AF;font-weight:500}
+@media(min-width:701px){#msalir{top:56px;bottom:auto;right:auto;left:calc(50% + 92px)}}

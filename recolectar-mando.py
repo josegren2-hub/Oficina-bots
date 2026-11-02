@@ -32,10 +32,23 @@ if rep:
   for l in open(rep[-1]):
     if l.startswith('## '):sec=l[3:].strip();continue
     if sec and l.startswith('- ') :cur.setdefault(sec,[]).append(re.sub(r'\*\*','',l[2:].strip()))
-  for bid,n in NOMBRE_REP.items():
-    for s,items in cur.items():
-      if s.split(' (')[0].strip()==n or s.startswith(n+' ') or (bid in('mateo','tr-editor','tr-cm') and s.startswith('En pausa')):
-        bots[bid].setdefault('pendientes',[]).extend(corta(i,400) for i in items if not(bid!='mateo' and s.startswith('En pausa')))
+  OKX=re.compile(r"tu OK|tu visto bueno|autorices|apruebes|decidas|que elijas|que le confirmes|tu aprobaci|tu autorizaci|tu decisi|espera tu",re.I)
+  def quien(i):
+    cab=i.split(':')[0]
+    for bid,n in sorted(NOMBRE_REP.items(),key=lambda x:-len(x[1])):
+      if re.search(r'\b'+re.escape(n)+r'\b',cab):return bid
+    for bid,n in sorted(NOMBRE_REP.items(),key=lambda x:-len(x[1])):
+      if re.search(r'\b'+re.escape(n)+r'\b',i):return bid
+  for s,items in cur.items():
+    pausa=s.startswith('En pausa')
+    dueno=next((bid for bid,n in NOMBRE_REP.items() if s.split(' (')[0].strip()==n or s.startswith(n+' ')),None)
+    for i in items:
+      bid=quien(i) if pausa else dueno
+      if not bid:continue
+      c=corta(i,400);b=bots[bid];b.setdefault('pendientes',[]).append(c)
+      if pausa or OKX.search(i):b.setdefault('ok',[]).append(c)
+  for b in bots.values():
+    if b.get('pendiente') and OKX.search(b['pendiente']):b.setdefault('ok',[]).insert(0,b['pendiente'])
 # 3) índice de mensajes: último trabajo, historial y actividad
 db=sqlite3.connect(f'file:{AD}/search-index.db?mode=ro',uri=True);fuentes['mensajes']='índice de conversaciones de cada bot (solo lectura)'
 desde=int((ahora-datetime.timedelta(days=30)).timestamp()*1000)
