@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-02T09:20:00-06:00",
+ "actualizado": "2026-11-02T14:15:00-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,8 +12,8 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "pausa",
-   "frase": "Tomando un café"
+   "estado": "esperando",
+   "frase": "Esperando revisión"
   },
   {
    "id": "mateo",
@@ -26,7 +26,7 @@
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "esperando",
+   "estado": "trabajando",
    "frase": "Trabajando"
   },
   {
@@ -61,8 +61,8 @@
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "pausa",
-   "frase": "Ordenando archivos"
+   "estado": "trabajando",
+   "frase": "Diseñando ilustración"
   },
   {
    "id": "libro",
