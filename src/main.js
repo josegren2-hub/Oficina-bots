@@ -6,12 +6,12 @@ const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({
 const ini=n=>n.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
 const movil=()=>innerWidth<700;
 const cv=$('c'),R=new THREE.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,movil()?1.5:2));
-R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.38;R.outputColorSpace=THREE.SRGBColorSpace;
-const S=new THREE.Scene();S.background=new THREE.Color('#F2F0EC');S.fog=new THREE.Fog('#F2F0EC',90,190);
-const pm=new THREE.PMREMGenerator(R);S.environmentIntensity=.85;
+R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.1;R.outputColorSpace=THREE.SRGBColorSpace;
+const S=new THREE.Scene();S.background=new THREE.Color('#D9D4CC');S.fog=new THREE.Fog('#D9D4CC',90,190);
+const pm=new THREE.PMREMGenerator(R);S.environmentIntensity=.7;
 new RGBELoader().load('./hdri/estudio.hdr',t=>{S.environment=pm.fromEquirectangular(t).texture;t.dispose();});
-S.add(new THREE.HemisphereLight('#fff4e6','#d8cbb6',1.15));
-const dl=new THREE.DirectionalLight('#fff0da',3.1);dl.castShadow=true;const sm=movil()?1024:2048;dl.shadow.mapSize.set(sm,sm);
+S.add(new THREE.HemisphereLight('#fff4e6','#d8cbb6',.75));
+const dl=new THREE.DirectionalLight('#fff0da',2.85);dl.castShadow=true;const sm=movil()?1024:2048;dl.shadow.mapSize.set(sm,sm);
 Object.assign(dl.shadow.camera,{left:-20,right:20,top:16,bottom:-16,near:1,far:80});dl.shadow.radius=4;dl.shadow.bias=-.0005;dl.shadow.normalBias=.03;S.add(dl,dl.target);
 dl.position.set(-9,22,-14);dl.target.position.set(0,0,0);
 const cam=new THREE.PerspectiveCamera(35,1,.1,260);
@@ -19,7 +19,7 @@ const ctl=new OrbitControls(cam,cv);ctl.enableDamping=true;ctl.dampingFactor=.08
 ctl.touches={ONE:THREE.TOUCH.PAN,TWO:THREE.TOUCH.DOLLY_ROTATE};ctl.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};ctl.panSpeed=1.2;ctl.zoomToCursor=true;
 // limita el objetivo al interior de la oficina
 ctl.addEventListener('change',()=>{const t=ctl.target,cx=Math.max(-15,Math.min(15,t.x)),cz=Math.max(-11,Math.min(11,t.z)),dx=cx-t.x,dz=cz-t.z,dy=-t.y;if(dx||dz||dy){t.x+=dx;t.y+=dy;t.z+=dz;cam.position.x+=dx;cam.position.y+=dy;cam.position.z+=dz;}});
-const comp=new EffectComposer(R);const ao=new N8AOPass(S,cam,innerWidth,innerHeight);Object.assign(ao.configuration,{aoRadius:1.6,distanceFalloff:1,intensity:2.6,gammaCorrection:false,halfRes:movil(),aoSamples:movil()?8:16,denoiseSamples:movil()?4:8,transparencyAware:false});ao.setQualityMode(movil()?'Low':'Medium');comp.addPass(ao);
+const comp=new EffectComposer(R);const ao=new N8AOPass(S,cam,innerWidth,innerHeight);Object.assign(ao.configuration,{aoRadius:1.6,distanceFalloff:1,intensity:3,gammaCorrection:false,halfRes:movil(),aoSamples:movil()?8:16,denoiseSamples:movil()?4:8,transparencyAware:false});ao.setQualityMode(movil()?'Low':'Medium');comp.addPass(ao);
 const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth/2,innerHeight/2),.22,.5,.92);comp.addPass(bloom);comp.addPass(new OutputPass());
 function resize(){R.setSize(innerWidth,innerHeight);comp.setPixelRatio(R.getPixelRatio());comp.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
 addEventListener('resize',resize);resize();
@@ -186,7 +186,7 @@ for(const [x,z] of [[11,7.9],[0,6.2],[0,-7.4],[-1.6,-3.6],[7.2,-7.2],[12.3,-7.2]
 for(const x of [-9,-6.6])for(const z of [-8,-4.4])lamparaLineal(x,z,1.8);lamparaLineal(-13,-8,1.6);
 for(const x of [-9,-5])for(const z of [4.6,8.4])lamparaLineal(x,z,1.8);for(const [x,z] of [[4.4,4.6],[7.3,4.6],[5.4,8.6],[-13.3,5.4]])lamparaLineal(x,z,1.6);for(const x of [-10,0,10])lamparaLineal(x,0,3);
 flush();
-for(const [x,z,c,i] of [[-10,-6],[0,-6],[7.5,-6],[12.5,-6],[-13,6,'#ffc2a8',5],[-7,6],[0,7],[6,6],[12,7]]){const l=new THREE.PointLight(c||'#ffd9a8',(i||6)*1.6,11,1.4);l.position.set(x,2.6,z);S.add(l);}
+for(const [x,z,c,i] of [[-10,-6],[0,-6],[7.5,-6],[12.5,-6],[-13,6,'#ffc2a8',5],[-7,6],[0,7],[6,6],[12,7]]){const l=new THREE.PointLight(c||'#ffd9a8',(i||6)*1.3,10,1.5);l.position.set(x,2.6,z);S.add(l);}
 // letreros
 function letrero(txt,x,z,w=2.6,y=2.4){const c=document.createElement('canvas');c.width=640;c.height=112;const g=c.getContext('2d');g.fillStyle='#1d1d1f';g.fillRect(0,0,640,112);g.fillStyle='#C8A46A';g.fillRect(0,104,640,8);g.fillStyle='#f4efe6';g.font='600 46px Inter,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,320,54);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.BoxGeometry(w,w*112/640,.03),[M.negro,M.negro,M.negro,M.negro,new THREE.MeshStandardMaterial({map:t,roughness:.5}),M.negro]);m.position.set(x,y,z);W.add(m);}
@@ -239,7 +239,7 @@ function renderPaneles(){const L=[...bots.values()].map(o=>o.data),act=L.filter(
  $('eq').innerHTML=L.map(b=>`<div class="f" data-id="${b.id}"><span class="d e-${EK(b)}" style="margin:0"></span><b>${esc(b.nombre)}</b><span class="s" style="margin-left:auto">${TXT[EK(b)]}</span></div>`).join('');
  const c={trabajando:0,esperando:0,pausa:0,te:0};L.forEach(b=>c[b.estado]++);L.forEach(b=>{if(TE(b.id))c.te++;});const mx=Math.max(...hist,1),w=200,h=34;
  const pts=hist.map((v,i)=>`${(i/Math.max(hist.length-1,1))*w},${h-2-(v/mx)*(h-6)}`).join(' ');
- $('resumen').innerHTML=`<div style="display:flex;justify-content:space-between"><span><span class="acc">${c.trabajando}</span> trabajando</span>${c.te?`<span style="color:#F97316">${c.te} te esperan</span>`:`<span>${c.esperando} disponibles</span>`}<span>${c.pausa} pausa</span></div><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#10B981" stroke-width="2"/></svg><div class="s">Actividad reciente · act. ${esc(hora(window.__act))}</div>`;}
+ $('resumen').innerHTML=`<div class="rsum"><span><span class="acc">${c.trabajando}</span> trabajando</span><span class="sep">·</span>${c.te?`<span style="color:#F97316">${c.te} te esperan</span>`:`<span>${c.esperando} disponibles</span>`}<span class="sep">·</span><span>${c.pausa} pausa</span></div><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#10B981" stroke-width="2"/></svg><div class="s">Actividad reciente · act. ${esc(hora(window.__act))}</div>`;}
 const irA=id=>{const o=bots.get(id);if(!o)return;const p=new THREE.Vector3();o.g.getWorldPosition(p);p.y+=.8;volar(p,8,new THREE.Vector3(.45,.75,.6).normalize());if(movil())document.body.classList.remove('abiertos');};
 for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f');if(el)irA(el.dataset.id)};
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
