@@ -58,7 +58,7 @@ hist=[json.loads(l) for l in open(H)][-400:]
 data={'generado':ahora.isoformat(timespec='minutes'),'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
 raw=json.dumps(data,ensure_ascii=False).encode()
 # cifrado
-pw=open(f'{B}/.clave-mando').read().strip().encode();salt=base64.b64decode(open(f'{B}/.sal-mando').read());IT=310000
+pw=(os.environ.get('MANDO_CLAVE') or open(f'{B}/.clave-mando').read()).strip().encode();salt=base64.b64decode(open(f'{B}/.sal-mando').read());IT=310000
 key=PBKDF2HMAC(hashes.SHA256(),32,salt,IT).derive(pw);iv=secrets.token_bytes(12)
 enc={'v':1,'kdf':'PBKDF2-SHA256','iter':IT,'salt':base64.b64encode(salt).decode(),'iv':base64.b64encode(iv).decode(),'ct':base64.b64encode(AESGCM(key).encrypt(iv,raw,None)).decode()}
 out=f'{B}/mando-local/mando.enc';open(out,'w').write(json.dumps(enc));print(f'mando.enc listo ({len(raw)} B en claro, cifrado)')
