@@ -1,3 +1,5 @@
+import {makePersonita,PERSONITAS} from './personitas.js';
+const PERS_ON=!new URLSearchParams(location.search).has('robots');
 import * as THREE from 'three';import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';import {MeshoptDecoder} from 'three/examples/jsm/libs/meshopt_decoder.module.js';import * as SkU from 'three/examples/jsm/utils/SkeletonUtils.js';import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';import {N8AOPass} from 'n8ao';import './estilo.css';
 const COL={trabajando:'#3B82F6',esperando:'#22C55E',pausa:'#9CA3AF'},TXT={trabajando:'Trabajando ahora',esperando:'Activo',pausa:'En pausa'},EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -154,9 +156,9 @@ let ESC=1,SIT_Y=0;const ocupado=new Set();
 function calibrar(){const g=MOD.robot,o=g.scene;const b=new THREE.Box3().setFromObject(o);ESC=1.3/(b.max.y-b.min.y);
  const c=SkU.clone(o);c.scale.setScalar(ESC);const mx=new THREE.AnimationMixer(c);const hip=()=>{c.updateMatrixWorld(true);const v=new THREE.Vector3();c.getObjectByName('Hips').getWorldPosition(v);return v.y};
  mx.clipAction(THREE.AnimationClip.findByName(g.animations,'Sitting')).play();mx.update(3);SIT_Y=.6-hip();}
-function makeBot(b,i){const g=new THREE.Group(),m=SkU.clone(MOD.robot.scene);m.scale.setScalar(ESC);g.add(m);
- const c=PAL[i%PAL.length];m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;if(o.material.name==='Main'){o.material=o.material.clone();o.material.color.set(c);o.material.roughness=.45;}}});
- const mix=new THREE.AnimationMixer(m),A={};for(const n of ['Idle','Walking','Sitting','Wave','Yes','ThumbsUp'])A[n]=mix.clipAction(THREE.AnimationClip.findByName(MOD.robot.animations,n));
+function makeBot(b,i){const g=new THREE.Group(),PC=PERS_ON&&PERSONITAS[b.id],pm=PC&&makePersonita(PC),m=pm?pm.scene:SkU.clone(MOD.robot.scene),ANIMS=pm?pm.animations:MOD.robot.animations;if(!pm)m.scale.setScalar(ESC);g.add(m);
+ const c=PAL[i%PAL.length];m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;if(!pm&&o.material.name==='Main'){o.material=o.material.clone();o.material.color.set(c);o.material.roughness=.45;}}});
+ const mix=new THREE.AnimationMixer(m),A={};for(const n of ['Idle','Walking','Sitting','Wave','Yes','ThumbsUp'])A[n]=mix.clipAction(THREE.AnimationClip.findByName(ANIMS,n));
  for(const n of ['Wave','Yes','ThumbsUp']){A[n].setLoop(THREE.LoopOnce);A[n].clampWhenFinished=true;}
  const cup=new THREE.Group();const cm=new THREE.Mesh(new THREE.CylinderGeometry(.04,.034,.1,14),M.taza);cm.castShadow=true;cup.add(cm);const lid=new THREE.Mesh(new THREE.CylinderGeometry(.042,.042,.012,14),M.oro);lid.position.y=.055;cup.add(lid);
  const hand=(m.getObjectByName('Palm2R')||m.getObjectByName('LowerArmR'));hand.add(cup);cup.visible=false;m.updateMatrixWorld(true);{const ws=new THREE.Vector3();hand.getWorldScale(ws);cup.scale.setScalar(1/ws.x);}
@@ -164,7 +166,7 @@ function makeBot(b,i){const g=new THREE.Group(),m=SkU.clone(MOD.robot.scene);m.s
  const hit=new THREE.Mesh(new THREE.BoxGeometry(.8,1.5,.8),new THREE.MeshBasicMaterial({visible:false}));hit.position.y=.75;hit.userData.id=b.id;g.add(hit);hits.push(hit);
  const el=document.createElement('div');el.className='pin';capa.appendChild(el);
  let p=PUESTOS[b.id];if(!p){p=EXTRA.find(e=>!e.uso)||EXTRA[0];p.uso=1;PUESTOS[b.id]=p;}g.position.set(p.x,0,p.sz);g.rotation.y=0;W.add(g);
- const o={g,m,mix,A,cur:null,cup,hand,el,seat:p,path:[],t:Math.random()*9,data:b,col:c,spot:null,back:rutaSilla(p).concat(C(p.x,p.sz)),ry:0,sit:0,wait:0,nuevo:1};
+ const o={sy:pm?0:null,g,m,mix,A,cur:null,cup,hand,el,seat:p,path:[],t:Math.random()*9,data:b,col:c,spot:null,back:rutaSilla(p).concat(C(p.x,p.sz)),ry:0,sit:0,wait:0,nuevo:1};
  mix.addEventListener('finished',()=>anim(o,o.base));return o;}
 function anim(o,n,d=.35){if(['Idle','Walking','Sitting'].includes(n))o.base=n;const a=o.A[n];if(o.cur===a)return;a.reset().setEffectiveWeight(1).fadeIn(d).play();if(o.cur)o.cur.fadeOut(d);o.cur=a;}
 function ir(o,dest,fin){o.path=[...o.back].reverse().concat(dest);if(o.nuevo){o.nuevo=0;const d=dest.at(-1);o.g.position.set(d.x,0,d.z);o.path=[d];}o.back=dest;o.fin=fin;o.sit=0;anim(o,'Walking');o.cup.visible=false;}
@@ -193,7 +195,7 @@ for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f')
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
 function abrirFicha(id){const b=bots.get(id).data;$('ficha').style.display='block';$('ficha').innerHTML=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[b.estado]};font-weight:700;margin:6px 0">${EMO[b.estado]} ${TXT[b.estado]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;}
 // ---------- datos ----------
-async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();window.__act=new Date(j.actualizado);
+async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
  j.bots.forEach((b,i)=>{if(!TXT[b.estado])b.estado='esperando';let o=bots.get(b.id);
   if(!o){o=makeBot(b,i);bots.set(b.id,o);meta(o);burbuja(o);}else if(o.data.estado!==b.estado||o.data.frase!==b.frase){if(o.data.estado!==b.estado){log(`${b.nombre}: ${TXT[o.data.estado]} → ${TXT[b.estado]} · ${b.frase}`);o.data=b;meta(o);}o.data=b;burbuja(o);}else o.data=b;});
  hist.push([...bots.values()].filter(o=>o.data.estado==='trabajando').length);if(hist.length<2)hist.unshift(hist[0]);if(hist.length>30)hist.shift();
@@ -218,6 +220,7 @@ cam.position.copy(DIR0).multiplyScalar(D0());ctl.target.set(0,0,0);ctl.update();
  const L=[['Recepción','rec'],['Tinta Rosa','tr'],['Administración','per'],['Creativa','cre'],['CEO','ceo'],['Café','com'],['Vista general','']];
  for(const [n,id] of L){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(!id){volar(new THREE.Vector3(0,0,0),D0(),DIR0.clone());return;}const a=AR[id];volar(new THREE.Vector3((a.x0+a.x1)/2,0,(a.z0+a.z1)/2),movil()?17:13,new THREE.Vector3(.25,.8,.55).normalize());};z.appendChild(b);}
  document.body.appendChild(z);}
+window.__volar2=(x,y,z,d,a,b2,c)=>volar(new THREE.Vector3(x,y,z),d,new THREE.Vector3(a,b2,c).normalize());
 window.__volar=(x,z,d)=>volar(new THREE.Vector3(x,0,z),d,new THREE.Vector3(.3,.75,.6).normalize());
 // ---------- animación ----------
 const clk=new THREE.Clock(),tmp=new THREE.Vector3(),ang=a=>((a+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
@@ -232,7 +235,7 @@ R.setAnimationLoop(()=>{const rdt=clk.getDelta(),dt=Math.min(rdt,.05),k=1-Math.e
    o.wait-=dt;if(o.wait<=0){o.wait=8+Math.random()*10;const e=o.data.estado;
     if(e==='pausa'&&Math.random()<.4)meta(o);else if(!o.sit)anim(o,o.cup.visible?'Yes':e==='esperando'?(Math.random()<.5?'Wave':'ThumbsUp'):'Yes',.25);}}
   if(want!=null)o.g.rotation.y+=ang(want-o.g.rotation.y)*k;
-  p.y+=((o.sit?SIT_Y:0)-p.y)*k;
+  p.y+=((o.sit?(o.sy??SIT_Y):0)-p.y)*k;
   o.g.getWorldPosition(tmp);const dist=tmp.distanceTo(cam.position);tmp.y+=o.sit?1.3:1.62;const q=pr(tmp),sz=Math.max(32,Math.min(movil()?44:52,(movil()?40:48)*Math.pow(D0()/cam.position.distanceTo(ctl.target),.6)));vis.push({o,q,sz});}
  vis.sort((a,b)=>a.q.z-b.q.z);const ya2=[];
  for(const v of vis){const {o,q,sz}=v;let ok=q.z<1&&q.x>-20&&q.x<innerWidth+20;for(const u of ya2)if(Math.hypot(u.x-q.x,u.y-q.y)<(u.s+sz)*.42){ok=false;break;}
