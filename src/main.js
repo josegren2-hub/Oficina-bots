@@ -164,7 +164,7 @@ function makeBot(b,i){const g=new THREE.Group(),PC=PERS_ON&&PERSONITAS[b.id],pm=
  const hand=(m.getObjectByName('Palm2R')||m.getObjectByName('LowerArmR'));hand.add(cup);cup.visible=false;m.updateMatrixWorld(true);{const ws=new THREE.Vector3();hand.getWorldScale(ws);cup.scale.setScalar(1/ws.x);}
  const img=new Image();img.onload=()=>{AV[b.id]=img.src;renderPaneles();const o=bots.get(b.id);if(o)burbuja(o);};img.src=`./avatares/${b.id}.png`;
  const hit=new THREE.Mesh(new THREE.BoxGeometry(.8,1.5,.8),new THREE.MeshBasicMaterial({visible:false}));hit.position.y=.75;hit.userData.id=b.id;g.add(hit);hits.push(hit);
- const el=document.createElement('div');el.className='pin';capa.appendChild(el);
+ const el=document.createElement('div');el.className='pin';el.dataset.id=b.id;el.addEventListener('pointerdown',e=>e.stopPropagation());el.addEventListener('click',e=>{e.stopPropagation();abrirFicha(b.id);});capa.appendChild(el);
  let p=PUESTOS[b.id];if(!p){p=EXTRA.find(e=>!e.uso)||EXTRA[0];p.uso=1;PUESTOS[b.id]=p;}g.position.set(p.x,0,p.sz);g.rotation.y=0;W.add(g);
  const o={sy:pm?0:null,g,m,mix,A,cur:null,cup,hand,el,seat:p,path:[],t:Math.random()*9,data:b,col:c,spot:null,back:rutaSilla(p).concat(C(p.x,p.sz)),ry:0,sit:0,wait:0,nuevo:1};
  mix.addEventListener('finished',()=>anim(o,o.base));return o;}
@@ -193,7 +193,7 @@ function renderPaneles(){const L=[...bots.values()].map(o=>o.data),act=L.filter(
 const irA=id=>{const o=bots.get(id);if(!o)return;const p=new THREE.Vector3();o.g.getWorldPosition(p);p.y+=.8;volar(p,8,new THREE.Vector3(.45,.75,.6).normalize());if(movil())document.body.classList.remove('abiertos');};
 for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f');if(el)irA(el.dataset.id)};
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
-function abrirFicha(id){const b=bots.get(id).data;$('ficha').style.display='block';$('ficha').innerHTML=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[b.estado]};font-weight:700;margin:6px 0">${EMO[b.estado]} ${TXT[b.estado]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;}
+function abrirFicha(id){const b=bots.get(id).data;$('ficha').style.display='block';$('ficha').innerHTML=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[b.estado]};font-weight:700;margin:6px 0">${EMO[b.estado]} ${TXT[b.estado]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div><button class="cerrar" aria-label="Cerrar">✕</button>`;}
 // ---------- datos ----------
 async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
  j.bots.forEach((b,i)=>{if(!TXT[b.estado])b.estado='esperando';let o=bots.get(b.id);
@@ -204,13 +204,18 @@ cargar();setInterval(cargar,60000);{const l=document.createElement('div');l.id='
 $('ult').textContent='Cargando muebles y personajes…';
 // ---------- tap vs arrastre (la cámara la maneja OrbitControls) ----------
 const ptrs=new Map();let st=null,moved=false;
-cv.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===1){st={x:e.clientX,y:e.clientY,t:performance.now()};moved=false}else moved=true;});
-cv.addEventListener('pointermove',e=>{if(st&&ptrs.has(e.pointerId)&&Math.hypot(e.clientX-st.x,e.clientY-st.y)>6)moved=true;});
-const up=e=>{if(!ptrs.delete(e.pointerId))return;if(!ptrs.size){if(st&&!moved&&performance.now()-st.t<500)tap(e.clientX,e.clientY);st=null;}};
-cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId);st=null});
-const ray=new THREE.Raycaster();
-function tap(x,y){ray.setFromCamera(new THREE.Vector2(x/innerWidth*2-1,-(y/innerHeight)*2+1),cam);const h=ray.intersectObjects(hits)[0];
- if(h)abrirFicha(h.object.userData.id);else $('ficha').style.display='none';}
+cv.addEventListener('pointerdown',e=>{if(e.isPrimary)ptrs.clear();ptrs.set(e.pointerId,1);if(ptrs.size===1){st={x:e.clientX,y:e.clientY,t:performance.now()};moved=false}else moved=true;});
+addEventListener('pointermove',e=>{if(st&&!moved&&ptrs.has(e.pointerId)&&Math.hypot(e.clientX-st.x,e.clientY-st.y)>(e.pointerType==='touch'?12:6))moved=true;},{passive:true});
+const up=e=>{if(!ptrs.delete(e.pointerId))return;if(!ptrs.size){if(st&&!moved&&performance.now()-st.t<800&&e.type==='pointerup')tap(e.clientX,e.clientY);st=null;}};
+addEventListener('pointerup',up);addEventListener('pointercancel',up);addEventListener('blur',()=>{ptrs.clear();st=null});
+const ray=new THREE.Raycaster(),_nd=new THREE.Vector2(),_v=new THREE.Vector3();
+function tap(x,y){_nd.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromCamera(_nd,cam);const h=ray.intersectObjects(hits,false)[0];
+ if(h)return abrirFicha(h.object.userData.id);
+ let best=null,bd=movil()?34:24;for(const [id,o] of bots){for(const hy of[.35,.75,1.3]){o.g.getWorldPosition(_v);_v.y+=hy;_v.project(cam);if(_v.z>1)continue;
+  const d=Math.hypot((_v.x+1)/2*innerWidth-x,(1-_v.y)/2*innerHeight-y);if(d<bd){bd=d;best=id;}}}
+ if(best)abrirFicha(best);else cerrarFicha();}
+function cerrarFicha(){$('ficha').style.display='none';}
+$('ficha').addEventListener('click',e=>{if(e.target.closest('.cerrar'))cerrarFicha();});
 window.__fichaAbierta=()=>$('ficha').style.display==='block';
 const pr=(v)=>{v.project(cam);return {x:(v.x+1)/2*innerWidth,y:(1-v.y)/2*innerHeight,z:v.z}};
 window.__botPantalla=id=>{const v=new THREE.Vector3();bots.get(id).g.getWorldPosition(v);v.y+=.9;return pr(v)};

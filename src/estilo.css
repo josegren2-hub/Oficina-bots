@@ -23,7 +23,7 @@
 .burb{transform:translate(-50%,-100%);transform-origin:50% 100%}
 .burb.pop{animation:pop .45s cubic-bezier(.34,1.56,.64,1)}@keyframes pop{0%{transform:translate(-50%,-100%) scale(0)}100%{transform:translate(-50%,-100%) scale(1)}}
 .burb .bav{width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px}
-.pin{position:absolute;left:0;top:0;--s:24px;width:var(--s);height:var(--s);pointer-events:none;will-change:transform}
+.pin{position:absolute;left:0;top:0;--s:24px;width:var(--s);height:var(--s);pointer-events:auto;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;z-index:2;will-change:transform}
 .pin img,.pin i{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25);box-sizing:border-box}
 .pin i{color:#fff;font:600 calc(var(--s)*.38)/calc(var(--s) - 3px) Inter,sans-serif;text-align:center;font-style:normal}
 .pin .sd{position:absolute;right:-2px;bottom:-1px;width:32%;height:32%;min-width:11px;min-height:11px;border-radius:50%;border:2px solid #fff;background:#9CA3AF;box-sizing:border-box}
@@ -38,3 +38,5 @@
 #zonas{position:fixed;left:50%;top:10px;transform:translateX(-50%);display:flex;gap:2px;padding:3px;max-width:calc(100% - 20px);overflow-x:auto;scrollbar-width:none;z-index:5}#zonas::-webkit-scrollbar{display:none}#zonas button{background:none;border:0;border-radius:8px;color:#eee;font:600 12px Inter,sans-serif;padding:6px 10px;cursor:pointer;white-space:nowrap}#zonas button:hover{background:rgba(255,255,255,.12)}
 @media (max-width:700px){#zonas{top:auto;bottom:104px;left:8px;right:8px;transform:none;max-width:none}#zonas button{font-size:12px;padding:7px 9px}}
 canvas{touch-action:none}
+
+#ficha{z-index:50;pointer-events:auto}#ficha .cerrar{position:absolute;top:6px;right:8px;background:none;border:0;color:#ccc;font-size:16px;cursor:pointer;padding:6px}
