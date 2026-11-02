@@ -30,19 +30,22 @@ export async function iniciarMando(){
  if(g){try{const enc=await traer();if(enc.salt!==g.salt)throw 0;KEY=await crypto.subtle.importKey('raw',b64(g.k),'AES-GCM',true,['decrypt']);MANDO=await abrir(KEY,enc);$('#mlock').remove();listo();}catch(e){localStorage.removeItem(LS);}}
 }
 // ---------- ficha detallada ----------
-const lista=a=>a&&a.length?'<ul>'+a.map(x=>`<li>${E(x)}</li>`).join('')+'</ul>':SD;
+const OKR=/\bOK\b|autoriz|decid|aprueb|visto bueno|revis|elegir|opini|firma|confirm/i;const necesitaOK=t=>OKR.test(t||'');
+const ir=(b,t='Abrir chat')=>b.agente?`<a class="mir" href="grokbot://app/v1/agent?id=${encodeURIComponent(b.agente)}">${t} →</a>`:'';
+const pendOK=b=>[...new Set([b.pendiente,...(b.pendientes||[])].filter(necesitaOK))];
+const lista=(a,b)=>a&&a.length?'<ul>'+a.map(x=>`<li>${E(x)}${b&&necesitaOK(x)?' '+ir(b,'Ir a autorizar'):''}</li>`).join('')+'</ul>':SD;
 function barras(dia,dias=14){const out=[];let mx=1;const hoy=new Date();for(let i=dias-1;i>=0;i--){const d=new Date(hoy-i*864e5);const k=d.toLocaleDateString('en-CA',{timeZone:'America/Chihuahua'});const v=dia?.[k]||[0,0];out.push([k,v]);mx=Math.max(mx,v[0]+v[1]);}
  return `<div class="mbars">${out.map(([k,v])=>`<div title="${k}: ${v[0]} peticiones, ${v[1]} respuestas"><i style="height:${(v[0]+v[1])/mx*100}%"></i><s style="height:${v[0]/mx*100}%"></s></div>`).join('')}</div><div class="mleg"><span><s></s> peticiones de Rob</span><span><i></i> respuestas del bot</span> · últimos ${dias} días</div>`;}
 export function fichaMando(id,base){if(!MANDO)return null;const b=MANDO.bots.find(x=>x.id===id);if(!b)return null;
  const esp=b.estado==='esperando'&&b.pendiente;const st=b.stats||{};
- const tabs={Ahora:`<h4>En qué está</h4><p>${b.tarea?E(b.tarea):SD}</p><h4>${esp?'Esperando':'Pendiente principal'}</h4><p>${b.pendiente?E(b.pendiente):SD}</p>${esp?'<p class="s">De: Rob (según el reporte del supervisor)</p>':''}
+ const tabs={Ahora:`<h4>En qué está</h4><p>${b.tarea?E(b.tarea):SD}</p><h4>${esp?'Esperando':'Pendiente principal'}</h4><p>${b.pendiente?E(b.pendiente):SD}${necesitaOK(b.pendiente)?' '+ir(b,'Ir a autorizar'):''}</p>${esp?'<p class="s">De: Rob (según el reporte del supervisor)</p>':''}
    <h4>Lo último que trabajó</h4>${b.ultimo?`<p class="s">${fh(b.ultimo.t)}</p><p>${E(b.ultimo.txt)}</p>`:SD}<p class="s">Supervisor: última actividad ${E(b.sup_ultima||'sin datos')}</p>`,
-  Pendientes:`<h4>Pendientes (reporte del supervisor)</h4>${lista(b.pendientes)}`,
+  Pendientes:`<h4>Pendientes (reporte del supervisor)</h4>${lista(b.pendientes,b)}`,
   Historial:`${(b.historial||[]).length?'<ol class="mtl">'+b.historial.map(h=>`<li><b>${fh(h.t)}</b>${E(h.txt)}</li>`).join('')+'</ol>':SD}${b.rutinas?'<h4>Corridas de rutinas</h4><ol class="mtl">'+b.rutinas.map(h=>`<li><b>${E(h.t)}</b>${E(h.txt)}${h.err&&h.err!=='ninguno'?` <em>(${E(h.err)})</em>`:''}</li>`).join('')+'</ol>':''}`,
   Estadísticas:`${barras(st.por_dia)}<div class="mkpi"><div><b>${st.mensajes??'—'}</b>mensajes totales</div><div><b>${st.peticiones??'—'}</b>peticiones de Rob</div><div><b>${(b.pendientes||[]).length}</b>pendientes</div></div>
    <p class="s">Activo desde ${fh(st.desde)||'sin datos'} · última actividad ${fh(st.ultima_actividad)||'sin datos'}</p><h4>Estados registrados</h4>${linea(id)}`};
  const k=Object.keys(tabs);
- return `<div class="mhead">${base}</div><div class="mtabs">${k.map((t,i)=>`<button data-t="${i}" class="${i?'':'on'}">${t}</button>`).join('')}</div>${k.map((t,i)=>`<div class="mtab" data-p="${i}" ${i?'hidden':''}>${tabs[t]}</div>`).join('')}`;}
+ return `<div class="mhead">${base}<div>${ir(b)}</div></div><div class="mtabs">${k.map((t,i)=>`<button data-t="${i}" class="${i?'':'on'}">${t}</button>`).join('')}</div>${k.map((t,i)=>`<div class="mtab" data-p="${i}" ${i?'hidden':''}>${tabs[t]}</div>`).join('')}`;}
 document.addEventListener('click',e=>{const t=e.target.closest('.mtabs button');if(!t)return;const r=t.closest('#ficha,#mpanel');r.querySelectorAll('.mtabs button').forEach(x=>x.classList.toggle('on',x===t));r.querySelectorAll('.mtab').forEach(p=>p.hidden=p.dataset.p!==t.dataset.t);});
 const CE={trabajando:'#3B82F6',esperando:'#22C55E',pausa:'#9CA3AF',inactivo:'#6B7280'};
 function linea(id){const s=(MANDO.snapshots||[]).slice(-60);if(s.length<2)return `<p class="s">Se acumula con cada corrida del recolector (${s.length} registro${s.length===1?'':'s'} hasta ahora).</p>`+(s.length?`<div class="mline">${s.map(x=>`<i style="background:${CE[x.e[id]]||'#333'}" title="${x.t}"></i>`).join('')}</div>`:'');
@@ -52,11 +55,11 @@ function pintarPanel(){const p=$('#mpanel');if(!p||!MANDO)return;const B=MANDO.b
  const hoy=new Date(),k14=[...Array(14)].map((_,i)=>new Date(hoy-(13-i)*864e5).toLocaleDateString('en-CA',{timeZone:'America/Chihuahua'}));
  const tot=B.map(b=>[b,k14.reduce((s,k)=>s+((b.stats?.por_dia?.[k]||[0,0])[0]),0)]).sort((a,b)=>b[1]-a[1]);const mx=Math.max(1,...tot.map(x=>x[1]));
  const tl=B.flatMap(b=>(b.historial||[]).slice(0,4).map(h=>({...h,n:b.nombre}))).sort((a,b)=>b.t<a.t?-1:1).slice(0,25);
- const esp=B.filter(b=>b.pendiente&&b.estado!=='pausa');
+ const aut=B.map(b=>[b,pendOK(b)]).filter(x=>x[1].length);const esp=B.filter(b=>b.pendiente&&b.estado!=='pausa');
  p.innerHTML=`<div class="mt">📊 Centro de mando <button class="mx" onclick="this.closest('#mpanel').hidden=true">✕</button></div><p class="s">Datos al ${fh(MANDO.generado)}</p>
  <div class="mkpi">${['trabajando','esperando','pausa','inactivo'].filter(e=>c[e]).map(e=>`<div><b style="color:${CE[e]}">${c[e]}</b>${EST[e]}</div>`).join('')}</div>
- <div class="mtabs"><button data-t="0" class="on">Esperan algo</button><button data-t="1">Actividad</button><button data-t="2">Línea de tiempo</button><button data-t="3">Fuentes</button></div>
- <div class="mtab" data-p="0">${esp.length?'<ul class="mesp">'+esp.map(b=>`<li><b>${E(b.nombre)}</b> ${E(b.pendiente)}</li>`).join('')+'</ul>':SD}</div>
+ <div class="mtabs"><button data-t="0" class="on">Por autorizar</button><button data-t="4">Esperan algo</button><button data-t="1">Actividad</button><button data-t="2">Línea de tiempo</button><button data-t="3">Fuentes</button></div>
+ <div class="mtab" data-p="0"><p class="s">Pendientes por autorizar (se autorizan en el chat de cada bot)</p>${aut.length?aut.map(([b,it])=>`<div class="maut"><div class="mt2"><b>${E(b.nombre)}</b>${ir(b,'Ir a autorizar')}</div><ul>${it.map(x=>`<li>${E(x)}</li>`).join('')}</ul></div>`).join(''):SD}</div><div class="mtab" data-p="4" hidden>${esp.length?'<ul class="mesp">'+esp.map(b=>`<li><b>${E(b.nombre)}</b> ${E(b.pendiente)} ${ir(b)}</li>`).join('')+'</ul>':SD}</div>
  <div class="mtab" data-p="1" hidden><p class="s">Peticiones de Rob por bot, últimos 14 días</p>${tot.map(([b,v])=>`<div class="mrow"><span>${E(b.nombre)}</span><div><i style="width:${v/mx*100}%"></i></div><b>${v}</b></div>`).join('')}</div>
  <div class="mtab" data-p="2" hidden><ol class="mtl">${tl.map(h=>`<li><b>${fh(h.t)} · ${E(h.n)}</b>${E(h.txt)}</li>`).join('')}</ol></div>
  <div class="mtab" data-p="3" hidden><ul>${Object.entries(MANDO.fuentes||{}).map(([k,v])=>`<li><b>${E(k)}:</b> ${E(v)}</li>`).join('')}</ul></div>`;}

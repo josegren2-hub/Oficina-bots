@@ -15,6 +15,9 @@ def corta(t,n):t=re.sub(r'\s+',' ',t).strip();return t if len(t)<=n else t[:n-1]
 estado=json.load(open(f'{B}/public/estado.json'))
 bots={b['id']:{'id':b['id'],'nombre':b['nombre'],'area':b['area'],'estado':b['estado'],'frase':b.get('frase')} for b in estado['bots']}
 fuentes={'estado':f"public/estado.json ({estado.get('actualizado')})"}
+AG={d[:4]:d for d in os.listdir(f'{AD}/agents')}
+for pre,bid in MAP.items():
+  if pre in AG:bots[bid]['agente']=AG[pre]
 # 1) supervisor: tarea / pendiente / última actividad
 sup=sorted(glob.glob(f'{SUP}/estado-oficina-*.txt'))
 if sup:
