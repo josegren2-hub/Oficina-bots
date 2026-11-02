@@ -61,15 +61,25 @@ const CE={trabajando:'#3B82F6',esperando:'#22C55E',pausa:'#9CA3AF',inactivo:'#6B
 function linea(id){const s=(MANDO.snapshots||[]).slice(-60);if(s.length<2)return `<p class="s">Se acumula con cada corrida del recolector (${s.length} registro${s.length===1?'':'s'} hasta ahora).</p>`+(s.length?`<div class="mline">${s.map(x=>`<i style="background:${CE[x.e[id]]||'#333'}" title="${x.t}"></i>`).join('')}</div>`:'');
  return `<div class="mline">${s.map(x=>`<i style="background:${CE[x.e[id]]||'#333'}" title="${x.t}: ${x.e[id]||'?'}"></i>`).join('')}</div>`;}
 // ---------- panel global ----------
+document.addEventListener('click',e=>{const b=e.target.closest('#mpanel .mcont button');if(b)window.__abrirListaEstado?.(b.dataset.k);});
 function pintarPanel(){const p=$('#mpanel');if(!p||!MANDO)return;const B=MANDO.bots;const c={};B.forEach(b=>c[b.estado]=(c[b.estado]||0)+1);
  const hoy=new Date(),k14=[...Array(14)].map((_,i)=>new Date(hoy-(13-i)*864e5).toLocaleDateString('en-CA',{timeZone:'America/Chihuahua'}));
  const tot=B.map(b=>[b,k14.reduce((s,k)=>s+((b.stats?.por_dia?.[k]||[0,0])[0]),0)]).sort((a,b)=>b[1]-a[1]);const mx=Math.max(1,...tot.map(x=>x[1]));
  const tl=B.flatMap(b=>(b.historial||[]).slice(0,4).map(h=>({...h,n:b.nombre}))).sort((a,b)=>b.t<a.t?-1:1).slice(0,25);
  const aut=B.map(b=>[b,pendOK(b)]).filter(x=>x[1].length);const esp=B.filter(b=>b.pendiente&&b.estado!=='pausa');
  p.innerHTML=`<div class="mt">📊 Centro de mando <button class="mx" onclick="this.closest('#mpanel').hidden=true">✕</button></div><p class="s">Datos al ${fh(MANDO.generado)}</p>
- <div class="mkpi">${['trabajando','esperando','pausa','inactivo'].filter(e=>c[e]).map(e=>`<div><b style="color:${CE[e]}">${c[e]}</b>${EST[e]}</div>`).join('')}</div>
- <div class="mtabs"><button data-t="0" class="on">Por autorizar</button><button data-t="4">Esperan algo</button><button data-t="1">Actividad</button><button data-t="2">Línea de tiempo</button><button data-t="3">Fuentes</button></div>
+ <div class="mkpi mcont">${(()=>{const n=window.__conteos?.()||c;return [['te','Te esperan','#F97316'],['trabajando','Trabajando','#3B82F6'],['esperando','Disponible','#D1D5DB'],['pausa','En pausa','#6B7280']].map(([e,t,col])=>`<button data-k="${e}"><b style="color:${col}">${n[e]||0}</b>${t} ›</button>`).join('');})()}</div>
+ <div class="mtabs"><button data-t="0" class="on">Por autorizar</button><button data-t="4">Esperan algo</button><button data-t="1">Actividad</button><button data-t="2">Línea de tiempo</button><button data-t="5">Uso</button><button data-t="3">Fuentes</button></div>
  <div class="mtab" data-p="0"><p class="s">Pendientes por autorizar (se autorizan en el chat de cada bot)</p>${aut.length?aut.map(([b,it])=>`<div class="maut"><div class="mt2"><b>${E(b.nombre)}</b>${ir(b,'Ir a autorizar')}</div><ul>${it.map(x=>`<li>${E(x)}${btnsItem(b,x)}</li>`).join('')}</ul></div>`).join(''):SD}</div><div class="mtab" data-p="4" hidden>${esp.length?'<ul class="mesp">'+esp.map(b=>`<li><b>${E(b.nombre)}</b> ${E(b.pendiente)} ${ir(b)}</li>`).join('')+'</ul>':SD}</div>
  <div class="mtab" data-p="1" hidden><p class="s">Peticiones de Rob por bot, últimos 14 días</p>${tot.map(([b,v])=>`<div class="mrow"><span>${E(b.nombre)}</span><div><i style="width:${v/mx*100}%"></i></div><b>${v}</b></div>`).join('')}</div>
  <div class="mtab" data-p="2" hidden><ol class="mtl">${tl.map(h=>`<li><b>${fh(h.t)} · ${E(h.n)}</b>${E(h.txt)}</li>`).join('')}</ol></div>
- <div class="mtab" data-p="3" hidden><ul>${Object.entries(MANDO.fuentes||{}).map(([k,v])=>`<li><b>${E(k)}:</b> ${E(v)}</li>`).join('')}</ul></div>`;}
+ <div class="mtab" data-p="5" hidden>${usoHTML(B)}</div><div class="mtab" data-p="3" hidden><ul>${Object.entries(MANDO.fuentes||{}).map(([k,v])=>`<li><b>${E(k)}:</b> ${E(v)}</li>`).join('')}</ul></div>`;}
+
+let USOP='7d';const nf=n=>Number(n||0).toLocaleString('es-MX');
+function usoHTML(B){const g=MANDO.uso_global;const tieneUso=B.some(b=>b.uso);
+ const gl=g?`<div class="maut"><b style="color:#fff">Límite semanal usado: ${E(g.limite_semanal_usado_pct)}%</b><div class="mrow1"><i style="width:${Math.min(100,+g.limite_semanal_usado_pct||0)}%"></i></div><p class="s">Dato real de la cuenta, al ${fh(g.al)} · se reinicia ${fh(g.reinicia)} (se actualiza a mano)</p></div>`:'';
+ if(!tieneUso)return gl+'<p class="s">Aún no hay estadística de uso en estos datos; aparece en la próxima corrida del recolector.</p>';
+ const r=B.filter(b=>b.uso).map(b=>[b,b.uso[USOP]||{}]).sort((a,b)=>(b[1].caracteres||0)-(a[1].caracteres||0));const mx=Math.max(1,...r.map(x=>x[1].caracteres||0));
+ return gl+`<p class="muso">⚠️ Estimado por actividad, no es el consumo exacto. Ordenado por texto procesado.</p><div class="mtabs mper">${[['hoy','Hoy'],['7d','7 días'],['30d','30 días']].map(([k,t])=>`<button data-per="${k}" class="${k===USOP?'on':''}">${t}</button>`).join('')}</div>`+
+ r.map(([b,u])=>`<div class="mrow"><span>${E(b.nombre)}</span><div><i style="width:${(u.caracteres||0)/mx*100}%"></i></div><b>${Math.round((u.caracteres||0)/1000)}k</b></div><p class="s muso2">${nf(u.turnos)} turnos · ${nf(u.mensajes)} mensajes · ${nf(u.corridas)} corridas · ${nf(u.caracteres)} caracteres</p>`).join('');}
+document.addEventListener('click',e=>{const t=e.target.closest('.mper button');if(!t)return;e.stopPropagation();USOP=t.dataset.per;const p=document.querySelector('#mpanel .mtab[data-p="5"]');if(p)p.innerHTML=usoHTML(MANDO.bots);},true);

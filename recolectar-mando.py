@@ -66,12 +66,36 @@ try:
   r=list(csv.DictReader(open(f'{SUP}/registro-rutinas.csv')));fuentes['rutinas']='supervisor/registro-rutinas.csv'
   bots['ted']['rutinas']=[{'t':x['fecha'],'txt':corta(x['resultado'],220),'err':x['errores']} for x in r[::-1][:30]]
 except Exception:pass
+# 4b) uso ESTIMADO por actividad (no es consumo exacto): turnos, mensajes, texto procesado y corridas fuera del chat principal
+PER={'hoy':int(ahora.replace(hour=0,minute=0,second=0,microsecond=0).timestamp()*1000),'7d':int((ahora-datetime.timedelta(days=7)).timestamp()*1000),'30d':int((ahora-datetime.timedelta(days=30)).timestamp()*1000)}
+rcsv=[]
+try:rcsv=list(csv.DictReader(open(f'{SUP}/registro-rutinas.csv')))
+except Exception:pass
+for pre,bid in MAP.items():
+  u={}
+  for k,t0 in PER.items():
+    r=db.execute("select count(*),coalesce(sum(role='user' and in_main_chat=1),0),coalesce(sum(length(body)),0),coalesce(sum(in_main_chat=0 and role='user'),0) from messages where agent_id like ? and timestamp_ms>=?",(pre+'%',t0)).fetchone()
+    u[k]={'mensajes':r[0],'turnos':r[1],'caracteres':r[2],'corridas':r[3]}
+    if bid=='ted' and rcsv:
+      n=0
+      for x in rcsv:
+        try:
+          d=datetime.datetime.fromisoformat(x['fecha'][:16].replace(' ','T'))
+          if d.tzinfo is None:d=d.replace(tzinfo=TZ)
+          if d.timestamp()*1000>=t0:n+=1
+        except Exception:pass
+      u[k]['corridas']+=n
+  bots[bid]['uso']=u
+# dato global REAL: se actualiza a mano en mando-local/uso-global.json
+UG=f'{B}/mando-local/uso-global.json'
+if not os.path.exists(UG):json.dump({'limite_semanal_usado_pct':39.1,'al':'2026-11-02T05:43-06:00','reinicia':'2026-11-04T01:08-06:00','nota':'Actualizar a mano desde la pantalla de uso'},open(UG,'w'),ensure_ascii=False,indent=1)
+uso_global=json.load(open(UG));fuentes['uso']='Estimado por actividad (índice de mensajes + registro de rutinas); límite semanal: mando-local/uso-global.json (manual)'
 # 5) historial local (para estadísticas de estados en el tiempo)
 os.makedirs(f'{B}/mando-local',exist_ok=True);H=f'{B}/mando-local/historial.jsonl'
 snap={'t':ahora.isoformat(timespec='minutes'),'e':{k:v['estado'] for k,v in bots.items()}}
 with open(H,'a') as f:f.write(json.dumps(snap)+'\n')
 hist=[json.loads(l) for l in open(H)][-400:]
-data={'generado':ahora.isoformat(timespec='minutes'),'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
+data={'generado':ahora.isoformat(timespec='minutes'),'uso_global':uso_global,'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
 raw=json.dumps(data,ensure_ascii=False).encode()
 # cifrado
 pw=(os.environ.get('MANDO_CLAVE') or open(f'{B}/.clave-mando').read()).strip().encode();salt=base64.b64decode(open(f'{B}/.sal-mando').read());IT=310000
