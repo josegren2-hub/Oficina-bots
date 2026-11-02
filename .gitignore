@@ -2,3 +2,7 @@ node_modules/
 dist/
 referencia/
 capturas/
+.clave-mando
+.sal-mando
+mando-local/
+public/mando.enc
