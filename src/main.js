@@ -14,7 +14,9 @@ Object.assign(dl.shadow.camera,{left:-20,right:20,top:16,bottom:-16,near:1,far:8
 dl.position.set(-9,22,-14);dl.target.position.set(0,0,0);
 const cam=new THREE.PerspectiveCamera(35,1,.1,260);
 const ctl=new OrbitControls(cam,cv);ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.minDistance=4;ctl.maxDistance=110;ctl.minPolarAngle=.15;ctl.maxPolarAngle=1.38;ctl.screenSpacePanning=false;
-ctl.touches={ONE:THREE.TOUCH.ROTATE,TWO:THREE.TOUCH.DOLLY_PAN};ctl.mouseButtons={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.PAN};
+ctl.touches={ONE:THREE.TOUCH.PAN,TWO:THREE.TOUCH.DOLLY_ROTATE};ctl.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};ctl.panSpeed=1.2;ctl.zoomToCursor=true;
+// limita el objetivo al interior de la oficina
+ctl.addEventListener('change',()=>{const t=ctl.target,cx=Math.max(-15,Math.min(15,t.x)),cz=Math.max(-11,Math.min(11,t.z)),dx=cx-t.x,dz=cz-t.z,dy=-t.y;if(dx||dz||dy){t.x+=dx;t.y+=dy;t.z+=dz;cam.position.x+=dx;cam.position.y+=dy;cam.position.z+=dz;}});
 const comp=new EffectComposer(R);const ao=new N8AOPass(S,cam,innerWidth,innerHeight);Object.assign(ao.configuration,{aoRadius:1.6,distanceFalloff:1,intensity:3.5,gammaCorrection:false,halfRes:movil(),aoSamples:movil()?8:16,denoiseSamples:movil()?4:8,transparencyAware:false});ao.setQualityMode(movil()?'Low':'Medium');comp.addPass(ao);
 const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth/2,innerHeight/2),.22,.5,.92);comp.addPass(bloom);comp.addPass(new OutputPass());
 function resize(){R.setSize(innerWidth,innerHeight);comp.setPixelRatio(R.getPixelRatio());comp.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
@@ -171,6 +173,7 @@ function meta(o){const e=o.data.estado,s=o.seat;if(o.spot){ocupado.delete(o.spot
  else if(e==='esperando')ir(o,rutaSilla(s).concat(C(s.ax,s.sz+.35)),{ry:null,sit:0});
  else{const libres=CAFE.filter(c=>!ocupado.has(c));const c=libres[Math.floor(Math.random()*libres.length)]||CAFE[0];ocupado.add(c);o.spot=c;ir(o,[...c.via,c.p],{ry:c.ry,sit:c.sit,cup:c.cup});}
  o.wait=10+Math.random()*12;}
+var DPIN=0;
 function burbuja(o){const b=o.data;o.el.className='pin '+b.estado;o.el.innerHTML=`${AV[b.id]?`<img src="${AV[b.id]}" alt="">`:`<i style="background:#${o.col.toString(16).padStart(6,'0')}">${ini(b.nombre)}</i>`}<span class="sd"></span>`;}
 const listo=cargaModelos.then(()=>{colocar();calibrar();});
 // ---------- paneles ----------
@@ -211,6 +214,10 @@ const pr=(v)=>{v.project(cam);return {x:(v.x+1)/2*innerWidth,y:(1-v.y)/2*innerHe
 window.__botPantalla=id=>{const v=new THREE.Vector3();bots.get(id).g.getWorldPosition(v);v.y+=.9;return pr(v)};
 const DIR0=new THREE.Vector3(.42,.62,.66).normalize(),D0=()=>movil()?82:46;
 cam.position.copy(DIR0).multiplyScalar(D0());ctl.target.set(0,0,0);ctl.update();
+{const z=document.createElement('div');z.id='zonas';z.className='glass';
+ const L=[['Recepción','rec'],['Tinta Rosa','tr'],['Administración','per'],['Creativa','cre'],['CEO','ceo'],['Café','com'],['Vista general','']];
+ for(const [n,id] of L){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(!id){volar(new THREE.Vector3(0,0,0),D0(),DIR0.clone());return;}const a=AR[id];volar(new THREE.Vector3((a.x0+a.x1)/2,0,(a.z0+a.z1)/2),movil()?17:13,new THREE.Vector3(.25,.8,.55).normalize());};z.appendChild(b);}
+ document.body.appendChild(z);}
 window.__volar=(x,z,d)=>volar(new THREE.Vector3(x,0,z),d,new THREE.Vector3(.3,.75,.6).normalize());
 // ---------- animación ----------
 const clk=new THREE.Clock(),tmp=new THREE.Vector3(),ang=a=>((a+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
@@ -226,9 +233,9 @@ R.setAnimationLoop(()=>{const rdt=clk.getDelta(),dt=Math.min(rdt,.05),k=1-Math.e
     if(e==='pausa'&&Math.random()<.4)meta(o);else if(!o.sit)anim(o,o.cup.visible?'Yes':e==='esperando'?(Math.random()<.5?'Wave':'ThumbsUp'):'Yes',.25);}}
   if(want!=null)o.g.rotation.y+=ang(want-o.g.rotation.y)*k;
   p.y+=((o.sit?SIT_Y:0)-p.y)*k;
-  o.g.getWorldPosition(tmp);const dist=tmp.distanceTo(cam.position);tmp.y+=o.sit?1.3:1.62;const q=pr(tmp),sz=Math.max(14,Math.min(28,28*11/dist*(movil()?1.5:1)));vis.push({o,q,sz});}
+  o.g.getWorldPosition(tmp);const dist=tmp.distanceTo(cam.position);tmp.y+=o.sit?1.3:1.62;const q=pr(tmp),sz=Math.max(32,Math.min(movil()?44:52,(movil()?40:48)*Math.pow(D0()/cam.position.distanceTo(ctl.target),.6)));vis.push({o,q,sz});}
  vis.sort((a,b)=>a.q.z-b.q.z);const ya2=[];
- for(const v of vis){const {o,q,sz}=v;let ok=q.z<1&&q.x>-20&&q.x<innerWidth+20;for(const u of ya2)if(Math.hypot(u.x-q.x,u.y-q.y)<(u.s+sz)*.5){ok=false;break;}
+ for(const v of vis){const {o,q,sz}=v;let ok=q.z<1&&q.x>-20&&q.x<innerWidth+20;for(const u of ya2)if(Math.hypot(u.x-q.x,u.y-q.y)<(u.s+sz)*.42){ok=false;break;}
   o.el.style.display=ok?'block':'none';if(ok){ya2.push({x:q.x,y:q.y,s:sz});o.el.style.transform=`translate(${q.x}px,${q.y}px) translate(-50%,-100%)`;o.el.style.setProperty('--s',sz+'px');}}
  comp.render();});
 window.__camara=()=>({pos:cam.position.toArray().map(n=>+n.toFixed(2)),polar:+ctl.getPolarAngle().toFixed(3),azim:+ctl.getAzimuthalAngle().toFixed(3)});
