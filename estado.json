@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-02T14:15:00-06:00",
+ "actualizado": "2026-11-02T20:15:00-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,14 +12,14 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "esperando",
-   "frase": "Esperando revisión"
+   "estado": "trabajando",
+   "frase": "Programando"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "pausa",
+   "estado": "trabajando",
    "frase": "Preparando notas"
   },
   {
@@ -38,7 +38,7 @@
   },
   {
    "id": "vale",
-   "nombre": "Vale",
+   "nombre": "Valery",
    "area": "Redes personales",
    "estado": "pausa",
    "frase": "Pensando ideas"
@@ -61,50 +61,50 @@
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "trabajando",
-   "frase": "Diseñando ilustración"
+   "estado": "pausa",
+   "frase": "Tomando un café"
   },
   {
    "id": "libro",
-   "nombre": "Libro",
+   "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "esperando",
-   "frase": "Esperando revisión"
+   "estado": "trabajando",
+   "frase": "Escribiendo"
   },
   {
    "id": "apps",
-   "nombre": "Apps",
+   "nombre": "Charly",
    "area": "Desarrollo móvil",
    "estado": "esperando",
    "frase": "Esperando pruebas"
   },
   {
    "id": "ceo",
-   "nombre": "CEO Digital",
+   "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "pausa",
-   "frase": "Tomando un café"
+   "estado": "trabajando",
+   "frase": "Pensando ideas"
   },
   {
    "id": "tr-editor",
-   "nombre": "TR Editor Jefe",
+   "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "pausa",
+   "estado": "trabajando",
    "frase": "Revisando textos"
   },
   {
    "id": "tr-cm",
-   "nombre": "TR Community Manager",
+   "nombre": "Dany",
    "area": "Tinta Rosa · redes",
    "estado": "pausa",
    "frase": "En el sillón"
   },
   {
    "id": "director",
-   "nombre": "Director",
+   "nombre": "Joss",
    "area": "Coordinación",
-   "estado": "pausa",
-   "frase": "Tomando un café"
+   "estado": "trabajando",
+   "frase": "Revisando diseño"
   }
  ]
 }
