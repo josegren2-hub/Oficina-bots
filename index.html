@@ -6,4 +6,16 @@
 <div id="term" class="glass"><span class="acc">&gt;</span> <span id="ult">Cargando oficina…</span></div>
 <div id="ctrl"><button id="bpaneles" class="glass">☰ Paneles</button><div id="pisos" class="glass"></div><button id="bedif" class="glass">🏢 Ver edificio</button></div>
 <div id="ficha" class="glass"></div>
-<script type="module" src="./src/main.js"></script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));</script></body></html>
+<script type="module" src="./src/main.js"></script><button id="bact" class="glass" title="Actualizar la oficina">↻ Actualizar</button><div id="avisoNueva" class="glass" hidden>Hay versión nueva · <b>Actualizar</b></div>
+<script>(()=>{const V='v16.11',sw=navigator.serviceWorker;let pedido=false;
+const aviso=document.getElementById('avisoNueva');
+async function forzar(){try{if(window.caches){for(const k of await caches.keys())await caches.delete(k);}if(sw){for(const r of await sw.getRegistrations()){try{await r.update()}catch(e){}await r.unregister();}}}catch(e){}
+ location.replace(location.pathname+'?v='+Date.now());}
+document.getElementById('bact').onclick=forzar;
+if(!sw)return;
+function mostrar(reg){aviso.hidden=false;aviso.onclick=()=>{pedido=true;const w=reg&&reg.waiting;if(w)w.postMessage({type:'SKIP_WAITING'});else location.reload();};}
+sw.addEventListener('controllerchange',()=>{if(pedido)location.reload();else if(window.__teniaSW)mostrar(null);});
+addEventListener('load',async()=>{const tenia=window.__teniaSW=!!sw.controller;const reg=await sw.register('./sw.js',{updateViaCache:'none'});
+ if(reg.waiting&&sw.controller)mostrar(reg);
+ reg.addEventListener('updatefound',()=>{const n=reg.installing;n&&n.addEventListener('statechange',()=>{if((n.state==='installed'||n.state==='activated')&&tenia)mostrar(reg);});});
+ const chk=()=>reg.update().catch(()=>{});chk();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk();});setInterval(chk,3*60e3);});})();</script></body></html>

@@ -19,3 +19,10 @@ Para cada bot que la base (rutina de Ted) marcó `esperando`, se toma la hora de
 
 ## v16.10
 - Se quitaron todas las mamparas/divisiones interiores; solo quedan paredes exteriores y el despacho de cristal de Mateo. Áreas por color de piso, tapetes grandes por área y letreros en el piso.
+
+## v16.11
+- Se restauró la distribución, las paredes, la recepción, los letreros y la escenografía de v16.8.
+- Se conserva el estado en vivo con ✅ Resuelto. El café admite un máximo de 3; el resto va a lugares únicos del pasillo y a la sala de recepción.
+- Separación lateral solo entre bots que caminan; no se aplica cerca del punto de paso, así que nadie se traba.
+- dt limitado a 0.2 en lugar de 0.05 para que caminen aunque el FPS sea bajo.
+- Aviso "Hay versión nueva · Actualizar" y botón ↻ Actualizar. sw.js usa la caché oficina-v16-11 con navegación en modo network-first / no-store.
