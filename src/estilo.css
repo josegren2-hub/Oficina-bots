@@ -81,7 +81,7 @@ body.mando #ficha{width:min(440px,calc(100% - 16px));max-height:calc(100% - 40px
 #resumen .rsum{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 6px;white-space:nowrap}#resumen .rsum .sep{color:#555}
 #bmodo{white-space:nowrap}
 @media(max-width:480px){#ctrl{gap:4px;flex-wrap:nowrap}#ctrl button,#pisos button{padding:7px 6px;font-size:10.5px}#pisos button{padding:5px 6px}}
-body.noche{background:#1E1913;color:#b8a990}
+body.noche{background:#2E261D;color:#b8a990}
 body.noche .glass{background:rgba(28,22,16,.88);border-color:rgba(255,200,140,.12)}
 body.noche,body.noche *{--c:#e9dcc3}
 body.noche .glass,body.noche #ficha,body.noche #ctrl button,body.noche #pisos button{color:#e0d2b8}body.noche .glass b,body.noche #ficha b{color:#efe2c8}

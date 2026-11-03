@@ -312,22 +312,22 @@ window.__camara=()=>({pos:cam.position.toArray().map(n=>+n.toFixed(2)),polar:+ct
 
 // ---- v16.4 modo noche ----
 const MD={dia:{exp:1.1,env:.7,hl:.75,hc:'#fff4e6',hg:'#d8cbb6',dl:2.85,dc:'#fff0da',bg:'#D9D4CC',pl:1,pc:null,ao:3,em:null,tc:'#111827'},
- noche:{exp:.62,env:.22,hl:.22,hc:'#ffd9a8',hg:'#3a2a1c',dl:.35,dc:'#ffb36b',bg:'#1E1913',pl:.7,pc:'#ffb066',ao:2,em:'#ffb066',tc:'#1E1913'}};
+ noche:{exp:.97,env:.4,hl:.6,hc:'#ffd2a0',hg:'#6a5038',dl:.9,dc:'#ffbe80',bg:'#2E261D',pl:.7,pc:'#ffb066',ao:2.2,em:'#ffb066',tc:'#2E261D'}};
 const NL=[],NE=[];{const mE=()=>new THREE.MeshStandardMaterial({color:0x2a2018,emissive:0xffa24a,emissiveIntensity:0,roughness:.6});const mP=new THREE.MeshStandardMaterial({color:0x2a2622,roughness:.5,metalness:.6});
  const ad=(g,m,x,y,z)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);S.add(o);return o;};
  for(const A of AREAS){const zb=A.s>0?A.z0+.25:A.z1-.25,zm=(A.z0+A.z1)/2,cx=(A.x0+A.x1)/2;
   const t=mE();NE.push(t);ad(new THREE.BoxGeometry(A.x1-A.x0-.6,.04,.06),t,cx,2.85,zb);
   const fx=A.x0+.6,fz=A.s>0?A.z0+.7:A.z1-.7;ad(new THREE.CylinderGeometry(.025,.025,1.55,8),mP,fx,.78,fz);ad(new THREE.CylinderGeometry(.18,.12,.08,16),mP,fx,.02,fz);const sh=mE();NE.push(sh);ad(new THREE.CylinderGeometry(.14,.22,.28,16,1,true),sh,fx,1.62,fz);
   const dx=A.d+.7,dz=zm+(A.s>0?-1.2:1.2);ad(new THREE.CylinderGeometry(.012,.012,.38,6),mP,dx,.95,dz);const ds=mE();NE.push(ds);ad(new THREE.ConeGeometry(.09,.12,14,1,true),ds,dx,1.16,dz);
-  const l=new THREE.PointLight('#ffa859',3.2,6.5,1.8);l.position.set((fx+cx)/2,1.7,(fz+zm)/2);l.visible=false;S.add(l);NL.push(l);}}
+  const l=new THREE.PointLight('#ffb066',9,11,1.4);l.position.set((fx+cx)/2,1.7,(fz+zm)/2);l.visible=false;S.add(l);NL.push(l);}}
 const _pl0=LP.map(l=>[l.intensity,l.color.clone()]);let _lum=null;
 function nocheAhora(){const h=+new Intl.DateTimeFormat('en-US',{timeZone:'America/Chihuahua',hour:'numeric',hourCycle:'h23'}).format(new Date());return h>=19||h<7;}
 let PREF=localStorage.getItem('oficinaModo')||'auto';
 function aplicarModo(){const n=PREF==='noche'||(PREF==='auto'&&nocheAhora());const m=n?MD.noche:MD.dia;
  R.toneMappingExposure=m.exp;S.environmentIntensity=m.env;HL.intensity=m.hl;HL.color.set(m.hc);HL.groundColor.set(m.hg);dl.intensity=m.dl;dl.color.set(m.dc);
- S.background.set(m.bg);S.fog.color.set(m.bg);LP.forEach(l=>l.visible=!n);NL.forEach(l=>l.visible=n);NE.forEach(e=>e.emissiveIntensity=n?(e===NE[0]?1:.9):0);LP.forEach((l,i)=>{l.intensity=_pl0[i][0]*m.pl;if(m.pc)l.color.set(m.pc);else l.color.copy(_pl0[i][1]);});
+ S.background.set(m.bg);S.fog.color.set(m.bg);LP.forEach(l=>l.visible=!n);NL.forEach(l=>l.visible=n);NE.forEach(e=>e.emissiveIntensity=n?1.6:0);LP.forEach((l,i)=>{l.intensity=_pl0[i][0]*m.pl;if(m.pc)l.color.set(m.pc);else l.color.copy(_pl0[i][1]);});
  try{ao.configuration.intensity=m.ao;}catch(e){}
- S.traverse(o=>{const mt=o.material;if(mt&&!Array.isArray(mt)&&mt.emissive&&mt.color&&mt.color.getHex()===0xfff6e0){if(_lum===null)_lum=[mt.emissive.clone(),mt.emissiveIntensity];if(n){mt.emissive.set(m.em);mt.emissiveIntensity=_lum[1]*.55;}else{mt.emissive.copy(_lum[0]);mt.emissiveIntensity=_lum[1];}}});
+ S.traverse(o=>{const mt=o.material;if(mt&&!Array.isArray(mt)&&mt.emissive&&mt.color&&mt.color.getHex()===0xfff6e0){if(_lum===null)_lum=[mt.emissive.clone(),mt.emissiveIntensity];if(n){mt.emissive.set(m.em);mt.emissiveIntensity=_lum[1]*.8;}else{mt.emissive.copy(_lum[0]);mt.emissiveIntensity=_lum[1];}}});
  document.body.classList.toggle('noche',n);document.querySelectorAll('meta[name=theme-color]').forEach(e=>e.content=m.tc);
  const b=document.getElementById('bmodo');if(b){b.textContent=PREF==='auto'?(n?'🌙 Auto':'☀️ Auto'):PREF==='noche'?'🌙 Noche':'☀️ Día';b.title='Modo: Auto → Noche → Día';}}
 (()=>{const b=document.createElement('button');b.id='bmodo';b.className='glass';b.setAttribute('aria-label','Cambiar modo día/noche');
