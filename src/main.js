@@ -1,7 +1,7 @@
 import {makePersonita,PERSONITAS} from './personitas.js';import {iniciarMando,fichaMando,MANDO} from './mando.js';iniciarMando();
 const PERS_ON=!new URLSearchParams(location.search).has('robots');
 import * as THREE from 'three';import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';import {MeshoptDecoder} from 'three/examples/jsm/libs/meshopt_decoder.module.js';import * as SkU from 'three/examples/jsm/utils/SkeletonUtils.js';import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';import {N8AOPass} from 'n8ao';import './estilo.css';
-const COL={trabajando:'#3B82F6',esperando:'#9CA3AF',pausa:'#4B5563',te:'#F97316'},TXT={trabajando:'Trabajando ahora',esperando:'Disponible',pausa:'En pausa',te:'Te espera'};const TE=id=>!!window.__teEspera?.has(id);const EK=b=>TE(b.id)?'te':b.estado,EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
+const COL={trabajando:'#3B82F6',esperando:'#9CA3AF',pausa:'#4B5563',te:'#F97316'},TXT={trabajando:'Trabajando ahora',esperando:'Disponible',pausa:'En pausa',te:'Te espera'};const TE=id=>window.__vivo?.(id)==='esperando';const EK=b=>TE(b.id)?'te':b.estado,EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ini=n=>n.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
 const movil=()=>innerWidth<700;
@@ -54,12 +54,14 @@ function muro(x0,z0,x1,z1,t='int',puertas=[]){const H=z0===z1,a=Math.min(H?x0:z0
  for(const d of puertas.sort((p,q)=>p-q)){segs.push([u,d-.55]);u=d+.55;}segs.push([u,b]);
  const B=(L,h,th,mk,m,y,o)=>caja(H?L:th,h,H?th:L,mk,H?m:x0,y,H?z0:m,o);
  for(const [s,e] of segs){if(e-s<.05)continue;const L=e-s,m=(s+e)/2;
+  if(t==='mampara'){if(L<.3)continue;B(L,1.1,.08,'muro',m,.55);B(L,.04,.12,'marco',m,1.12);for(const q of [s+.04,e-.04])caja(.06,1.14,.06,'marco',H?q:x0,.57,H?z0:q);continue;}
   if(t==='bajo'){B(L,.6,.2,'muro',m,.3);B(L,.04,.24,'marco',m,.62);continue;}
   const hs=t==='int'?1.05:t==='ext'?.9:.06,top=t==='ext'?3.1:2.75;
   B(L,hs,t==='ext'?.25:TH,t==='cristal'?'marco':'muro',m,hs/2);B(L,.1,(t==='ext'?.25:TH)+.03,'zoclo',m,.05);
   B(L,.04,(t==='ext'?.27:TH)+.02,'marco',m,hs+.02);B(L,top-hs-.08,.025,'vidrio',m,(top+hs)/2);
   if(t==='ext')B(L,.4,.25,'muro',m,2.9);else B(L,.06,.08,'marco',m,top);
   const n=Math.max(1,Math.round(L/1.6));for(let k=0;k<=n;k++){const q=s+k*L/n;caja(.05,top-hs,.05,'marco',H?q:x0,(top+hs)/2,H?z0:q);}}
+ if(t==='mampara')return;
  for(const d of puertas){for(const s of [-.55,.55])caja(H?.08:TH+.04,2.25,H?TH+.04:.08,'marco',H?d+s:x0,1.125,H?z0:d+s);
   const top=t==='ext'?3.1:2.75;caja(H?1.18:TH,top-2.25,H?TH:1.18,t==='cristal'?'vidrio':'muro',H?d:x0,(top+2.25)/2,H?z0:d);caja(H?1.18:TH+.04,.06,H?TH+.04:1.18,'marco',H?d:x0,2.25,H?z0:d);
   // hoja de puerta de vidrio entreabierta
@@ -72,9 +74,8 @@ const AREAS=[
  {id:'jur',n:'Jurídico',x0:5,z0:-11,x1:10,z1:-1,m:'madera',d:6,s:1},
  {id:'fin',n:'Finanzas',x0:10,z0:-11,x1:15,z1:-1,m:'alfAzul',d:11.2,s:1},
  {id:'pod',n:'Estudio podcast',x0:-15,z0:1,x1:-11,z1:11,m:'concreto',d:-13.6,s:-1},
- {id:'per',n:'Asuntos personales',x0:-11,z0:1,x1:-3,z1:11,m:'madera',d:-7,s:-1},
- {id:'rec',n:'Recepción',x0:-3,z0:1,x1:3,z1:11,m:'marmol',d:0,s:-1},
- {id:'pro',n:'Proyectos',x0:3,z0:1,x1:9,z1:11,m:'concreto',d:6,s:-1},
+ {id:'per',n:'Asuntos personales',x0:-11,z0:1,x1:-.8,z1:11,m:'madera',d:-7,s:-1},
+ {id:'pro',n:'Proyectos',x0:.8,z0:1,x1:9,z1:11,m:'concreto',d:6,s:-1},
  {id:'com',n:'Café',x0:9,z0:1,x1:15,z1:11,m:'mosaico',d:9.8,s:-1}];
 const AR=Object.fromEntries(AREAS.map(a=>[a.id,a]));AR.jun={n:'Sala de juntas'};
 Object.assign(M,{rojo:new THREE.MeshStandardMaterial({color:0xd33a2c,emissive:0x7a1008,emissiveIntensity:.6,roughness:.4}),espuma:new THREE.MeshStandardMaterial({color:0x2e3440,roughness:1}),
@@ -85,12 +86,13 @@ Object.assign(M,{rojo:new THREE.MeshStandardMaterial({color:0xd33a2c,emissive:0x
 caja(31,.4,23,'losa',0,-.2,0,{ts:4});caja(31.2,1.4,23.2,'fachada',0,-1.1,0);
 for(let k=0;k<22;k++)caja(1,.6,.05,'negro',-14.2+k*1.35,-1.05,11.62);for(let k=0;k<16;k++)caja(.05,.6,1,'negro',15.62,-1.05,-10.2+k*1.35);
 for(const a of AREAS)piso(a.x0,a.z0,a.x1,a.z1,a.m,a.m==='marmol'?3:a.m==='mosaico'?1.5:2);
-piso(-15,-1,15,1,'concreto',3);piso(-15,-11,-10.8,-5.6,'nogal',2,.016);piso(-4,-6.2,4,-2.2,'alfAzul',2,.016);
+piso(-15,-1,15,1,'concreto',3);piso(-.8,1,.8,11,'concreto',3);piso(-15,-11,-10.8,-5.6,'nogal',2,.016);piso(-4,-6.2,4,-2.2,'alfAzul',2,.016);
 muro(-15,-11,15,-11,'ext');muro(-15,-11,-15,11,'ext');muro(15,-11,15,11,'bajo');muro(-15,11,15,11,'bajo',[0]);
-muro(-15,-1,15,-1,'int',[-7,-3,6,11.2]);muro(-5,-11,-5,-1,'int');muro(5,-11,5,-1,'int');muro(10,-11,10,-1,'cristal');
+// v16.9: planta abierta (mismo tamaño): mamparas bajas con pasos amplios, sin muros cerrados
+muro(-15,-1,15,-1,'mampara',[-12.6,-7,-3,0,3,6,8.4,11.2,13.4]);
+muro(-5,-11,-5,-3.4,'mampara');muro(5,-11,5,-3.4,'mampara');muro(10,-11,10,-4.2,'mampara');
 muro(-10.8,-11,-10.8,-5.6,'cristal');muro(-15,-5.6,-10.8,-5.6,'cristal',[-12.6]);
-muro(-15,1,-3,1,'int',[-13.6,-7]);muro(3,1,15,1,'int',[6,9.8]);muro(-11,1,-11,11,'int');muro(-3,1,-3,11,'int');muro(3,1,3,11,'int');muro(9,1,9,11,'cristal');
-for(const x of [-3,3])caja(.4,3,.4,'muro',x,1.5,1);
+muro(-11,3.2,-11,9,'mampara');muro(-.8,3.6,-.8,9.4,'mampara');muro(.8,3.6,.8,9.4,'mampara');muro(9,4.6,9,11,'mampara');
 // ---------- muebles GLB ----------
 const GL=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),MOD={},pend=[];
 const NOMS=['metal_office_desk','dining_chair_02','sofa_02','modern_coffee_table_01','potted_plant_04','wooden_bookshelf_worn','round_wooden_table_01','drawer_cabinet','dining_table','mid_century_lounge_chair','robot'];
@@ -160,16 +162,14 @@ cil(.035,.22,'azul',-9.4,TOP+.11,8.35);mueble('potted_plant_04',-10.5,6.3,0,4.5)
 for(const [x,z,h] of [[-4.2,10.5,.25],[-3.9,10.6,.18],[-4.5,10.65,.32]]){cil(.05,h,'vela',x,h/2,z);P(new THREE.ConeGeometry(.02,.06,8),'llama',x,h+.04,z);}
 for(const [x,z,s] of [[-5.5,8.2,.06],[-5.35,8.15,.04],[-4.4,8.45,.05]])P(new THREE.OctahedronGeometry(s),'morado',x,TOP+s,z);
 P(new THREE.CircleGeometry(.45,32).rotateY(Math.PI),'luna',-4.6,2.1,10.86);P(new THREE.CircleGeometry(.43,32).rotateY(Math.PI),'espuma',-4.42,2.15,10.85);
-for(let k=0;k<3;k++)caja(.07,.004,.12,'morado',-4.75+k*.1,TOP+.003,8.0);caja(.6,.6,.03,'espuma',-3.05+0.0,1.7,9.2,{ry:Math.PI/2});
-// Recepción
-caja(5,2.7,.25,'muro',0,1.35,3.4);caja(5.1,.06,.3,'marco',0,2.73,3.4);
-caja(3.4,1.05,.7,'muro',0,.53,6.2);caja(3.6,.06,.85,'nogal',0,1.09,6.15);caja(3.4,.06,.04,'oro',0,.9,6.57);mueble('dining_chair_02',0,5.3,SILLA_RY,1);monitor(-.5,6.1,Math.PI);
-mueble('sofa_02',0,10.2,0,1);mueble('modern_coffee_table_01',0,9,Math.PI/2,.9);mueble('potted_plant_04',-2.5,4.2,0,5);mueble('potted_plant_04',2.5,4.2,0,5);mueble('potted_plant_04',-2.5,10.4,0,4);mueble('potted_plant_04',2.5,10.4,0,4);
+for(let k=0;k<3;k++)caja(.07,.004,.12,'morado',-4.75+k*.1,TOP+.003,8.0);
+// v16.9: sin recepción; pasillo abierto entre Personal y Proyectos
+mueble('potted_plant_04',0,4.2,0,4.5);mueble('potted_plant_04',0,10.4,0,4);
 // Proyectos: laboratorio de apps, oficina CEO, estudio de video
-caja(.04,1,1.8,'papel',3.17,1.6,4.2);caja(.05,1.06,1.86,'marco',3.15,1.6,4.2);monitor(3.95,4,0);
+
 caja(.03,2.2,2.6,'verde',8.86,1.3,8.8);for(const a of [0,2.1,4.2])cil(.012,1.4,'marco',7.9+Math.cos(a)*.2,.7,9.4+Math.sin(a)*.2);caja(.22,.14,.3,'negro',7.9,1.48,9.4);
 cil(.012,1.6,'marco',8.4,.8,10.4);caja(.5,.5,.12,'luz',8.4,1.7,10.35);
-mueble('mid_century_lounge_chair',3.8,10,Math.PI/2,.85);mueble('potted_plant_04',3.5,7,0,4);caja(.05,.7,1.1,'oro',3.17,1.7,8.6);
+mueble('mid_century_lounge_chair',3.8,10,Math.PI/2,.85);mueble('potted_plant_04',3.5,7,0,4);
 // Café
 const MESAS=[[11,6.3],[11,9.5]];
 for(const [tx,tz] of MESAS){mueble('round_wooden_table_01',tx,tz,0,[.62,.76,.62]);mueble('dining_chair_02',tx-.8,tz,Math.PI/2,1);mueble('dining_chair_02',tx+.8,tz,-Math.PI/2,1);}
@@ -192,11 +192,11 @@ function letrero(txt,x,z,w=2.6,y=2.4){const c=document.createElement('canvas');c
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.BoxGeometry(w,w*112/640,.03),[M.negro,M.negro,M.negro,M.negro,new THREE.MeshStandardMaterial({map:t,roughness:.5}),M.negro]);m.position.set(x,y,z);W.add(m);}
 for(const a of AREAS)if(a.id!=='rec')letrero(a.n,(a.x0+a.x1)/2,a.s>0?-.86:1.14,Math.min(a.n.length>14?3.6:2.6,a.x1-a.x0-.6));
 letrero('Dirección Tinta Rosa',-12.9,-5.48,2.6);
-{const c=document.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');g.fillStyle='#EDE7DD';g.fillRect(0,0,1024,256);g.fillStyle='#1d1d1f';g.font='600 92px Inter,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('Oficina de los bots',512,120);g.fillStyle='#C8A46A';g.fillRect(352,200,320,6);
- const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.PlaneGeometry(4.6,1.15),new THREE.MeshStandardMaterial({map:t,roughness:.5}));m.position.set(0,1.8,3.53);W.add(m);}
+
 // ---------- rutas ----------
 const C=(x,z)=>new THREE.Vector3(x,0,z);
 function rutaSilla(p){const a=AR[p.a],dz=a.s>0?-2:2;return [C(a.d,0),C(a.d,dz),...(p.via||[]).map(([x,z])=>C(x,z)),C(p.ax,(p.via?p.via.at(-1)[1]:dz)),C(p.ax,p.sz)];}
+const OTROS=[[-13,.35],[-10,-.35],[-5.2,.35],[-1.4,-.35],[1.6,.35],[4.6,-.35],[7.6,.35],[13.2,-.35],[0,6.2],[0,8.2]].map(([x,z])=>({p:C(x,z),ry:z>0?Math.PI:0,sit:0,cup:1,via:[C(x,0)]}));const MAXCOC=3;
 const CAFE=[];MESAS.forEach(([tx,tz],i)=>{for(const s of [-1,1])CAFE.push({p:C(tx+s*.8,tz),ry:s<0?Math.PI/2:-Math.PI/2,sit:1,via:[C(9.8,0),C(9.8,2),C(9.8,7.9),C(tx+s*.8,7.9)]});});
 for(const z of [7.3,8.5])CAFE.push({p:C(13.1,z),ry:Math.PI/2,sit:0,cup:1,via:[C(9.8,0),C(9.8,2),C(9.8,4.5),C(13.1,4.5)]});
 // ---------- bots: robots GLB animados ----------
@@ -223,7 +223,7 @@ function ir(o,dest,fin){o.path=[...o.back].reverse().concat(dest);if(o.nuevo){o.
 function meta(o){const e=o.data.estado,s=o.seat;if(o.spot){ocupado.delete(o.spot);o.spot=null;}
  if(e==='trabajando')ir(o,rutaSilla(s).concat(C(s.x,s.sz)),{ry:0,sit:1});
  else if(e==='esperando')ir(o,rutaSilla(s).concat(C(s.ax,s.sz+.35)),{ry:null,sit:0});
- else{const libres=CAFE.filter(c=>!ocupado.has(c));const c=libres[Math.floor(Math.random()*libres.length)]||CAFE[0];ocupado.add(c);o.spot=c;ir(o,[...c.via,c.p],{ry:c.ry,sit:c.sit,cup:c.cup});}
+ else{const enC=CAFE.filter(c=>ocupado.has(c)).length;const pool=enC<MAXCOC?CAFE:OTROS;let libres=pool.filter(c=>!ocupado.has(c));if(!libres.length)libres=OTROS.filter(c=>!ocupado.has(c));const c=libres[Math.floor(Math.random()*libres.length)]||OTROS[0];ocupado.add(c);o.spot=c;ir(o,[...c.via,c.p],{ry:c.ry,sit:c.sit,cup:c.cup});}
  o.wait=10+Math.random()*12;}
 var DPIN=0;
 function burbuja(o){const b=o.data;o.el.className='pin '+EK(b);o.el.innerHTML=`${AV[b.id]?`<img src="${AV[b.id]}" alt="">`:`<i style="background:#${o.col.toString(16).padStart(6,'0')}">${ini(b.nombre)}</i>`}<span class="sd"></span>`;}
@@ -255,7 +255,7 @@ window.__repintar=()=>{bots.forEach(o=>burbuja(o));renderPaneles();};cargar();se
  l.addEventListener('click',e=>{const k=e.target.closest('[data-k]')?.dataset.k;if(k)abrirListaEstado(k);});}
 // ---------- lista de bots por estado (leyenda y centro de mando) ----------
 const LTIT={te:'🟠 Te esperan',trabajando:'💻 Trabajando',pausa:'☕ En pausa',esperando:'Disponibles'};
-window.__conteos=()=>{const c={te:0,trabajando:0,esperando:0,pausa:0};for(const o of bots.values())c[EK(o.data)]++;return c;};
+window.__vivo=id=>bots.get(id)?.data?.estado;window.__conteos=()=>{const c={te:0,trabajando:0,esperando:0,pausa:0};for(const o of bots.values())c[EK(o.data)]++;return c;};
 function abrirListaEstado(k){let d=$('lestado');if(!d){d=document.createElement('div');d.id='lestado';d.className='glass';document.body.appendChild(d);
   d.addEventListener('click',e=>{if(e.target.closest('.lcerrar')){d.hidden=true;return;}const f=e.target.closest('.f[data-id]');if(f)abrirFicha(f.dataset.id);});}
  if(k==='te'&&!document.body.classList.contains('mando')){d.innerHTML=`<div class="lt"><b>🔐 Te esperan</b><button class="lcerrar" aria-label="Cerrar">✕</button></div><p class="s">Esta lista solo se ve con el Centro de mando desbloqueado. Vuelve a cargar la página y escribe la frase de acceso.</p><button class="mprim" onclick="location.reload()">Desbloquear</button>`;d.hidden=false;return;}
@@ -284,7 +284,7 @@ window.__botPantalla=id=>{const v=new THREE.Vector3();bots.get(id).g.getWorldPos
 const DIR0=new THREE.Vector3(.42,.62,.66).normalize(),D0=()=>movil()?82:46;
 cam.position.copy(DIR0).multiplyScalar(D0());ctl.target.set(0,0,0);ctl.update();
 {const z=document.createElement('div');z.id='zonas';z.className='glass';
- const L=[['Recepción','rec'],['Ted','ted'],['Tinta Rosa','tr'],['Jurídico','jur'],['Finanzas','fin'],['Podcast','pod'],['Personal','per'],['Proyectos','pro'],['Café','com'],['Vista general','']];
+ const L=[['Ted','ted'],['Tinta Rosa','tr'],['Jurídico','jur'],['Finanzas','fin'],['Podcast','pod'],['Personal','per'],['Proyectos','pro'],['Café','com'],['Vista general','']];
  for(const [n,id] of L){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(!id){volar(new THREE.Vector3(0,0,0),D0(),DIR0.clone());return;}const a=AR[id];volar(new THREE.Vector3((a.x0+a.x1)/2,0,(a.z0+a.z1)/2),movil()?17:13,new THREE.Vector3(.25,.8,.55).normalize());};z.appendChild(b);}
  document.body.appendChild(z);}
 window.__volar2=(x,y,z,d,a,b2,c)=>volar(new THREE.Vector3(x,y,z),d,new THREE.Vector3(a,b2,c).normalize());
@@ -297,7 +297,8 @@ R.setAnimationLoop(()=>{const rdt=clk.getDelta(),dt=Math.min(rdt,.05),k=1-Math.e
  for(const o of bots.values()){o.t+=dt;o.mix.update(dt);const p=o.g.position;let want=o.ry;
   if(o.path.length){const nx=o.path[0];tmp.copy(nx).sub(p);tmp.y=0;const d=tmp.length();
    if(d<.05){p.x=nx.x;p.z=nx.z;o.path.shift();if(!o.path.length){const f=o.fin;o.ry=f.ry;if(f.sit){o.sit=1;anim(o,'Sitting',.5);}else anim(o,'Idle');o.cup.visible=!!f.cup;}}
-   else{p.addScaledVector(tmp.normalize(),Math.min(d,dt*1.25));want=Math.atan2(tmp.x,tmp.z);}}
+   else{p.addScaledVector(tmp.normalize(),Math.min(d,dt*1.25));want=Math.atan2(tmp.x,tmp.z);
+    for(const q of bots.values()){if(q===o)continue;const qp=q.g.position,dx=p.x-qp.x,dz=p.z-qp.z,dd=Math.hypot(dx,dz);if(dd>.01&&dd<.6&&(!q.path.length||dd<.45)){const f=(.6-dd)*Math.min(1,dt*6)/dd;p.x+=dx*f;p.z+=dz*f;}}}}
   else{if(o.fin&&o.fin.ry==null)want=Math.atan2(cam.position.x-p.x,cam.position.z-p.z);
    o.wait-=dt;if(o.wait<=0){o.wait=8+Math.random()*10;const e=o.data.estado;
     if(e==='pausa'&&Math.random()<.4)meta(o);else if(!o.sit)anim(o,o.cup.visible?'Yes':e==='esperando'?(Math.random()<.5?'Wave':'ThumbsUp'):'Yes',.25);}}

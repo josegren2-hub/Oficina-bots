@@ -10,7 +10,7 @@ TZ=datetime.timezone(datetime.timedelta(hours=-6))
 MAP={'e290':'ted','60f9':'tadeo','83ad':'mateo','276c':'julian','2927':'ines','fb47':'vale','d53b':'rulo','a873':'emiliano','4c6a':'luna','5b96':'libro','7257':'apps','7abd':'ceo','6cb7':'tr-editor','c945':'tr-cm','dd3a':'director','b3eb':'luca'}
 NOMBRE_REP={'ted':'Ted','tadeo':'Tadeo','mateo':'Mateo','julian':'Julián','ines':'Inés','vale':'Valery','rulo':'Rulo','emiliano':'Emiliano','luna':'Luna','libro':'Libro','apps':'Apps','ceo':'CEO Digital','tr-editor':'Editor Jefe','tr-cm':'Community Manager','director':'Director','luca':'Luca'}
 # v16.6: alias por nombre actual (nombre de pila) además del anterior
-NR=list(NR)+[('libro','Rodrigo'),('apps','Charly'),('ceo','Tommy'),('tr-editor','Naim'),('tr-cm','Dany'),('director','Joss'),('luca','Técnico Digital')]
+NR=list(NOMBRE_REP.items())+[('libro','Rodrigo'),('apps','Charly'),('ceo','Tommy'),('tr-editor','Naim'),('tr-cm','Dany'),('director','Joss'),('luca','Técnico Digital')]
 iso=lambda ms:datetime.datetime.fromtimestamp(ms/1000,TZ).isoformat(timespec='minutes')
 ahora=datetime.datetime.now(TZ)
 def corta(t,n):t=re.sub(r'\s+',' ',t).strip();return t if len(t)<=n else t[:n-1]+'…'
@@ -69,6 +69,22 @@ for pre,bid in MAP.items():
     k=iso(t)[:10];dia.setdefault(k,[0,0]);dia[k][0 if r=='user' else 1]+=1
   tot=db.execute("select count(*),sum(role='user'),min(timestamp_ms),max(timestamp_ms) from messages where agent_id like ?",(pre+'%',)).fetchone()
   b['stats']={'por_dia':dia,'mensajes':tot[0],'peticiones':tot[1] or 0,'desde':iso(tot[2]) if tot[2] else None,'ultima_actividad':iso(tot[3]) if tot[3] else None}
+# 3b) v16.9: regla del vivo (solo horas y rol, nunca body): espera solo si el último mensaje del chat principal es del bot sin respuesta de Rob
+mrep=max([os.path.getmtime(f) for f in (sup[-1:]+rep[-1:])] or [0])*1000
+for pre,bid in MAP.items():
+  b=bots[bid];u=db.execute("select role,timestamp_ms from messages where agent_id like ? and in_main_chat=1 order by timestamp_ms desc limit 1",(pre+'%',)).fetchone()
+  rob=db.execute("select max(timestamp_ms) from messages where agent_id like ? and role='user' and in_main_chat=1",(pre+'%',)).fetchone()[0] or 0
+  esperando=bool(u and u[0]=='assistant') and b.get('estado')=='esperando'
+  b['esperando_vivo']=esperando
+  if esperando:b['esperando_desde']=iso(u[1])
+  else:
+    b.pop('esperando_desde',None)
+    if b.get('ok') or b.get('pendiente'):b['resuelto']=True
+    b['ok']=[]
+    if rob>mrep:  # Rob ya contestó después del reporte: pendientes viejos fuera
+      if b.get('pendientes'):b['pendientes_descartados']=len(b['pendientes'])
+      b['pendientes']=[];b['pendiente']='';b['tarea']=''
+fuentes['regla']='Esperando = estado en vivo + último mensaje del chat principal es del bot sin respuesta de Rob (v16.9)'
 # 4) bitácora de rutinas de Ted
 try:
   r=list(csv.DictReader(open(f'{SUP}/registro-rutinas.csv')));fuentes['rutinas']='supervisor/registro-rutinas.csv'

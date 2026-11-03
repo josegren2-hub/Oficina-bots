@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""v16.8 · Oficina casi en vivo: estado por actividad reciente (solo marcas de tiempo). Sin IA, stdlib."""
+"""v16.9 · Oficina casi en vivo: estado por actividad reciente (solo marcas de tiempo). Sin IA, stdlib."""
 import json,os,sqlite3,time,hashlib,fcntl,subprocess,datetime,sys
 B='/workspace/oficina-bots';F=f'{B}/public/estado.json';ML=f'{B}/mando-local'
 BASE=f'{ML}/estado-base.json';ULT=f'{ML}/estado-vivo.ultimo';LOG=f'{ML}/estado-vivo.log';LOCK=f'{ML}/estado.lock'
@@ -20,9 +20,9 @@ def corrida():
   # v16.8: solo horas y rol (nunca body). Rob = role 'user' en el chat principal (in_main_chat=1).
   rob={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='user' and in_main_chat=1 group by agent_id") if a[:8] in MAP}
   bot={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='assistant' group by agent_id") if a[:8] in MAP}
-  ulr={}
+  ulr={};ultt={}
   for a,r,t in db.execute("select m.agent_id,m.role,m.timestamp_ms from messages m join (select agent_id,max(timestamp_ms) t from messages where in_main_chat=1 group by agent_id) x on m.agent_id=x.agent_id and m.timestamp_ms=x.t where m.in_main_chat=1"):
-    if a[:8] in MAP:ulr[MAP[a[:8]]]=r
+    if a[:8] in MAP:ulr[MAP[a[:8]]]=r;ultt[MAP[a[:8]]]=t
   db.close()
   with open(LOCK,'w') as lk:
     fcntl.flock(lk,fcntl.LOCK_EX)
@@ -37,7 +37,7 @@ def corrida():
     for k,v in NUEVOS.items():
       if k not in ids:bots.append(dict(v))
     for b in bots:
-      bb=base.get(b['id'],{})
+      bb=base.get(b['id'],{});b.pop('esperando_desde',None)
       if bb.get('estado')=='esperando':
         tm=tgen
         for k in ('esperando_desde','desde','marcado'):
@@ -45,13 +45,13 @@ def corrida():
           except Exception:pass
         resuelto=rob.get(b['id'],0)>tm or bot.get(b['id'],0)>tm
         if not resuelto and ulr.get(b['id'])=='assistant':
-          b['estado']='esperando';b['frase']=bb.get('frase') or 'Esperando OK';continue
+          b['estado']='esperando';b['frase']=bb.get('frase') or 'Esperando OK';b['esperando_desde']=datetime.datetime.fromtimestamp(ultt[b['id']]/1000,TZ).isoformat(timespec='minutes');continue
       viva=ahora-act.get(b['id'],0)<VENT
       fb=base.get(b['id'],{}).get('frase')
       b['estado']='trabajando' if viva else 'pausa'
       b['frase']=(fb if generica(fb) else 'Trabajando') if viva else 'Descansando'
     nuevo=dict(cur);nuevo['bots']=bots
-    if [ (b['id'],b['estado'],b['frase']) for b in bots]==[(b['id'],b['estado'],b.get('frase')) for b in cur['bots']]:
+    if [ (b['id'],b['estado'],b['frase'],b.get('esperando_desde')) for b in bots]==[(b['id'],b['estado'],b.get('frase'),b.get('esperando_desde')) for b in cur['bots']]:
       log(f"sin cambios ({sum(b['estado']=='trabajando' for b in bots)} trabajando)");return
     nuevo['actualizado']=datetime.datetime.now(TZ).isoformat(timespec='seconds')
     out=json.dumps(nuevo,ensure_ascii=False,indent=1).encode()
