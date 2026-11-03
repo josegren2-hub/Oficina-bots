@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Oficina casi en vivo: estado por actividad reciente (solo marcas de tiempo). Sin IA, stdlib."""
+"""v16.8 · Oficina casi en vivo: estado por actividad reciente (solo marcas de tiempo). Sin IA, stdlib."""
 import json,os,sqlite3,time,hashlib,fcntl,subprocess,datetime,sys
 B='/workspace/oficina-bots';F=f'{B}/public/estado.json';ML=f'{B}/mando-local'
 BASE=f'{ML}/estado-base.json';ULT=f'{ML}/estado-vivo.ultimo';LOG=f'{ML}/estado-vivo.log';LOCK=f'{ML}/estado.lock'
@@ -17,18 +17,35 @@ def corrida():
   ahora=int(time.time()*1000)
   db=sqlite3.connect(DB,uri=True)
   act={MAP[a[:8]]:t for a,t in db.execute('select agent_id,max(timestamp_ms) from messages group by agent_id') if a[:8] in MAP}
+  # v16.8: solo horas y rol (nunca body). Rob = role 'user' en el chat principal (in_main_chat=1).
+  rob={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='user' and in_main_chat=1 group by agent_id") if a[:8] in MAP}
+  bot={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='assistant' group by agent_id") if a[:8] in MAP}
+  ulr={}
+  for a,r,t in db.execute("select m.agent_id,m.role,m.timestamp_ms from messages m join (select agent_id,max(timestamp_ms) t from messages where in_main_chat=1 group by agent_id) x on m.agent_id=x.agent_id and m.timestamp_ms=x.t where m.in_main_chat=1"):
+    if a[:8] in MAP:ulr[MAP[a[:8]]]=r
   db.close()
   with open(LOCK,'w') as lk:
     fcntl.flock(lk,fcntl.LOCK_EX)
     raw=open(F,'rb').read();cur=json.loads(raw)
     ult=open(ULT).read().strip() if os.path.exists(ULT) else ''
     if h(raw)!=ult or not os.path.exists(BASE):open(BASE,'wb').write(raw);log('base nueva (escribió otra rutina)')
-    base={b['id']:b for b in json.load(open(BASE))['bots']}
+    bj=json.load(open(BASE));base={b['id']:b for b in bj['bots']}
+    try:tgen=int(datetime.datetime.fromisoformat(bj.get('actualizado')).timestamp()*1000)
+    except Exception:tgen=int(os.path.getmtime(BASE)*1000)
     bots=[dict(b) for b in cur['bots']]
     ids={b['id'] for b in bots}
     for k,v in NUEVOS.items():
       if k not in ids:bots.append(dict(v))
     for b in bots:
+      bb=base.get(b['id'],{})
+      if bb.get('estado')=='esperando':
+        tm=tgen
+        for k in ('esperando_desde','desde','marcado'):
+          try:tm=int(datetime.datetime.fromisoformat(bb[k]).timestamp()*1000);break
+          except Exception:pass
+        resuelto=rob.get(b['id'],0)>tm or bot.get(b['id'],0)>tm
+        if not resuelto and ulr.get(b['id'])=='assistant':
+          b['estado']='esperando';b['frase']=bb.get('frase') or 'Esperando OK';continue
       viva=ahora-act.get(b['id'],0)<VENT
       fb=base.get(b['id'],{}).get('frase')
       b['estado']='trabajando' if viva else 'pausa'
