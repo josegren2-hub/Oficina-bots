@@ -88,11 +88,11 @@ for(let k=0;k<22;k++)caja(1,.6,.05,'negro',-14.2+k*1.35,-1.05,11.62);for(let k=0
 for(const a of AREAS)piso(a.x0,a.z0,a.x1,a.z1,a.m,a.m==='marmol'?3:a.m==='mosaico'?1.5:2);
 piso(-15,-1,15,1,'concreto',3);piso(-.8,1,.8,11,'concreto',3);piso(-15,-11,-10.8,-5.6,'nogal',2,.016);piso(-4,-6.2,4,-2.2,'alfAzul',2,.016);
 muro(-15,-11,15,-11,'ext');muro(-15,-11,-15,11,'ext');muro(15,-11,15,11,'bajo');muro(-15,11,15,11,'bajo',[0]);
-// v16.9: planta abierta (mismo tamaño): mamparas bajas con pasos amplios, sin muros cerrados
-muro(-15,-1,15,-1,'mampara',[-12.6,-7,-3,0,3,6,8.4,11.2,13.4]);
-muro(-5,-11,-5,-3.4,'mampara');muro(5,-11,5,-3.4,'mampara');muro(10,-11,10,-4.2,'mampara');
+// v16.10: planta abierta sin divisiones interiores; áreas por piso y tapetes grandes
 muro(-10.8,-11,-10.8,-5.6,'cristal');muro(-15,-5.6,-10.8,-5.6,'cristal',[-12.6]);
-muro(-11,3.2,-11,9,'mampara');muro(-.8,3.6,-.8,9.4,'mampara');muro(.8,3.6,.8,9.4,'mampara');muro(9,4.6,9,11,'mampara');
+{const TAP={tr:0x7a3348,ted:0x2f3e5c,jur:0x5c4a32,fin:0x2f5c55,pod:0x3a3a44,per:0x6b5a3e,pro:0x3f4d5e};
+ for(const a of AREAS){if(!TAP[a.id])continue;const m=new THREE.MeshStandardMaterial({color:TAP[a.id],roughness:1});const x0=a.id==='tr'?-10.4:a.x0+.6;
+  const r=new THREE.Mesh(new THREE.BoxGeometry(a.x1-.6-x0,.012,a.z1-a.z0-1.2),m);r.position.set((x0+a.x1-.6)/2,.026,(a.z0+a.z1)/2);r.receiveShadow=true;W.add(r);}}
 // ---------- muebles GLB ----------
 const GL=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),MOD={},pend=[];
 const NOMS=['metal_office_desk','dining_chair_02','sofa_02','modern_coffee_table_01','potted_plant_04','wooden_bookshelf_worn','round_wooden_table_01','drawer_cabinet','dining_table','mid_century_lounge_chair','robot'];
@@ -188,9 +188,9 @@ for(const x of [-9,-5])for(const z of [4.6,8.4])lamparaLineal(x,z,1.8);for(const
 flush();
 const LP=[];for(const [x,z,c,i] of [[-10,-6],[0,-6],[7.5,-6],[12.5,-6],[-13,6,'#ffc2a8',5],[-7,6],[0,7],[6,6],[12,7]]){const l=new THREE.PointLight(c||'#ffd9a8',(i||6)*1.3,10,1.5);l.position.set(x,2.6,z);S.add(l);LP.push(l);}
 // letreros
-function letrero(txt,x,z,w=2.6,y=2.4){const c=document.createElement('canvas');c.width=640;c.height=112;const g=c.getContext('2d');g.fillStyle='#1d1d1f';g.fillRect(0,0,640,112);g.fillStyle='#C8A46A';g.fillRect(0,104,640,8);g.fillStyle='#f4efe6';g.font='600 46px Inter,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,320,54);
- const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.BoxGeometry(w,w*112/640,.03),[M.negro,M.negro,M.negro,M.negro,new THREE.MeshStandardMaterial({map:t,roughness:.5}),M.negro]);m.position.set(x,y,z);W.add(m);}
-for(const a of AREAS)if(a.id!=='rec')letrero(a.n,(a.x0+a.x1)/2,a.s>0?-.86:1.14,Math.min(a.n.length>14?3.6:2.6,a.x1-a.x0-.6));
+function letrero(txt,x,z,w=2.6,y=2.4,piso=0){const c=document.createElement('canvas');c.width=640;c.height=112;const g=c.getContext('2d');g.fillStyle='#1d1d1f';g.fillRect(0,0,640,112);g.fillStyle='#C8A46A';g.fillRect(0,104,640,8);g.fillStyle='#f4efe6';g.font='600 46px Inter,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,320,54);
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.BoxGeometry(w,w*112/640,.03),[M.negro,M.negro,M.negro,M.negro,new THREE.MeshStandardMaterial({map:t,roughness:.5}),M.negro]);m.position.set(x,y,z);if(piso)m.rotation.x=-Math.PI/2;W.add(m);}
+for(const a of AREAS)if(a.id!=='rec')letrero(a.n,(a.x0+a.x1)/2,a.s>0?a.z1-.32:a.z0+.32,Math.min(a.n.length>14?3.6:2.6,a.x1-a.x0-.6),.04,1);
 letrero('Dirección Tinta Rosa',-12.9,-5.48,2.6);
 
 // ---------- rutas ----------

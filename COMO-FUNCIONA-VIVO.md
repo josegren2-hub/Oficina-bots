@@ -16,3 +16,6 @@ Para cada bot que la base (rutina de Ted) marcó `esperando`, se toma la hora de
 - `estado-vivo.py` escribe `esperando_desde` (hora del último mensaje del bot en el chat principal) por cada bot en espera.
 - `recolectar-mando.py`: aplica la misma regla (solo horas/rol, nunca body). Si el bot no está esperando, vacía `ok` y marca `resuelto`; si Rob escribió después del reporte del supervisor, descarta pendientes viejos (`pendientes_descartados`). Se corrigió `NR` no definido (el script fallaba).
 - Planta abierta (mismo tamaño): mamparas bajas (1.1 m) con pasos amplios en lugar de muros; sin recepción (pasillo abierto entre Personal y Proyectos). Personajes: máx. 3 en el café, el resto va a puntos libres del pasillo; evasión de 0.6 m al caminar.
+
+## v16.10
+- Se quitaron todas las mamparas/divisiones interiores; solo quedan paredes exteriores y el despacho de cristal de Mateo. Áreas por color de piso, tapetes grandes por área y letreros en el piso.
