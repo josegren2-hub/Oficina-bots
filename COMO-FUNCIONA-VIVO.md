@@ -26,3 +26,12 @@ Para cada bot que la base (rutina de Ted) marcó `esperando`, se toma la hora de
 - Separación lateral solo entre bots que caminan; no se aplica cerca del punto de paso, así que nadie se traba.
 - dt limitado a 0.2 en lugar de 0.05 para que caminen aunque el FPS sea bajo.
 - Aviso "Hay versión nueva · Actualizar" y botón ↻ Actualizar. sw.js usa la caché oficina-v16-11 con navegación en modo network-first / no-store.
+
+## v16.12 (3 nov 2026)
+- Personajes caminan de verdad: cada bot tiene su escritorio (PUESTOS). trabajando → camina a SU silla y se sienta; esperando → de pie junto a su escritorio; pausa → cada 6–15 s elige otro lugar: café (máx. 3, 60 % de probabilidad si hay cupo), puntos del pasillo, sala de recepción o sillones (café y Proyectos). 45 % de las veces pasea por el pasillo antes de llegar. Nunca repite el mismo lugar seguido; los lugares se reservan (no se empalman).
+- Rutas solo por puertas/pasillo (vía corredor z≈0 y waypoints por área), sin atravesar muros ni muebles.
+- El avance al caminar usa dt real (hasta 1 s) para que se muevan aunque el FPS sea bajo; la animación Walking se ve al desplazarse.
+- Prueba: `medir.mjs` (posiciones a t=0/10/20 s) y `captura-v1612.mjs` (capturas en capturas/v16-12/).
+- SW: caché oficina-v16-12.
+- estado-vivo.py: `esperando_desde` se guarda con milisegundos; el "esperando" se da por resuelto SOLO si hay mensaje de Rob (role user, in_main_chat=1) posterior al último mensaje del bot en el chat principal (antes se comparaba contra una hora truncada a minutos y el propio mensaje del bot lo resolvía). El log anota la marca más reciente del índice.
+- Índice (search-index.db): no está congelado; se sincroniza de forma perezosa por agente (server_cursors). El 3 nov solo tenía mensajes nuevos de Ted, Mateo, Inés y Emiliano (último 14:38). No hay otra fuente fresca de metadatos: los store.db por agente (agents/*/store.db, tabla transcript_entries) tienen 2–3 entradas y mtime 09:14; /cursor/stores solo tiene canvases; /home/box/sand-data es el mismo directorio. Se sigue usando search-index.db.

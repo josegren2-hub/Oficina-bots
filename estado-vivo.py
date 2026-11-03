@@ -19,7 +19,9 @@ def corrida():
   act={MAP[a[:8]]:t for a,t in db.execute('select agent_id,max(timestamp_ms) from messages group by agent_id') if a[:8] in MAP}
   # v16.8: solo horas y rol (nunca body). Rob = role 'user' en el chat principal (in_main_chat=1).
   rob={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='user' and in_main_chat=1 group by agent_id") if a[:8] in MAP}
-  bot={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='assistant' group by agent_id") if a[:8] in MAP}
+  # v16.12: último mensaje del bot EN EL CHAT PRINCIPAL (ms exactos)
+  bot={MAP[a[:8]]:t for a,t in db.execute("select agent_id,max(timestamp_ms) from messages where role='assistant' and in_main_chat=1 group by agent_id") if a[:8] in MAP}
+  maxidx=db.execute('select max(timestamp_ms) from messages').fetchone()[0] or 0
   ulr={};ultt={}
   for a,r,t in db.execute("select m.agent_id,m.role,m.timestamp_ms from messages m join (select agent_id,max(timestamp_ms) t from messages where in_main_chat=1 group by agent_id) x on m.agent_id=x.agent_id and m.timestamp_ms=x.t where m.in_main_chat=1"):
     if a[:8] in MAP:ulr[MAP[a[:8]]]=r;ultt[MAP[a[:8]]]=t
@@ -43,16 +45,19 @@ def corrida():
         for k in ('esperando_desde','desde','marcado'):
           try:tm=int(datetime.datetime.fromisoformat(bb[k]).timestamp()*1000);break
           except Exception:pass
-        resuelto=rob.get(b['id'],0)>tm or bot.get(b['id'],0)>tm
+        # v16.12: resuelto SOLO si Rob escribió (chat principal) después del último mensaje del bot.
+        # Antes: esperando_desde se guardaba truncado a minutos y el propio mensaje del bot (segundos después) lo "resolvía".
+        ref=max(tm,bot.get(b['id'],0))
+        resuelto=rob.get(b['id'],0)>ref
         if not resuelto and ulr.get(b['id'])=='assistant':
-          b['estado']='esperando';b['frase']=bb.get('frase') or 'Esperando OK';b['esperando_desde']=datetime.datetime.fromtimestamp(ultt[b['id']]/1000,TZ).isoformat(timespec='minutes');continue
+          b['estado']='esperando';b['frase']=bb.get('frase') or 'Esperando OK';b['esperando_desde']=datetime.datetime.fromtimestamp(ultt[b['id']]/1000,TZ).isoformat(timespec='milliseconds');continue
       viva=ahora-act.get(b['id'],0)<VENT
       fb=base.get(b['id'],{}).get('frase')
       b['estado']='trabajando' if viva else 'pausa'
       b['frase']=(fb if generica(fb) else 'Trabajando') if viva else 'Descansando'
     nuevo=dict(cur);nuevo['bots']=bots
     if [ (b['id'],b['estado'],b['frase'],b.get('esperando_desde')) for b in bots]==[(b['id'],b['estado'],b.get('frase'),b.get('esperando_desde')) for b in cur['bots']]:
-      log(f"sin cambios ({sum(b['estado']=='trabajando' for b in bots)} trabajando)");return
+      log(f"sin cambios ({sum(b['estado']=='trabajando' for b in bots)} trabajando · índice al {datetime.datetime.fromtimestamp(maxidx/1000,TZ).strftime('%d %H:%M')})");return
     nuevo['actualizado']=datetime.datetime.now(TZ).isoformat(timespec='seconds')
     out=json.dumps(nuevo,ensure_ascii=False,indent=1).encode()
     open(F+'.tmp','wb').write(out);os.replace(F+'.tmp',F);open(ULT,'w').write(h(out))

@@ -199,6 +199,8 @@ const C=(x,z)=>new THREE.Vector3(x,0,z);
 function rutaSilla(p){const a=AR[p.a],dz=a.s>0?-2:2;return [C(a.d,0),C(a.d,dz),...(p.via||[]).map(([x,z])=>C(x,z)),C(p.ax,(p.via?p.via.at(-1)[1]:dz)),C(p.ax,p.sz)];}
 const OTROS=[[-13,.35],[-10,-.35],[-5.2,.35],[-1.4,-.35],[1.6,.35],[4.6,-.35],[7.6,.35],[13.2,-.35],[-7.8,-.35],[10.6,.35],[-3.2,.35]].map(([x,z])=>({p:C(x,z),ry:z>0?Math.PI:0,sit:0,cup:1,via:[C(x,0)]}));for(const x of [-1.6,1.6])OTROS.push({p:C(x,8.7),ry:Math.PI,sit:0,cup:1,via:[C(0,0),C(0,2),C(2.75*Math.sign(x),2),C(2.75*Math.sign(x),8.2)]});const MAXCOC=3;
 const CAFE=[];MESAS.forEach(([tx,tz],i)=>{for(const s of [-1,1])CAFE.push({p:C(tx+s*.8,tz),ry:s<0?Math.PI/2:-Math.PI/2,sit:1,via:[C(9.8,0),C(9.8,2),C(9.8,7.9),C(tx+s*.8,7.9)]});});
+// v16.12: sillones/bancas para descansar (fuera del café)
+OTROS.push({p:C(13.6,2.6),ry:-Math.PI/2,sit:1,via:[C(9.8,0),C(9.8,2),C(12.6,2.3)]},{p:C(3.9,10),ry:Math.PI/2,sit:1,via:[C(6,0),C(6,2),C(6,6.2),C(4,6.2),C(4,9.4)]});
 for(const z of [7.3,8.5])CAFE.push({p:C(13.1,z),ry:Math.PI/2,sit:0,cup:1,via:[C(9.8,0),C(9.8,2),C(9.8,4.5),C(13.1,4.5)]});
 // ---------- bots: robots GLB animados ----------
 const bots=new Map(),hits=[],AV={},capa=$('capa');
@@ -220,12 +222,15 @@ function makeBot(b,i){const g=new THREE.Group(),PC=PERS_ON&&PERSONITAS[b.id],pm=
  const o={sy:pm?0:null,g,m,mix,A,cur:null,cup,hand,el,seat:p,path:[],t:Math.random()*9,data:b,col:c,spot:null,back:rutaSilla(p).concat(C(p.x,p.sz)),ry:0,sit:0,wait:0,nuevo:1};
  mix.addEventListener('finished',()=>anim(o,o.base));return o;}
 function anim(o,n,d=.35){if(['Idle','Walking','Sitting'].includes(n))o.base=n;const a=o.A[n];if(o.cur===a)return;a.reset().setEffectiveWeight(1).fadeIn(d).play();if(o.cur)o.cur.fadeOut(d);o.cur=a;}
-function ir(o,dest,fin){o.path=[...o.back].reverse().concat(dest);if(o.nuevo){o.nuevo=0;const d=dest.at(-1);o.g.position.set(d.x,0,d.z);o.path=[d];}o.back=dest;o.fin=fin;o.sit=0;anim(o,'Walking');o.cup.visible=false;}
-function meta(o){const e=o.data.estado,s=o.seat;if(o.spot){ocupado.delete(o.spot);o.spot=null;}
+function ir(o,dest,fin,back){o.path=[...o.back].reverse().concat(dest);if(o.nuevo){o.nuevo=0;const d=dest.at(-1);o.g.position.set(d.x,0,d.z);o.path=[d];}o.back=back||dest;o.fin=fin;o.sit=0;anim(o,'Walking');o.cup.visible=false;}
+function meta(o){const e=o.data.estado,s=o.seat;if(o.spot){ocupado.delete(o.spot);o.spot=null;}const _nv=o.nuevo;
  if(e==='trabajando')ir(o,rutaSilla(s).concat(C(s.x,s.sz)),{ry:0,sit:1});
  else if(e==='esperando')ir(o,rutaSilla(s).concat(C(s.ax,s.sz+.35)),{ry:null,sit:0});
- else{const enC=CAFE.filter(c=>ocupado.has(c)).length;const pool=enC<MAXCOC?CAFE:OTROS;let libres=pool.filter(c=>!ocupado.has(c));if(!libres.length)libres=OTROS.filter(c=>!ocupado.has(c));const c=libres[Math.floor(Math.random()*libres.length)]||OTROS[0];ocupado.add(c);o.spot=c;ir(o,[...c.via,c.p],{ry:c.ry,sit:c.sit,cup:c.cup});}
- o.wait=10+Math.random()*12;}
+ else{const prev=o.prevSpot,enC=CAFE.filter(c=>ocupado.has(c)).length;const pool=(enC<MAXCOC&&Math.random()<.6)?CAFE:OTROS;let libres=pool.filter(c=>!ocupado.has(c)&&c!==prev);if(!libres.length)libres=OTROS.filter(c=>!ocupado.has(c)&&c!==prev);const c=libres[Math.floor(Math.random()*libres.length)]||OTROS[0];ocupado.add(c);o.spot=c;o.prevSpot=c;
+  // paseo: a veces recorre el pasillo antes de llegar a su lugar
+  const pas=!o.nuevo&&Math.random()<.45?[C(-13+Math.random()*26,(Math.random()-.5)*.6),C(-13+Math.random()*26,(Math.random()-.5)*.6)]:[];
+  ir(o,[...pas,...c.via,c.p],{ry:c.ry,sit:c.sit,cup:c.cup},[...c.via,c.p]);}
+ if(_nv&&e==='pausa')o.wait=1+Math.random()*5;else o.wait=e==='pausa'?6+Math.random()*9:10+Math.random()*12;}
 var DPIN=0;
 function burbuja(o){const b=o.data;o.el.className='pin '+EK(b);o.el.innerHTML=`${AV[b.id]?`<img src="${AV[b.id]}" alt="">`:`<i style="background:#${o.col.toString(16).padStart(6,'0')}">${ini(b.nombre)}</i>`}<span class="sd"></span>`;}
 const listo=cargaModelos.then(()=>{colocar();calibrar();});
@@ -292,17 +297,17 @@ window.__volar2=(x,y,z,d,a,b2,c)=>volar(new THREE.Vector3(x,y,z),d,new THREE.Vec
 window.__volar=(x,z,d)=>volar(new THREE.Vector3(x,0,z),d,new THREE.Vector3(.3,.75,.6).normalize());
 // ---------- animación ----------
 const clk=new THREE.Clock(),tmp=new THREE.Vector3(),ang=a=>((a+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
-R.setAnimationLoop(()=>{const rdt=clk.getDelta(),dt=Math.min(rdt,.2),k=1-Math.exp(-dt*8);
+R.setAnimationLoop(()=>{const rdt=clk.getDelta(),dt=Math.min(rdt,.2),mdt=Math.min(rdt,1),k=1-Math.exp(-dt*8);
  if(fly){fly.t=Math.min(fly.t+Math.min(rdt,.25)/fly.dur,1);const e=ease(fly.t);ctl.target.lerpVectors(fly.t0,fly.t1,e);cam.position.lerpVectors(fly.p0,fly.p1,e);if(fly.t>=1)fly=null;}
  ctl.update();const vis=[];
  for(const o of bots.values()){o.t+=dt;o.mix.update(dt);const p=o.g.position;let want=o.ry;
   if(o.path.length){const nx=o.path[0];tmp.copy(nx).sub(p);tmp.y=0;const d=tmp.length();
    if(d<.05){p.x=nx.x;p.z=nx.z;o.path.shift();if(!o.path.length){const f=o.fin;o.ry=f.ry;if(f.sit){o.sit=1;anim(o,'Sitting',.5);}else anim(o,'Idle');o.cup.visible=!!f.cup;}}
-   else{tmp.normalize();p.addScaledVector(tmp,Math.min(d,dt*1.25));want=Math.atan2(tmp.x,tmp.z);
+   else{tmp.normalize();p.addScaledVector(tmp,Math.min(d,mdt*1.25));want=Math.atan2(tmp.x,tmp.z);
     if(d>.6)for(const q of bots.values()){if(q===o||!q.path.length)continue;const qp=q.g.position,dx=p.x-qp.x,dz=p.z-qp.z,dd=Math.hypot(dx,dz);if(dd>.01&&dd<.5){const side=(dx*-tmp.z+dz*tmp.x)>=0?1:-1;const f=(.5-dd)*Math.min(1,dt*3);p.x+=-tmp.z*side*f;p.z+=tmp.x*side*f;}}}}
   else{if(o.fin&&o.fin.ry==null)want=Math.atan2(cam.position.x-p.x,cam.position.z-p.z);
-   o.wait-=dt;if(o.wait<=0){o.wait=8+Math.random()*10;const e=o.data.estado;
-    if(e==='pausa'&&Math.random()<.6)meta(o);else if(!o.sit)anim(o,o.cup.visible?'Yes':e==='esperando'?(Math.random()<.5?'Wave':'ThumbsUp'):'Yes',.25);}}
+   o.wait-=mdt;if(o.wait<=0){o.wait=8+Math.random()*10;const e=o.data.estado;
+    if(e==='pausa')meta(o);else if(!o.sit)anim(o,o.cup.visible?'Yes':e==='esperando'?(Math.random()<.5?'Wave':'ThumbsUp'):'Yes',.25);}}
   if(want!=null)o.g.rotation.y+=ang(want-o.g.rotation.y)*k;
   p.y+=((o.sit?(o.sy??SIT_Y):0)-p.y)*k;
   o.g.getWorldPosition(tmp);const dist=tmp.distanceTo(cam.position);tmp.y+=o.sit?1.3:1.62;const q=pr(tmp),sz=Math.max(32,Math.min(movil()?44:52,(movil()?40:48)*Math.pow(D0()/cam.position.distanceTo(ctl.target),.6)));vis.push({o,q,sz});}
