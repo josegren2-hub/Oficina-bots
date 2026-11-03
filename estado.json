@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-03T14:16:15-06:00",
+ "actualizado": "2026-11-03T14:46:27-06:00",
  "bots": [
   {
    "id": "ted",
@@ -49,7 +49,7 @@
    "area": "Podcast",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-02T11:03:08.777-06:00"
+   "esperando_desde": "2026-11-02T11:03-06:00"
   },
   {
    "id": "emiliano",
@@ -78,7 +78,7 @@
    "area": "Desarrollo móvil",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-02T17:58:42.709-06:00"
+   "esperando_desde": "2026-11-02T17:58-06:00"
   },
   {
    "id": "ceo",
@@ -107,7 +107,7 @@
    "area": "Coordinación",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-02T18:35:45.977-06:00"
+   "esperando_desde": "2026-11-02T18:35-06:00"
   },
   {
    "id": "luca",
