@@ -212,7 +212,7 @@ function makeBot(b,i){const g=new THREE.Group(),PC=PERS_ON&&PERSONITAS[b.id],pm=
  for(const n of ['Wave','Yes','ThumbsUp']){A[n].setLoop(THREE.LoopOnce);A[n].clampWhenFinished=true;}
  const cup=new THREE.Group();const cm=new THREE.Mesh(new THREE.CylinderGeometry(.04,.034,.1,14),M.taza);cm.castShadow=true;cup.add(cm);const lid=new THREE.Mesh(new THREE.CylinderGeometry(.042,.042,.012,14),M.oro);lid.position.y=.055;cup.add(lid);
  const hand=(m.getObjectByName('Palm2R')||m.getObjectByName('LowerArmR'));hand.add(cup);cup.visible=false;m.updateMatrixWorld(true);{const ws=new THREE.Vector3();hand.getWorldScale(ws);cup.scale.setScalar(1/ws.x);}
- const img=new Image();img.onload=()=>{AV[b.id]=img.src;renderPaneles();const o=bots.get(b.id);if(o)burbuja(o);};img.src=`./avatares/${b.id}.png`;
+ const img=new Image();img.onload=()=>{AV[b.id]=img.src;renderPaneles();const o=bots.get(b.id);if(o)burbuja(o);};img.src=`./avatares/${b.id}.webp`;
  const hit=new THREE.Mesh(new THREE.BoxGeometry(.8,1.5,.8),new THREE.MeshBasicMaterial({visible:false}));hit.position.y=.75;hit.userData.id=b.id;g.add(hit);hits.push(hit);
  const el=document.createElement('div');el.className='pin';el.dataset.id=b.id;el.addEventListener('pointerdown',e=>e.stopPropagation());el.addEventListener('click',e=>{e.stopPropagation();abrirFicha(b.id);});capa.appendChild(el);
  let p=PUESTOS[b.id];if(!p){p=EXTRA.find(e=>!e.uso)||EXTRA[0];p.uso=1;PUESTOS[b.id]=p;}g.position.set(p.x,0,p.sz);g.rotation.y=0;W.add(g);
@@ -245,7 +245,8 @@ for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f')
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
 function abrirFicha(id){const b=bots.get(id).data;const _h=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[EK(b)]};font-weight:700;margin:6px 0">${TE(b.id)?'🟠':EMO[b.estado]} ${TXT[EK(b)]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;const _m=fichaMando(id,_h.replace(/<div class="s" style="margin-top:8px">Toca fuera para cerrar<\/div>/,''));$('ficha').innerHTML=(_m||_h)+'<button class="cerrar" aria-label="Cerrar">✕</button>';$('ficha').style.display='block';$('ficha').scrollTop=0;}
 // ---------- datos ----------
-async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
+const NOMB={libro:'Rodrigo · Libro',apps:'Charly · Apps','tr-cm':'Dany · TR Community Manager',director:'Joss · Director de video'};
+async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();(j.bots||[]).forEach(b=>{if(NOMB[b.id])b.nombre=NOMB[b.id];});window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
  j.bots.forEach((b,i)=>{if(!TXT[b.estado])b.estado='esperando';let o=bots.get(b.id);
   if(!o){o=makeBot(b,i);bots.set(b.id,o);meta(o);burbuja(o);}else if(o.data.estado!==b.estado||o.data.frase!==b.frase){if(o.data.estado!==b.estado){log(`${b.nombre}: ${TXT[o.data.estado]} → ${TXT[b.estado]} · ${b.frase}`);o.data=b;meta(o);}o.data=b;burbuja(o);}else o.data=b;});
  hist.push([...bots.values()].filter(o=>o.data.estado==='trabajando').length);if(hist.length<2)hist.unshift(hist[0]);if(hist.length>30)hist.shift();
