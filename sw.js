@@ -1,5 +1,5 @@
 // SW mínimo: red primero para todo; estado.json y mando.enc NUNCA se guardan en caché.
-const C='oficina-v16-9';
+const C='oficina-v16-10';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;
