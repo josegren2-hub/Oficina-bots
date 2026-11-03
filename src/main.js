@@ -110,7 +110,7 @@ const PUESTOS={mateo:{x:-13,z:-8.5,w:1.8,a:'tr',j:1,via:[[-12.6,-2],[-12.6,-6.3]
  ted:{x:0,z:-7.6,w:2.4,a:'ted',j:1},julian:{x:7.2,z:-7.4,w:1.8,a:'jur',j:1},ines:{x:12.3,z:-7.4,w:1.8,a:'fin',j:1},
  rulo:{x:-13.3,z:5,w:1.6,a:'pod',j:1},
  vale:{x:-9,z:4,a:'per'},libro:{x:-5,z:4,a:'per'},emiliano:{x:-9,z:8.3,a:'per'},luna:{x:-5,z:8.3,a:'per'},
- apps:{x:4.4,z:4,a:'pro'},director:{x:7.3,z:4,a:'pro'},ceo:{x:5.4,z:8.3,w:2,a:'pro',j:1}};
+ apps:{x:4.4,z:4,a:'pro'},director:{x:7.3,z:4,a:'pro'},ceo:{x:5.4,z:8.3,w:2,a:'pro',j:1},luca:{x:8,z:8.3,a:'pro'}};
 const EXTRA=[{x:-6.6,z:-4.5,a:'tr'},{x:-13.3,z:9,a:'pod'}];
 for(const p of [...Object.values(PUESTOS),...EXTRA]){const w=p.w||1.5;p.sz=p.z-.8;p.ax??=p.x+w/2+.4;
  mueble('metal_office_desk',p.x,p.z,0,[w/2,.95,.8]);mueble('dining_chair_02',p.x,p.sz-.05,SILLA_RY,1);monitor(p.x+(p.j?-.2:0),p.z,0);if(p.j)monitor(p.x+.5,p.z,0);}
@@ -245,8 +245,8 @@ for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f')
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
 function abrirFicha(id){const b=bots.get(id).data;const _h=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[EK(b)]};font-weight:700;margin:6px 0">${TE(b.id)?'🟠':EMO[b.estado]} ${TXT[EK(b)]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;const _m=fichaMando(id,_h.replace(/<div class="s" style="margin-top:8px">Toca fuera para cerrar<\/div>/,''));$('ficha').innerHTML=(_m||_h)+'<button class="cerrar" aria-label="Cerrar">✕</button>';$('ficha').style.display='block';$('ficha').scrollTop=0;}
 // ---------- datos ----------
-const NOMB={libro:'Rodrigo · Libro',apps:'Charly · Apps','tr-cm':'Dany · TR Community Manager',director:'Joss · Director de video'};
-async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();(j.bots||[]).forEach(b=>{if(NOMB[b.id])b.nombre=NOMB[b.id];});window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
+const NOMB={tadeo:'Tadeo · Web y Sitio',mateo:'Mateo · Director Tinta Rosa',julian:'Julián · Jurídico',ines:'Inés · Finanzas',vale:'Valery · Redes Personales',rulo:'Rulo · Podcast · Productor',emiliano:'Emiliano · Salud · Entrenador',libro:'Rodrigo · Libro',apps:'Charly · Apps',ceo:'Tommy · CEO Digital','tr-editor':'Naim · TR Editor Jefe','tr-cm':'Dany · TR Community Manager',director:'Joss · Director de video',luca:'Luca · Técnico Digital'};
+async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now())).json();if(j.bots&&!j.bots.some(b=>b.id==='luca'))j.bots.push({id:'luca',nombre:'Luca · Técnico Digital',area:'Técnico Digital · soporte',estado:'pausa',frase:'Soporte técnico de la oficina'});(j.bots||[]).forEach(b=>{if(NOMB[b.id])b.nombre=NOMB[b.id];});window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
  j.bots.forEach((b,i)=>{if(!TXT[b.estado])b.estado='esperando';let o=bots.get(b.id);
   if(!o){o=makeBot(b,i);bots.set(b.id,o);meta(o);burbuja(o);}else if(o.data.estado!==b.estado||o.data.frase!==b.frase){if(o.data.estado!==b.estado){log(`${b.nombre}: ${TXT[o.data.estado]} → ${TXT[b.estado]} · ${b.frase}`);o.data=b;meta(o);}o.data=b;burbuja(o);}else o.data=b;});
  hist.push([...bots.values()].filter(o=>o.data.estado==='trabajando').length);if(hist.length<2)hist.unshift(hist[0]);if(hist.length>30)hist.shift();

@@ -7,8 +7,10 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 B='/workspace/oficina-bots';AD='/home/box/agent-data';SUP='/workspace/supervisor'
 TZ=datetime.timezone(datetime.timedelta(hours=-6))
-MAP={'e290':'ted','60f9':'tadeo','83ad':'mateo','276c':'julian','2927':'ines','fb47':'vale','d53b':'rulo','a873':'emiliano','4c6a':'luna','5b96':'libro','7257':'apps','7abd':'ceo','6cb7':'tr-editor','c945':'tr-cm','dd3a':'director'}
-NOMBRE_REP={'ted':'Ted','tadeo':'Tadeo','mateo':'Mateo','julian':'Julián','ines':'Inés','vale':'Valery','rulo':'Rulo','emiliano':'Emiliano','luna':'Luna','libro':'Libro','apps':'Apps','ceo':'CEO Digital','tr-editor':'Editor Jefe','tr-cm':'Community Manager','director':'Director'}
+MAP={'e290':'ted','60f9':'tadeo','83ad':'mateo','276c':'julian','2927':'ines','fb47':'vale','d53b':'rulo','a873':'emiliano','4c6a':'luna','5b96':'libro','7257':'apps','7abd':'ceo','6cb7':'tr-editor','c945':'tr-cm','dd3a':'director','b3eb':'luca'}
+NOMBRE_REP={'ted':'Ted','tadeo':'Tadeo','mateo':'Mateo','julian':'Julián','ines':'Inés','vale':'Valery','rulo':'Rulo','emiliano':'Emiliano','luna':'Luna','libro':'Libro','apps':'Apps','ceo':'CEO Digital','tr-editor':'Editor Jefe','tr-cm':'Community Manager','director':'Director','luca':'Luca'}
+# v16.6: alias por nombre actual (nombre de pila) además del anterior
+NR=list(NR)+[('libro','Rodrigo'),('apps','Charly'),('ceo','Tommy'),('tr-editor','Naim'),('tr-cm','Dany'),('director','Joss'),('luca','Técnico Digital')]
 iso=lambda ms:datetime.datetime.fromtimestamp(ms/1000,TZ).isoformat(timespec='minutes')
 ahora=datetime.datetime.now(TZ)
 def corta(t,n):t=re.sub(r'\s+',' ',t).strip();return t if len(t)<=n else t[:n-1]+'…'
@@ -16,8 +18,14 @@ estado=json.load(open(f'{B}/public/estado.json'))
 bots={b['id']:{'id':b['id'],'nombre':b['nombre'],'area':b['area'],'estado':b['estado'],'frase':b.get('frase')} for b in estado['bots']}
 fuentes={'estado':f"public/estado.json ({estado.get('actualizado')})"}
 AG={d[:4]:d for d in os.listdir(f'{AD}/agents')}
+bots.setdefault('luca',{'id':'luca','nombre':'Luca · Técnico Digital','area':'Técnico Digital','estado':'pausa','frase':None})
 for pre,bid in MAP.items():
-  if pre in AG:bots[bid]['agente']=AG[pre]
+  if pre in AG:
+    bots[bid]['agente']=AG[pre]
+    try:
+      nm=json.load(open(f'{AD}/agents/{AG[pre]}/profile.json')).get('name')
+      if nm:bots[bid]['nombre']=nm
+    except Exception:pass
 # 1) supervisor: tarea / pendiente / última actividad
 sup=sorted(glob.glob(f'{SUP}/estado-oficina-*.txt'))
 if sup:
@@ -35,9 +43,9 @@ if rep:
   OKX=re.compile(r"tu OK|tu visto bueno|autorices|apruebes|decidas|que elijas|que le confirmes|tu aprobaci|tu autorizaci|tu decisi|espera tu",re.I)
   def quien(i):
     cab=i.split(':')[0]
-    for bid,n in sorted(NOMBRE_REP.items(),key=lambda x:-len(x[1])):
+    for bid,n in sorted(NR,key=lambda x:-len(x[1])):
       if re.search(r'\b'+re.escape(n)+r'\b',cab):return bid
-    for bid,n in sorted(NOMBRE_REP.items(),key=lambda x:-len(x[1])):
+    for bid,n in sorted(NR,key=lambda x:-len(x[1])):
       if re.search(r'\b'+re.escape(n)+r'\b',i):return bid
   for s,items in cur.items():
     pausa=s.startswith('En pausa')

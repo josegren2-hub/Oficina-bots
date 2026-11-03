@@ -21,10 +21,11 @@ export const PERSONITAS={
  luna:{mujer:true,piel:0xe4b597,pelo:0x120e0e,peinado:'largoRizo',ropa:'tirantes',top:0x18181b,topSheen:0x55555a,pantalon:0x56708f,zapato:F,suela:0xc9c2b8,collar:0xc9c9c9,aretes:0xc9c9c9},
  libro:{piel:0xe2b190,pelo:0x1e1814,canas:0x8a857f,peinado:'rizos',nRizos:60,rizoR:.05,lentes:0xa8a8a8,ropa:'cardigan',top:0x141414,topSheen:0x555555,camisa:0xefe6d2,pantalon:0x2a3446,zapato:0x1a1a1a,suela:0x111111,barba:'llena',barbaC:0x2a221c},
  apps:{piel:0xe0ad88,pelo:0x5a3a24,peinado:'rizos',nRizos:55,rizoR:.05,lentes:0xb0a890,ropa:'playera',top:0x465A4D,topSheen:0x8a9a8d,pantalon:0x182538,zapato:0x303239,suela:0x92908D},
- ceo:{mujer:true,piel:0xf0c8aa,pelo:0x121010,peinado:'bob',ropa:'saco',top:0x1d2a4a,topSheen:0x6070a0,camisa:F,pantalon:0x1d2a4a,zapato:0x161616,suela:0x0e0e0e,aretes:0xf4f0e8,reloj:true},
- director:{piel:0xdcab86,pelo:0x1e1814,peinado:'rizos',nRizos:55,rizoR:.05,lentes:0x9a9a9a,ropa:'cuelloAlto',top:0x1c1c1f,topSheen:0x55565c,pantalon:0x3a3c42,zapato:0x161616,suela:0x0e0e0e,barba:'llena',barbaC:0x1e1814,reloj:true},
- 'tr-editor':{mujer:true,piel:0xdcab8a,pelo:0x2a1a14,peinado:'cola',lentes:0xe0559a,ropa:'saco',top:0xe5739f,topSheen:0xffc0d8,camisa:F,pantalon:0x1c1c20,zapato:0x161616,suela:0x0e0e0e,aretes:0xd8b25a},
- 'tr-cm':{piel:0xc99572,pelo:0x0e0c0b,peinado:'gorro',gorro:0x111111,ropa:'playera',top:0x2f3a30,topSheen:0x6a7a6c,pantalon:0x5b6f8a,zapato:0xece4d4,suela:0xece4d4,barba:'sombra'}};
+ ceo:{piel:0xf0c9aa,pelo:0x9a7552,peinado:'corto',lentes:0x5e3a22,ropa:'saco',top:0x1e2a44,topSheen:0x5a6a8a,camisa:0x6f8fb0,pantalon:0x5e6268,zapato:0x3a2a1e,suela:0x1a1410},
+ director:{piel:0xdcab86,pelo:0x1e1814,peinado:'rizos',nRizos:55,rizoR:.05,lentes:0x4a4a4e,ropa:'cuelloAlto',top:0x1c2233,topSheen:0x4a5470,pantalon:0x3a3c42,zapato:0x161616,suela:0x0e0e0e,barba:'llena',barbaC:0x1e1814,reloj:true},
+ 'tr-editor':{piel:0xd9a682,pelo:0x0e0c0b,peinado:'corto',ropa:'saco',top:0x2b2b2e,topSheen:0x66666c,camisa:0x5a1e2a,pantalon:0x1a1a1c,zapato:0x0e0e0e,suela:0x0a0a0a},
+ 'tr-cm':{piel:0xc99572,pelo:0x0e0c0b,peinado:'gorro',gorro:0x111111,ropa:'playera',top:0x2f3a30,topSheen:0x6a7a6c,pantalon:0x5b6f8a,zapato:0xece4d4,suela:0xece4d4,barba:'sombra'},
+ luca:{piel:0xd9a07a,pelo:0x15100d,peinado:'rizos',nRizos:65,rizoR:.055,barba:'llena',barbaC:0x1a1410,ropa:'hoodie',top:0x2a2a30,topSheen:0x6a5a9a,pantalon:0x2a3446,zapato:0x161616,suela:0xe0e0e0}};
 export function makePersonita(cfg){
  const root=new THREE.Group();root.name='Personita';const ropa=cfg.ropa||'sueter';
  const M={piel:mat(cfg.piel,{r:.55,sheen:.4,sc:0xffe0d0}),pelo:mat(cfg.pelo,{r:.7,sheen:.6,sc:0x9a8070}),top:mat(cfg.top,{r:.9,sheen:1,sc:cfg.topSheen}),
