@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T01:59:52-06:00",
+ "actualizado": "2026-11-04T02:07:56-06:00",
  "bots": [
   {
    "id": "ted",
@@ -47,8 +47,8 @@
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "emiliano",
