@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-03T22:56:13-06:00",
+ "actualizado": "2026-11-03T23:14:51-06:00",
  "bots": [
   {
    "id": "ted",
@@ -78,7 +78,7 @@
    "area": "Desarrollo móvil",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-03T22:28:06.348-06:00"
+   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
   },
   {
    "id": "ceo",
