@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T01:14:26-06:00",
+ "actualizado": "2026-11-04T01:22:52-06:00",
  "bots": [
   {
    "id": "ted",
@@ -47,9 +47,8 @@
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "esperando",
-   "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-03T22:28:45.626-06:00"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "emiliano",
@@ -76,9 +75,8 @@
    "id": "apps",
    "nombre": "Charly",
    "area": "Desarrollo móvil",
-   "estado": "esperando",
-   "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ceo",
@@ -105,9 +103,8 @@
    "id": "director",
    "nombre": "Joss",
    "area": "Coordinación",
-   "estado": "esperando",
-   "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-04T00:26:02.953-06:00"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luca",
@@ -118,11 +115,11 @@
   }
  ],
  "racha": {
-  "dias": 0,
-  "hoy_cero": false
+  "dias": 1,
+  "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-04T00:58:07-06:00",
+  "latido": "2026-11-04T01:22:52-06:00",
   "mando": "2026-11-04T00:23:31-06:00",
   "avisos_ok": null,
   "avisos_error": null,
