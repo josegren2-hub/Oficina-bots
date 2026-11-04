@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T02:07:56-06:00",
+ "actualizado": "2026-11-04T02:10:00-06:00",
  "bots": [
   {
    "id": "ted",
@@ -68,8 +68,8 @@
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "apps",
