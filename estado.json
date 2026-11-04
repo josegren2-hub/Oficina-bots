@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-03T20:18:33-06:00",
+ "actualizado": "2026-11-03T22:21:27-06:00",
  "bots": [
   {
    "id": "ted",
@@ -69,8 +69,8 @@
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "apps",
@@ -84,15 +84,15 @@
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tr-cm",
@@ -107,14 +107,14 @@
    "area": "Coordinación",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-02T18:35:45.977-06:00"
+   "esperando_desde": "2026-11-03T22:17:41.939-06:00"
   },
   {
    "id": "luca",
    "nombre": "Luca",
    "area": "Técnico digital",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   }
  ]
 }
