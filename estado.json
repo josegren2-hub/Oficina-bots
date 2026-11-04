@@ -1,19 +1,19 @@
 {
- "actualizado": "2026-11-04T12:17:35-06:00",
+ "actualizado": "2026-11-04T12:53:03-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "mateo",
@@ -120,7 +120,7 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-04T12:17:35-06:00",
+  "latido": "2026-11-04T12:53:03-06:00",
   "mando": "2026-11-04T09:22:00-06:00",
   "avisos_ok": null,
   "avisos_error": null,
