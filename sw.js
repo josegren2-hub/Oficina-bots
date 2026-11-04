@@ -1,5 +1,5 @@
 // SW v16.13: navegación e index/sw sin caché (red primero, no-store); estado.json y mando.enc NUNCA en caché.
-const C='oficina-v16-13';
+const C='oficina-v16-14';
 self.addEventListener('install',e=>self.skipWaiting()); // se activa solo: así las versiones viejas (v16.10 y antes) llegan sin pasos extra
 self.addEventListener('message',e=>{if(e.data==='SKIP_WAITING'||e.data?.type==='SKIP_WAITING')self.skipWaiting();});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
