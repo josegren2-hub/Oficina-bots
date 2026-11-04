@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T09:53:47-06:00",
+ "actualizado": "2026-11-04T09:57:51-06:00",
  "bots": [
   {
    "id": "ted",
@@ -7,7 +7,7 @@
    "area": "Asistente personal",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-04T09:52:02.019-06:00"
+   "esperando_desde": "2026-11-04T09:57:40.329-06:00"
   },
   {
    "id": "tadeo",
