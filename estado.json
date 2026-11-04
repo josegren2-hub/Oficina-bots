@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T09:51:43-06:00",
+ "actualizado": "2026-11-04T09:53:47-06:00",
  "bots": [
   {
    "id": "ted",
@@ -7,7 +7,7 @@
    "area": "Asistente personal",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-04T09:50:21.337-06:00"
+   "esperando_desde": "2026-11-04T09:52:02.019-06:00"
   },
   {
    "id": "tadeo",
@@ -121,7 +121,7 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-04T09:22:27-06:00",
+  "latido": "2026-11-04T09:53:47-06:00",
   "mando": "2026-11-04T09:22:00-06:00",
   "avisos_ok": null,
   "avisos_error": null,
