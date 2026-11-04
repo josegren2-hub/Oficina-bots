@@ -69,6 +69,11 @@ for pre,bid in MAP.items():
     k=iso(t)[:10];dia.setdefault(k,[0,0]);dia[k][0 if r=='user' else 1]+=1
   tot=db.execute("select count(*),sum(role='user'),min(timestamp_ms),max(timestamp_ms) from messages where agent_id like ?",(pre+'%',)).fetchone()
   b['stats']={'por_dia':dia,'mensajes':tot[0],'peticiones':tot[1] or 0,'desde':iso(tot[2]) if tot[2] else None,'ultima_actividad':iso(tot[3]) if tot[3] else None}
+# 3a) v16.13: actividad de HOY por bot, solo metadatos (timestamp_ms, role, in_main_chat; nunca body)
+h0=int(ahora.replace(hour=0,minute=0,second=0,microsecond=0).timestamp()*1000)
+for pre,bid in MAP.items():
+  r=db.execute("select count(*),coalesce(sum(role='user' and in_main_chat=1),0),max(timestamp_ms) from messages where agent_id like ? and timestamp_ms>=?",(pre+'%',h0)).fetchone()
+  bots[bid]['hoy']={'mensajes':r[0],'de_rob':r[1],'ultima':iso(r[2]) if r[2] else None}
 # 3b) v16.9: regla del vivo (solo horas y rol, nunca body): espera solo si el último mensaje del chat principal es del bot sin respuesta de Rob
 mrep=max([os.path.getmtime(f) for f in (sup[-1:]+rep[-1:])] or [0])*1000
 for pre,bid in MAP.items():
@@ -119,7 +124,9 @@ os.makedirs(f'{B}/mando-local',exist_ok=True);H=f'{B}/mando-local/historial.json
 snap={'t':ahora.isoformat(timespec='minutes'),'e':{k:v['estado'] for k,v in bots.items()}}
 with open(H,'a') as f:f.write(json.dumps(snap)+'\n')
 hist=[json.loads(l) for l in open(H)][-400:]
-data={'generado':ahora.isoformat(timespec='minutes'),'uso_global':uso_global,'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
+# v16.13: audiencias de mañana. No hay fuente confiable de audiencias en el box: no se inventa.
+audiencias={'estado':'sin_datos','items':[],'nota':'Sin datos conectados: no hay en el box una agenda de audiencias confiable (ni archivo ni base).'}
+data={'generado':ahora.isoformat(timespec='minutes'),'audiencias':audiencias,'uso_global':uso_global,'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
 raw=json.dumps(data,ensure_ascii=False).encode()
 # cifrado
 pw=(os.environ.get('MANDO_CLAVE') or open(f'{B}/.clave-mando').read()).strip().encode();salt=base64.b64decode(open(f'{B}/.sal-mando').read());IT=310000

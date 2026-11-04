@@ -35,3 +35,11 @@ Para cada bot que la base (rutina de Ted) marcó `esperando`, se toma la hora de
 - SW: caché oficina-v16-12.
 - estado-vivo.py: `esperando_desde` se guarda con milisegundos; el "esperando" se da por resuelto SOLO si hay mensaje de Rob (role user, in_main_chat=1) posterior al último mensaje del bot en el chat principal (antes se comparaba contra una hora truncada a minutos y el propio mensaje del bot lo resolvía). El log anota la marca más reciente del índice.
 - Índice (search-index.db): no está congelado; se sincroniza de forma perezosa por agente (server_cursors). El 3 nov solo tenía mensajes nuevos de Ted, Mateo, Inés y Emiliano (último 14:38). No hay otra fuente fresca de metadatos: los store.db por agente (agents/*/store.db, tabla transcript_entries) tienen 2–3 entradas y mtime 09:14; /cursor/stores solo tiene canvases; /home/box/sand-data es el mismo directorio. Se sigue usando search-index.db.
+
+## v16.13 (3 nov 2026)
+- `src/v1613.js`: barra fija "Te esperan" (orden por `esperando_desde`, más antiguo primero), tarjeta ampliada (espera desde, tarea actual y "Abrir chat" → `grokbot://app/v1/agent?id=<id>` solo con clave), tablero "Resumen del día" y avisos locales (>24 h, Notification API vía SW, sin push de servidor; deduplicado en localStorage `v13avisos`).
+- Áreas por departamento: Tinta Rosa, Personal, Jurídico y Finanzas, Proyectos. Muros v16.8 intactos; el escritorio de Rodrigo·Libro pasó a Proyectos (-13.3, 9).
+- PWA: `manifest.webmanifest` (standalone + display_override fullscreen, íconos 192/512 + maskable, scope/start_url `/Oficina-bots/`), metas apple-mobile-web-app-*; SW `oficina-v16-13` con `notificationclick`.
+- `estado-vivo.py`: el JSON público solo lleva id, nombre, area, estado, frase, esperando_desde. Para julian, ines, emiliano la frase es genérica (PRIV).
+- `recolectar-mando.py`: `bots[].hoy` = {mensajes, de_rob, ultima}, solo de metadatos (timestamp_ms, role, in_main_chat). `audiencias` = sin_datos (no hay fuente confiable en el box); al conectar una, llenar `audiencias.items` [{hora, asunto, lugar}] y `estado:'ok'`.
+- Verificación: `node captura-v1613.mjs` (URL=... opcional), capturas en `capturas/v16-13/`.

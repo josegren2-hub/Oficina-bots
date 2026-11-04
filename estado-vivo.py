@@ -7,6 +7,7 @@ DB='file:/home/box/agent-data/search-index.db?mode=ro';VENT=10*60*1000
 TZ=datetime.timezone(datetime.timedelta(hours=-6))
 MAP={'e2903041':'ted','60f97de3':'tadeo','83adc556':'mateo','276c99d2':'julian','2927051e':'ines','fb47c498':'vale','d53bedc7':'rulo','a87312c5':'emiliano','4c6a2028':'luna','5b967cf9':'libro','725791b6':'apps','7abdf69b':'ceo','6cb78d87':'tr-editor','c945be0f':'tr-cm','dd3a26cf':'director','b3eb69a1':'luca'}
 NUEVOS={'luca':{'id':'luca','nombre':'Luca','area':'Técnico digital','estado':'pausa','frase':'Descansando'}}
+PRIV={'julian','emiliano','ines'};GEN={'trabajando':'Trabajando','esperando':'Esperando respuesta','pausa':'Descansando'}
 NO_GEN=('café','sillón','descans','pausa','esperando')  # frases de pausa: no sirven para "trabajando"
 def log(m):
   if os.path.exists(LOG) and os.path.getsize(LOG)>100_000:os.replace(LOG,LOG+'.1')
@@ -55,6 +56,10 @@ def corrida():
       fb=base.get(b['id'],{}).get('frase')
       b['estado']='trabajando' if viva else 'pausa'
       b['frase']=(fb if generica(fb) else 'Trabajando') if viva else 'Descansando'
+    # v16.13: Jurídico, salud y finanzas: en público SOLO estado/punto (frase genérica, sin tareas ni textos)
+    for b in bots:
+      for k in [k for k in b if k not in ('id','nombre','area','estado','frase','esperando_desde')]:b.pop(k)
+      if b['id'] in PRIV:b['frase']=GEN.get(b['estado'],'')
     nuevo=dict(cur);nuevo['bots']=bots
     if [ (b['id'],b['estado'],b['frase'],b.get('esperando_desde')) for b in bots]==[(b['id'],b['estado'],b.get('frase'),b.get('esperando_desde')) for b in cur['bots']]:
       log(f"sin cambios ({sum(b['estado']=='trabajando' for b in bots)} trabajando · índice al {datetime.datetime.fromtimestamp(maxidx/1000,TZ).strftime('%d %H:%M')})");return

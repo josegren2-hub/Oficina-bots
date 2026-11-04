@@ -1,110 +1,120 @@
 {
- "actualizado": "2026-11-01T22:02:00-06:00",
+ "actualizado": "2026-11-03T22:56:13-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
    "estado": "trabajando",
-   "frase": "Mejorando la oficina"
+   "frase": "Trabajando"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
    "estado": "trabajando",
-   "frase": "Diseñando en 3D"
+   "frase": "Trabajando"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "esperando",
-   "frase": "Esperando revisión"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "esperando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "esperando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "vale",
-   "nombre": "Vale",
+   "nombre": "Valery",
    "area": "Redes personales",
-   "estado": "esperando",
-   "frase": "Pensando ideas"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
    "estado": "esperando",
-   "frase": "Planeando episodio"
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-03T22:28:45.626-06:00"
   },
   {
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
    "estado": "pausa",
-   "frase": "Tomando un café"
+   "frase": "Descansando"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "esperando",
-   "frase": "Ordenando archivos"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "libro",
-   "nombre": "Libro",
+   "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "esperando",
-   "frase": "Esperando revisión"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "apps",
-   "nombre": "Apps",
+   "nombre": "Charly",
    "area": "Desarrollo móvil",
    "estado": "esperando",
-   "frase": "Esperando pruebas"
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-03T22:28:06.348-06:00"
   },
   {
    "id": "ceo",
-   "nombre": "CEO Digital",
+   "nombre": "Tommy",
    "area": "Estrategia",
    "estado": "pausa",
-   "frase": "Tomando un café"
+   "frase": "Descansando"
   },
   {
    "id": "tr-editor",
-   "nombre": "TR Editor Jefe",
+   "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "esperando",
-   "frase": "Esperando revisión"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-cm",
-   "nombre": "TR Community Manager",
+   "nombre": "Dany",
    "area": "Tinta Rosa · redes",
    "estado": "pausa",
-   "frase": "En el sillón"
+   "frase": "Descansando"
   },
   {
    "id": "director",
-   "nombre": "Director",
+   "nombre": "Joss",
    "area": "Coordinación",
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-03T22:28:14.664-06:00"
+  },
+  {
+   "id": "luca",
+   "nombre": "Luca",
+   "area": "Técnico digital",
    "estado": "pausa",
-   "frase": "Tomando un café"
+   "frase": "Descansando"
   }
  ]
 }

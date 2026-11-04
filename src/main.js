@@ -1,4 +1,4 @@
-import {makePersonita,PERSONITAS} from './personitas.js';import {iniciarMando,fichaMando,MANDO} from './mando.js';iniciarMando();
+import {makePersonita,PERSONITAS} from './personitas.js';import {iniciarMando,fichaMando,MANDO} from './mando.js';import {iniciarV1613,extraFicha} from './v1613.js';iniciarMando();
 const PERS_ON=!new URLSearchParams(location.search).has('robots');
 import * as THREE from 'three';import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';import {MeshoptDecoder} from 'three/examples/jsm/libs/meshopt_decoder.module.js';import * as SkU from 'three/examples/jsm/utils/SkeletonUtils.js';import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';import {N8AOPass} from 'n8ao';import './estilo.css';
 const COL={trabajando:'#3B82F6',esperando:'#9CA3AF',pausa:'#4B5563',te:'#F97316'},TXT={trabajando:'Trabajando ahora',esperando:'Disponible',pausa:'En pausa',te:'Te espera'};const TE=id=>window.__vivo?.(id)==='esperando';const EK=b=>TE(b.id)?'te':b.estado,EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
@@ -68,11 +68,11 @@ function piso(x0,z0,x1,z1,mk,ts=2,y=.012){caja(x1-x0,.02,z1-z0,mk,(x0+x1)/2,y,(z
 // ---------- planta ----------
 const AREAS=[
  {id:'tr',n:'Tinta Rosa',x0:-15,z0:-11,x1:-5,z1:-1,m:'alfombra',d:-7,s:1},
- {id:'ted',n:'Dirección general · Ted',x0:-5,z0:-11,x1:5,z1:-1,m:'nogal',d:-3,s:1},
- {id:'jur',n:'Jurídico',x0:5,z0:-11,x1:10,z1:-1,m:'madera',d:6,s:1},
- {id:'fin',n:'Finanzas',x0:10,z0:-11,x1:15,z1:-1,m:'alfAzul',d:11.2,s:1},
- {id:'pod',n:'Estudio podcast',x0:-15,z0:1,x1:-11,z1:11,m:'concreto',d:-13.6,s:-1},
- {id:'per',n:'Asuntos personales',x0:-11,z0:1,x1:-3,z1:11,m:'madera',d:-7,s:-1},
+ {id:'ted',n:'Personal · Ted',x0:-5,z0:-11,x1:5,z1:-1,m:'nogal',d:-3,s:1},
+ {id:'jur',n:'Jurídico y Finanzas · Julián',x0:5,z0:-11,x1:10,z1:-1,m:'madera',d:6,s:1},
+ {id:'fin',n:'Jurídico y Finanzas · Inés',x0:10,z0:-11,x1:15,z1:-1,m:'alfAzul',d:11.2,s:1},
+ {id:'pod',n:'Proyectos · Podcast y Libro',x0:-15,z0:1,x1:-11,z1:11,m:'concreto',d:-13.6,s:-1},
+ {id:'per',n:'Personal',x0:-11,z0:1,x1:-3,z1:11,m:'madera',d:-7,s:-1},
  {id:'rec',n:'Recepción',x0:-3,z0:1,x1:3,z1:11,m:'marmol',d:0,s:-1},
  {id:'pro',n:'Proyectos',x0:3,z0:1,x1:9,z1:11,m:'concreto',d:6,s:-1},
  {id:'com',n:'Café',x0:9,z0:1,x1:15,z1:11,m:'mosaico',d:9.8,s:-1}];
@@ -109,9 +109,9 @@ const PUESTOS={mateo:{x:-13,z:-8.5,w:1.8,a:'tr',j:1,via:[[-12.6,-2],[-12.6,-6.3]
  'tr-editor':{x:-9,z:-8.5,a:'tr'},'tr-cm':{x:-6.6,z:-8.5,a:'tr'},tadeo:{x:-9,z:-4.5,a:'tr'},
  ted:{x:0,z:-7.6,w:2.4,a:'ted',j:1},julian:{x:7.2,z:-7.4,w:1.8,a:'jur',j:1},ines:{x:12.3,z:-7.4,w:1.8,a:'fin',j:1},
  rulo:{x:-13.3,z:5,w:1.6,a:'pod',j:1},
- vale:{x:-9,z:4,a:'per'},libro:{x:-5,z:4,a:'per'},emiliano:{x:-9,z:8.3,a:'per'},luna:{x:-5,z:8.3,a:'per'},
+ vale:{x:-9,z:4,a:'per'},libro:{x:-13.3,z:9,a:'pod'},emiliano:{x:-9,z:8.3,a:'per'},luna:{x:-5,z:8.3,a:'per'},
  apps:{x:4.4,z:4,a:'pro'},director:{x:7.3,z:4,a:'pro'},ceo:{x:5.4,z:8.3,w:2,a:'pro',j:1},luca:{x:8,z:8.3,a:'pro'}};
-const EXTRA=[{x:-6.6,z:-4.5,a:'tr'},{x:-13.3,z:9,a:'pod'}];
+const EXTRA=[{x:-6.6,z:-4.5,a:'tr'},{x:-5,z:4,a:'per'}];
 for(const p of [...Object.values(PUESTOS),...EXTRA]){const w=p.w||1.5;p.sz=p.z-.8;p.ax??=p.x+w/2+.4;
  mueble('metal_office_desk',p.x,p.z,0,[w/2,.95,.8]);mueble('dining_chair_02',p.x,p.sz-.05,SILLA_RY,1);monitor(p.x+(p.j?-.2:0),p.z,0);if(p.j)monitor(p.x+.5,p.z,0);}
 const cil=(r,h,mk,x,y,z,r2=r,n=12)=>P(new THREE.CylinderGeometry(r,r2,h,n),mk,x,y,z);
@@ -151,8 +151,8 @@ mueble('dining_chair_02',-13.6,6.1,Math.PI,1);mueble('potted_plant_04',-11.5,10.
 cil(.012,1.5,'marco',-10.4,.75,2.4);P(new THREE.TorusGeometry(.26,.03,10,28),'luz',-10.4,1.6,2.4);caja(.08,.15,.01,'negro',-10.4,1.6,2.41);
 caja(.08,.15,.01,'negro',-8.6,TOP+.08,3.9);caja(.5,.5,.03,'rojo',-10.95,1.7,4.6,{ry:Math.PI/2});
 // Libro: librero, máquina de escribir, manuscritos
-mueble('wooden_bookshelf_worn',-3.35,5.6,-Math.PI/2,1);caja(.34,.12,.26,'negro',-5.35,TOP+.06,3.85);caja(.3,.06,.02,'papel',-5.35,TOP+.17,3.98);
-for(const [x,n] of [[-4.6,5],[-4.25,3]])for(let k=0;k<n;k++)caja(.24,.012,.3,'papel',x,TOP+.006+k*.013,4.1);
+mueble('wooden_bookshelf_worn',-3.35,5.6,-Math.PI/2,1);caja(.34,.12,.26,'negro',-13.65,TOP+.06,8.85);caja(.3,.06,.02,'papel',-13.65,TOP+.17,8.98);
+for(const [x,n] of [[-12.9,5],[-12.55,3]])for(let k=0;k<n;k++)caja(.24,.012,.3,'papel',x,TOP+.006+k*.013,9.1);
 // Emiliano: plantas, mancuernas, tapete de yoga, agua
 caja(.65,.01,1.8,'verde',-10.3,.02,9.6);for(const z of [7.4,7.8]){caja(.25,.05,.05,'marco',-10.4,.06,z);for(const s of [-.12,.12])cil(.06,.08,'negro',-10.4+s,.06,z);}
 cil(.035,.22,'azul',-9.4,TOP+.11,8.35);mueble('potted_plant_04',-10.5,6.3,0,4.5);mueble('potted_plant_04',-7.6,10.4,0,4);
@@ -188,9 +188,9 @@ for(const x of [-9,-5])for(const z of [4.6,8.4])lamparaLineal(x,z,1.8);for(const
 flush();
 const LP=[];for(const [x,z,c,i] of [[-10,-6],[0,-6],[7.5,-6],[12.5,-6],[-13,6,'#ffc2a8',5],[-7,6],[0,7],[6,6],[12,7]]){const l=new THREE.PointLight(c||'#ffd9a8',(i||6)*1.3,10,1.5);l.position.set(x,2.6,z);S.add(l);LP.push(l);}
 // letreros
-function letrero(txt,x,z,w=2.6,y=2.4){const c=document.createElement('canvas');c.width=640;c.height=112;const g=c.getContext('2d');g.fillStyle='#1d1d1f';g.fillRect(0,0,640,112);g.fillStyle='#C8A46A';g.fillRect(0,104,640,8);g.fillStyle='#f4efe6';g.font='600 46px Inter,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,320,54);
+function letrero(txt,x,z,w=2.6,y=2.4){const c=document.createElement('canvas');c.width=640;c.height=112;const g=c.getContext('2d');g.fillStyle='#1d1d1f';g.fillRect(0,0,640,112);g.fillStyle='#C8A46A';g.fillRect(0,104,640,8);g.fillStyle='#f4efe6';let fs=46;g.font=`600 ${fs}px Inter,system-ui,sans-serif`;while(g.measureText(txt).width>600&&fs>20){fs-=2;g.font=`600 ${fs}px Inter,system-ui,sans-serif`;}g.textAlign='center';g.textBaseline='middle';g.fillText(txt,320,54);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.BoxGeometry(w,w*112/640,.03),[M.negro,M.negro,M.negro,M.negro,new THREE.MeshStandardMaterial({map:t,roughness:.5}),M.negro]);m.position.set(x,y,z);W.add(m);}
-for(const a of AREAS)if(a.id!=='rec')letrero(a.n,(a.x0+a.x1)/2,a.s>0?-.86:1.14,Math.min(a.n.length>14?3.6:2.6,a.x1-a.x0-.6));
+for(const a of AREAS)if(a.id!=='rec')letrero(a.n,(a.x0+a.x1)/2,a.s>0?-.86:1.14,Math.min(a.n.length>14?3.8:2.6,a.x1-a.x0-.6));
 letrero('Dirección Tinta Rosa',-12.9,-5.48,2.6);
 {const c=document.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');g.fillStyle='#EDE7DD';g.fillRect(0,0,1024,256);g.fillStyle='#1d1d1f';g.font='600 92px Inter,system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('Oficina de los bots',512,120);g.fillStyle='#C8A46A';g.fillRect(352,200,320,6);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const m=new THREE.Mesh(new THREE.PlaneGeometry(4.6,1.15),new THREE.MeshStandardMaterial({map:t,roughness:.5}));m.position.set(0,1.8,3.53);W.add(m);}
@@ -249,14 +249,14 @@ function renderPaneles(){const L=[...bots.values()].map(o=>o.data),act=L.filter(
 const irA=id=>{const o=bots.get(id);if(!o)return;const p=new THREE.Vector3();o.g.getWorldPosition(p);p.y+=.8;volar(p,8,new THREE.Vector3(.45,.75,.6).normalize());if(movil())document.body.classList.remove('abiertos');};
 for(const id of ['lista','eq'])$(id).onclick=e=>{const el=e.target.closest('.f');if(el)irA(el.dataset.id)};
 $('bpaneles').onclick=()=>document.body.classList.toggle('abiertos');
-function abrirFicha(id){const b=bots.get(id).data;const _h=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[EK(b)]};font-weight:700;margin:6px 0">${TE(b.id)?'🟠':EMO[b.estado]} ${TXT[EK(b)]}</div><div>“${esc(b.frase)}”</div><div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;const _m=fichaMando(id,_h.replace(/<div class="s" style="margin-top:8px">Toca fuera para cerrar<\/div>/,''));$('ficha').innerHTML=(_m||_h)+'<button class="cerrar" aria-label="Cerrar">✕</button>';$('ficha').style.display='block';$('ficha').scrollTop=0;}
+function abrirFicha(id){const b=bots.get(id).data;const _h=`${avHTML(b)}<b>${esc(b.nombre)}</b><div>${esc(b.area)}</div><div class="s">${esc(AR[bots.get(b.id).seat.a].n)}${bots.get(b.id).seat.j?' · Jefe de área':''}</div><div style="color:${COL[EK(b)]};font-weight:700;margin:6px 0">${TE(b.id)?'🟠':EMO[b.estado]} ${TXT[EK(b)]}</div><div>“${esc(b.frase)}”</div>${extraFicha(b)}<div class="s" style="margin-top:8px">Toca fuera para cerrar</div>`;const _m=fichaMando(id,_h.replace(/<div class="s" style="margin-top:8px">Toca fuera para cerrar<\/div>/,''));$('ficha').innerHTML=(_m||_h)+'<button class="cerrar" aria-label="Cerrar">✕</button>';$('ficha').style.display='block';$('ficha').scrollTop=0;}
 // ---------- datos ----------
 const NOMB={tadeo:'Tadeo · Web y Sitio',mateo:'Mateo · Director Tinta Rosa',julian:'Julián · Jurídico',ines:'Inés · Finanzas',vale:'Valery · Redes Personales',rulo:'Rulo · Podcast · Productor',emiliano:'Emiliano · Salud · Entrenador',libro:'Rodrigo · Libro',apps:'Charly · Apps',ceo:'Tommy · CEO Digital','tr-editor':'Naim · TR Editor Jefe','tr-cm':'Dany · TR Community Manager',director:'Joss · Director de video',luca:'Luca · Técnico Digital'};
 async function cargar(){try{await listo;const j=await (await fetch('./estado.json?t='+Date.now(),{cache:'no-store'})).json();if(j.bots&&!j.bots.some(b=>b.id==='luca'))j.bots.push({id:'luca',nombre:'Luca · Técnico Digital',area:'Técnico Digital · soporte',estado:'pausa',frase:'Soporte técnico de la oficina'});(j.bots||[]).forEach(b=>{if(NOMB[b.id])b.nombre=NOMB[b.id];});window.__act=new Date(j.actualizado);if(PERS_ON&&new URLSearchParams(location.search).has('sentados'))for(const b of (j.bots||[]))if(b.id==='ted'||b.id==='mateo')b.estado='trabajando';
  j.bots.forEach((b,i)=>{if(!TXT[b.estado])b.estado='esperando';let o=bots.get(b.id);
   if(!o){o=makeBot(b,i);bots.set(b.id,o);meta(o);burbuja(o);}else if(o.data.estado!==b.estado||o.data.frase!==b.frase){if(o.data.estado!==b.estado){log(`${b.nombre}: ${TXT[o.data.estado]} → ${TXT[b.estado]} · ${b.frase}`);o.data=b;meta(o);}o.data=b;burbuja(o);}else o.data=b;});
  hist.push([...bots.values()].filter(o=>o.data.estado==='trabajando').length);if(hist.length<2)hist.unshift(hist[0]);if(hist.length>30)hist.shift();
- if(!regs.length)log(`Oficina actualizada · ${hist.at(-1)} bots trabajando`);renderPaneles();}catch(e){console.warn(e)}}
+ if(!regs.length)log(`Oficina actualizada · ${hist.at(-1)} bots trabajando`);renderPaneles();window.__trasCargar?.();}catch(e){console.warn(e)}}
 window.__repintar=()=>{bots.forEach(o=>burbuja(o));renderPaneles();};cargar();setInterval(cargar,60000);{const l=document.createElement('div');l.id='leyenda';l.className='glass';l.innerHTML='<span class="lte" data-k="te" role="button"><i class="pulo" style="background:#F97316"></i>Te espera</span><span data-k="trabajando" role="button"><i class="pul" style="background:#3B82F6"></i>Trabajando</span><span data-k="pausa" role="button"><i style="background:#4B5563"></i>En pausa</span><span class="s0" data-k="esperando" role="button">Sin punto: disponible</span>';document.body.appendChild(l);
  l.addEventListener('click',e=>{const k=e.target.closest('[data-k]')?.dataset.k;if(k)abrirListaEstado(k);});}
 // ---------- lista de bots por estado (leyenda y centro de mando) ----------
@@ -268,7 +268,7 @@ function abrirListaEstado(k){let d=$('lestado');if(!d){d=document.createElement(
  const L=[...bots.values()].map(o=>o.data).filter(b=>EK(b)===k);
  const det=b=>{const m=MANDO?.bots?.find(x=>x.id===b.id);if(!m)return esc(b.frase||'');if(k==='te')return '⏳ '+esc((m.ok||[])[0]||m.pendiente||m.tarea||'');if(k==='trabajando')return esc(m.tarea||b.frase||'');return esc(m.pendiente?('Pendiente: '+m.pendiente):(m.tarea||b.frase||''));};
  d.innerHTML=`<div class="lt"><b>${LTIT[k]} · ${L.length}</b><button class="lcerrar" aria-label="Cerrar">✕ Cerrar</button></div>`+(L.length?L.map(b=>`<div class="f" data-id="${b.id}">${avHTML(b)}<span class="d e-${k}" style="margin:0"></span><div class="lx"><b>${esc(b.nombre)}</b><div class="s">${det(b)}</div></div><span class="lir">›</span></div>`).join(''):'<p class="s">No hay bots en este estado ahora.</p>')+'<p class="s" style="margin-top:6px">Toca un bot para ver su ficha.</p>';d.hidden=false;d.scrollTop=0;}
-window.__abrirListaEstado=abrirListaEstado;$('pisos').style.display='none';$('bedif').style.display='none';
+window.__abrirListaEstado=abrirListaEstado;window.__abrirFicha=abrirFicha;window.__datos=()=>[...bots.values()].map(o=>({...o.data,areaN:AR[o.seat.a].n}));iniciarV1613();$('pisos').style.display='none';$('bedif').style.display='none';
 $('ult').textContent='Cargando muebles y personajes…';
 // ---------- tap vs arrastre (la cámara la maneja OrbitControls) ----------
 const ptrs=new Map();let st=null,moved=false;
@@ -290,7 +290,7 @@ window.__botPantalla=id=>{const v=new THREE.Vector3();bots.get(id).g.getWorldPos
 const DIR0=new THREE.Vector3(.42,.62,.66).normalize(),D0=()=>movil()?82:46;
 cam.position.copy(DIR0).multiplyScalar(D0());ctl.target.set(0,0,0);ctl.update();
 {const z=document.createElement('div');z.id='zonas';z.className='glass';
- const L=[['Recepción','rec'],['Ted','ted'],['Tinta Rosa','tr'],['Jurídico','jur'],['Finanzas','fin'],['Podcast','pod'],['Personal','per'],['Proyectos','pro'],['Café','com'],['Vista general','']];
+ const L=[['Recepción','rec'],['Tinta Rosa','tr'],['Personal · Ted','ted'],['Personal','per'],['Jurídico','jur'],['Finanzas','fin'],['Proyectos','pro'],['Proyectos · Podcast','pod'],['Café','com'],['Vista general','']];
  for(const [n,id] of L){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(!id){volar(new THREE.Vector3(0,0,0),D0(),DIR0.clone());return;}const a=AR[id];volar(new THREE.Vector3((a.x0+a.x1)/2,0,(a.z0+a.z1)/2),movil()?17:13,new THREE.Vector3(.25,.8,.55).normalize());};z.appendChild(b);}
  document.body.appendChild(z);}
 window.__volar2=(x,y,z,d,a,b2,c)=>volar(new THREE.Vector3(x,y,z),d,new THREE.Vector3(a,b2,c).normalize());
