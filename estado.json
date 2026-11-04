@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-03T22:31:29-06:00",
+ "actualizado": "2026-11-03T22:41:30-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,8 +12,8 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "mateo",
@@ -26,22 +26,22 @@
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "vale",
    "nombre": "Valery",
    "area": "Redes personales",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "rulo",
@@ -55,22 +55,22 @@
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "apps",
@@ -84,8 +84,8 @@
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-editor",
@@ -98,8 +98,8 @@
    "id": "tr-cm",
    "nombre": "Dany",
    "area": "Tinta Rosa · redes",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "director",
@@ -113,8 +113,8 @@
    "id": "luca",
    "nombre": "Luca",
    "area": "Técnico digital",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   }
  ]
 }
