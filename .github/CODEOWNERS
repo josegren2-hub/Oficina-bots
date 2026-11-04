@@ -1,0 +1,4 @@
+# Todo cambio pasa por revisión de Tadeo (dueño de las funciones y de la publicación).
+*                 @josegren2-hub
+# FUNCIONALES (no tocar sin Tadeo): src/main.js (datos/sondeo), src/mando.js, src/lista.js, src/entrada.js,
+# src/v1613.js, src/v1615.js, src/v1616.js, public/sw.js, index.html (lógica), vite.config.js, package*.json

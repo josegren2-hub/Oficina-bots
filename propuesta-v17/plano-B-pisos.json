@@ -1,0 +1,95 @@
+[
+ {
+  "id": "PB",
+  "nombre": "PB · Cafetería + Personal",
+  "bots": "Luna, Valery, Emiliano · cafetería compartida para todos",
+  "salas": [
+   [
+    "Cafetería",
+    0,
+    0,
+    8.8,
+    9
+   ],
+   [
+    "Personal",
+    9.2,
+    0,
+    6.8,
+    9
+   ]
+  ]
+ },
+ {
+  "id": "P1",
+  "nombre": "Piso 1 · Jurídico y Finanzas",
+  "bots": "Julián, Inés",
+  "salas": []
+ },
+ {
+  "id": "P2",
+  "nombre": "Piso 2 · Proyectos + Estudio de podcast",
+  "bots": "Tommy, Charly, Rodrigo, Joss, Luca · Rulo en el estudio",
+  "salas": [
+   [
+    "Estudio podcast",
+    11,
+    3,
+    7,
+    6
+   ]
+  ]
+ },
+ {
+  "id": "P3",
+  "nombre": "Piso 3 · Tinta Rosa",
+  "bots": "Mateo (oficina de cristal), Tadeo, Naim, Dany",
+  "salas": [
+   [
+    "Oficina Mateo",
+    0,
+    0,
+    5,
+    5
+   ]
+  ]
+ },
+ {
+  "id": "P4",
+  "nombre": "Piso 4 · Penthouse de Ted",
+  "bots": "Ted (oficina principal + pizarrón en ventanal) · Sala de juntas 16 lugares",
+  "dimensiones": "20×7.5 u interior + terraza 20×4 u (más grande y más alto que los demás pisos, fachada de cristal)",
+  "salas": [
+   [
+    "Oficina de Ted",
+    -1,
+    -0.5,
+    9.5,
+    5.5
+   ],
+   [
+    "Sala de juntas (16 lugares)",
+    8.5,
+    -0.5,
+    7.5,
+    6
+   ],
+   [
+    "Terraza",
+    -1.6,
+    7,
+    21.2,
+    4.1
+   ]
+  ],
+  "pizarron": {
+   "x": 5.95,
+   "y": -0.5,
+   "w": 2.2,
+   "pegado_a": "ventanal trasero",
+   "interactivo": true,
+   "titulo": "Agenda y pendientes de hoy",
+   "nota": "Pegado al ventanal junto al escritorio de Ted; en la web será tocable para ver la agenda"
+  }
+ }
+]

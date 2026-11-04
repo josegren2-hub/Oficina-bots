@@ -1,0 +1,91 @@
+{
+ "zonas": [
+  {
+   "nombre": "Tinta Rosa",
+   "x": 0,
+   "y": 0,
+   "w": 13,
+   "h": 11
+  },
+  {
+   "nombre": "Oficina Mateo",
+   "x": 0,
+   "y": 0,
+   "w": 5,
+   "h": 5
+  },
+  {
+   "nombre": "Personal · Ted",
+   "x": 0,
+   "y": 11,
+   "w": 13,
+   "h": 11
+  },
+  {
+   "nombre": "Lounge · atrio central",
+   "x": 13,
+   "y": 0,
+   "w": 10,
+   "h": 14
+  },
+  {
+   "nombre": "Café",
+   "x": 13,
+   "y": 14,
+   "w": 10,
+   "h": 8
+  },
+  {
+   "nombre": "Proyectos",
+   "x": 23,
+   "y": 0,
+   "w": 13,
+   "h": 12
+  },
+  {
+   "nombre": "Jurídico y Finanzas",
+   "x": 23,
+   "y": 12,
+   "w": 13,
+   "h": 10
+  }
+ ],
+ "puertas": [
+  {
+   "x": 13,
+   "y": 4,
+   "orient": "v",
+   "largo": 2
+  },
+  {
+   "x": 13,
+   "y": 11,
+   "orient": "v",
+   "largo": 2
+  },
+  {
+   "x": 23,
+   "y": 5,
+   "orient": "v",
+   "largo": 2
+  },
+  {
+   "x": 23,
+   "y": 12,
+   "orient": "v",
+   "largo": 2
+  },
+  {
+   "x": 17,
+   "y": 14,
+   "orient": "h",
+   "largo": 2
+  },
+  {
+   "x": 2,
+   "y": 5,
+   "orient": "h",
+   "largo": 2
+  }
+ ]
+}
