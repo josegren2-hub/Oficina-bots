@@ -1,47 +1,47 @@
 {
- "actualizado": "2026-11-03T22:21:27-06:00",
+ "actualizado": "2026-11-03T22:31:29-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Publicando notas"
   },
   {
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "vale",
    "nombre": "Valery",
    "area": "Redes personales",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "rulo",
@@ -49,21 +49,21 @@
    "area": "Podcast",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-02T11:03:08.777-06:00"
+   "esperando_desde": "2026-11-03T22:28:45.626-06:00"
   },
   {
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "libro",
@@ -78,7 +78,7 @@
    "area": "Desarrollo móvil",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-02T17:58:42.709-06:00"
+   "esperando_desde": "2026-11-03T22:28:06.348-06:00"
   },
   {
    "id": "ceo",
@@ -98,8 +98,8 @@
    "id": "tr-cm",
    "nombre": "Dany",
    "area": "Tinta Rosa · redes",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "director",
@@ -107,7 +107,7 @@
    "area": "Coordinación",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-03T22:17:41.939-06:00"
+   "esperando_desde": "2026-11-03T22:28:14.664-06:00"
   },
   {
    "id": "luca",
