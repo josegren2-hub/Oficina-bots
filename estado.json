@@ -1,117 +1,120 @@
 {
- "actualizado": "2026-11-04T09:14:21-06:00",
+ "actualizado": "2026-11-04T09:25:00-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-04T08:17:28.919-06:00"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-04T04:57:21.716-06:00"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "trabajando",
-   "frase": "Publicando notas"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "vale",
    "nombre": "Valery",
    "area": "Redes personales",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-04T02:08:01.626-06:00"
   },
   {
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "apps",
    "nombre": "Charly",
    "area": "Desarrollo móvil",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-cm",
    "nombre": "Dany",
    "area": "Tinta Rosa · redes",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "director",
    "nombre": "Joss",
    "area": "Coordinación",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luca",
    "nombre": "Luca",
    "area": "Técnico digital",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   }
  ],
  "racha": {
