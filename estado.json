@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T09:59:55-06:00",
+ "actualizado": "2026-11-04T10:28:44-06:00",
  "bots": [
   {
    "id": "ted",
@@ -27,8 +27,8 @@
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ines",
@@ -121,7 +121,7 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-04T09:53:47-06:00",
+  "latido": "2026-11-04T10:28:44-06:00",
   "mando": "2026-11-04T09:22:00-06:00",
   "avisos_ok": null,
   "avisos_error": null,
