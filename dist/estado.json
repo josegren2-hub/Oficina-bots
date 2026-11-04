@@ -1,0 +1,131 @@
+{
+ "actualizado": "2026-11-04T00:53:06-06:00",
+ "bots": [
+  {
+   "id": "ted",
+   "nombre": "Ted",
+   "area": "Asistente personal",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "tadeo",
+   "nombre": "Tadeo",
+   "area": "Web y sitio",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "mateo",
+   "nombre": "Mateo",
+   "area": "Dirección Tinta Rosa",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "julian",
+   "nombre": "Julián",
+   "area": "Jurídico",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "ines",
+   "nombre": "Inés",
+   "area": "Finanzas",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "vale",
+   "nombre": "Valery",
+   "area": "Redes personales",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "rulo",
+   "nombre": "Rulo",
+   "area": "Podcast",
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-03T22:28:45.626-06:00"
+  },
+  {
+   "id": "emiliano",
+   "nombre": "Emiliano",
+   "area": "Entrenamiento",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "luna",
+   "nombre": "Luna",
+   "area": "Asistente",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "libro",
+   "nombre": "Rodrigo",
+   "area": "Redacción y edición",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "apps",
+   "nombre": "Charly",
+   "area": "Desarrollo móvil",
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
+  },
+  {
+   "id": "ceo",
+   "nombre": "Tommy",
+   "area": "Estrategia",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "tr-editor",
+   "nombre": "Naim",
+   "area": "Tinta Rosa · edición",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "tr-cm",
+   "nombre": "Dany",
+   "area": "Tinta Rosa · redes",
+   "estado": "pausa",
+   "frase": "Descansando"
+  },
+  {
+   "id": "director",
+   "nombre": "Joss",
+   "area": "Coordinación",
+   "estado": "esperando",
+   "frase": "Esperando respuesta",
+   "esperando_desde": "2026-11-04T00:26:02.953-06:00"
+  },
+  {
+   "id": "luca",
+   "nombre": "Luca",
+   "area": "Técnico digital",
+   "estado": "pausa",
+   "frase": "Descansando"
+  }
+ ],
+ "racha": {
+  "dias": 0,
+  "hoy_cero": false
+ },
+ "salud": {
+  "latido": "2026-11-04T00:28:02-06:00",
+  "mando": "2026-11-04T00:23:31-06:00",
+  "avisos_ok": null,
+  "avisos_error": null,
+  "avisos_config": true
+ }
+}
