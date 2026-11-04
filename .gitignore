@@ -3,6 +3,10 @@ dist/
 referencia/
 capturas/
 .clave-mando
-.sal-mando
 mando-local/
-public/mando.enc
+.ntfy-tema
+.ntfy-enviados.json
+privado/
+.ntfy-salud.json
+.ntfy-fallos.json
+*.tmp

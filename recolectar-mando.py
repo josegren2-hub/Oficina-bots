@@ -5,6 +5,11 @@ import json,glob,os,re,sys,sqlite3,base64,datetime,csv,secrets,urllib.request
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
+import sys as _s;_s.path.insert(0,'/workspace/oficina-bots');import ntfy_oficina
+def _hook(t,v,tb):
+  if t not in (SystemExit,KeyboardInterrupt):ntfy_oficina.fallo('recolectar-mando.py',t.__name__)
+  _s.__excepthook__(t,v,tb)
+_s.excepthook=_hook
 B='/workspace/oficina-bots';AD='/home/box/agent-data';SUP='/workspace/supervisor'
 TZ=datetime.timezone(datetime.timedelta(hours=-6))
 MAP={'e290':'ted','60f9':'tadeo','83ad':'mateo','276c':'julian','2927':'ines','fb47':'vale','d53b':'rulo','a873':'emiliano','4c6a':'luna','5b96':'libro','7257':'apps','7abd':'ceo','6cb7':'tr-editor','c945':'tr-cm','dd3a':'director','b3eb':'luca'}
@@ -74,6 +79,10 @@ h0=int(ahora.replace(hour=0,minute=0,second=0,microsecond=0).timestamp()*1000)
 for pre,bid in MAP.items():
   r=db.execute("select count(*),coalesce(sum(role='user' and in_main_chat=1),0),max(timestamp_ms) from messages where agent_id like ? and timestamp_ms>=?",(pre+'%',h0)).fetchone()
   bots[bid]['hoy']={'mensajes':r[0],'de_rob':r[1],'ultima':iso(r[2]) if r[2] else None}
+  # v16.16: línea de tiempo de hoy = mensajes por hora (0-23, hora Chihuahua), solo timestamp_ms
+  hh=[0]*24
+  for (t,) in db.execute("select timestamp_ms from messages where agent_id like ? and timestamp_ms>=?",(pre+'%',h0)):hh[datetime.datetime.fromtimestamp(t/1000,TZ).hour]+=1
+  bots[bid]['horas_hoy']=hh
 # 3b) v16.9: regla del vivo (solo horas y rol, nunca body): espera solo si el último mensaje del chat principal es del bot sin respuesta de Rob
 mrep=max([os.path.getmtime(f) for f in (sup[-1:]+rep[-1:])] or [0])*1000
 for pre,bid in MAP.items():
@@ -124,16 +133,64 @@ os.makedirs(f'{B}/mando-local',exist_ok=True);H=f'{B}/mando-local/historial.json
 snap={'t':ahora.isoformat(timespec='minutes'),'e':{k:v['estado'] for k,v in bots.items()}}
 with open(H,'a') as f:f.write(json.dumps(snap)+'\n')
 hist=[json.loads(l) for l in open(H)][-400:]
-# v16.13: audiencias de mañana. No hay fuente confiable de audiencias en el box: no se inventa.
-audiencias={'estado':'sin_datos','items':[],'nota':'Sin datos conectados: no hay en el box una agenda de audiencias confiable (ni archivo ni base).'}
-data={'generado':ahora.isoformat(timespec='minutes'),'audiencias':audiencias,'uso_global':uso_global,'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
+# v16.14: audiencias de mañana desde privado/audiencias-manana.json (lo deja Ted cada noche). Solo va cifrado.
+def leer_audiencias():
+  man=(ahora+datetime.timedelta(days=1)).date().isoformat()
+  try:j=json.load(open(f'{B}/privado/audiencias-manana.json'))
+  except Exception:return {'estado':'sin_datos','fecha':man,'items':[],'nota':'Sin datos de mañana'}
+  if j.get('fecha')!=man:return {'estado':'sin_datos','fecha':man,'items':[],'nota':'Sin datos de mañana'}
+  it=[{'hora':str(a.get('hora',''))[:5],'titulo':corta(str(a.get('titulo','')),120),'lugar':corta(str(a.get('lugar','')),120),'notas':corta(str(a.get('notas','')),300)} for a in (j.get('audiencias') or []) if isinstance(a,dict)]
+  it.sort(key=lambda a:a['hora'])
+  return {'estado':'ok','fecha':man,'generado':j.get('generado'),'items':it}
+audiencias=leer_audiencias()
+
+# v16.15: rutinas (única fuente fiable: supervisor/registro-rutinas.csv, la rutina de Ted). Fallo = errores no empieza con "ninguno"; no corrió = >26 h sin entrada.
+DIAS_CALLADO=3
+def _fecha(x):
+  d=datetime.datetime.fromisoformat(x[:16].replace(' ','T'))
+  return d.replace(tzinfo=TZ) if d.tzinfo is None else d
+try:
+  ur=rcsv[-1];uf=_fecha(ur['fecha']);hrs=(ahora-uf).total_seconds()/3600
+  fallo=not ur.get('errores','').strip().lower().startswith('ninguno')
+  # una fecha sin hora (AAAA-MM-DD) cuenta como fin del día
+  if len(ur['fecha'].strip())<=10:hrs=(ahora-uf-datetime.timedelta(hours=23,minutes=59)).total_seconds()/3600
+  bots['ted']['rutina']={'ultima':ur['fecha'],'fallo':fallo,'no_corrio':hrs>26,'horas':round(hrs,1),'fuente':'supervisor/registro-rutinas.csv'}
+except Exception:pass
+fuentes['rutinas_estado']='Solo la rutina de Ted tiene bitácora en el box (registro-rutinas.csv); las demás rutinas no tienen fuente fiable.'
+# v16.15: bot callado = DIAS_CALLADO días sin actividad y con pendientes
+for b in bots.values():
+  u=(b.get('stats') or {}).get('ultima_actividad')
+  dias=(ahora-datetime.datetime.fromisoformat(u)).total_seconds()/86400 if u else 999
+  b['callado']={'dias':round(dias,1),'umbral':DIAS_CALLADO} if dias>=DIAS_CALLADO and (b.get('pendientes') or b.get('pendiente')) else None
+# v16.15: resumen semanal SOLO de metadatos (timestamp_ms, role, in_main_chat). Espera = mensaje del bot en chat principal seguido de mensaje de Rob.
+def semana(t0,t1):
+  res=0;tiempos=[];por={};uso=0
+  for pre,bid in MAP.items():
+    uso+=db.execute("select count(*) from messages where agent_id like ? and timestamp_ms>=? and timestamp_ms<?",(pre+'%',t0,t1)).fetchone()[0]
+    rows=db.execute("select role,timestamp_ms from messages where agent_id like ? and in_main_chat=1 and timestamp_ms>=? and timestamp_ms<? order by timestamp_ms",(pre+'%',t0-7*864e5,t1)).fetchall()
+    ua=None
+    for r,t in rows:
+      if r=='assistant':ua=t
+      elif r=='user' and ua is not None:
+        if t>=t0:res+=1;tiempos.append(t-ua);por[bid]=por.get(bid,0)+(t-ua)
+        ua=None
+    if ua is not None and t1>=ahora.timestamp()*1000-6e4 and bots[bid].get('esperando_vivo'):por[bid]=por.get(bid,0)+(t1-max(ua,t0))
+  top=max(por,key=por.get) if por else None
+  return {'esperas_resueltas':res,'respuesta_promedio_min':round(sum(tiempos)/len(tiempos)/6e4) if tiempos else None,
+          'mas_atorado':{'id':top,'nombre':bots[top]['nombre'],'horas':round(por[top]/36e5,1)} if top else None,'mensajes':uso}
+n1=int(ahora.timestamp()*1000);w=7*864e5
+semanal={'esta':semana(int(n1-w),n1),'anterior':semana(int(n1-2*w),int(n1-w)),'nota':'Solo metadatos (horas y rol). Espera resuelta = mensaje del bot en chat principal seguido de respuesta de Rob.'}
+SH=f'{B}/mando-local/semanal.jsonl'
+with open(SH,'a') as f:f.write(json.dumps({'t':ahora.isoformat(timespec='minutes'),**semanal['esta']},ensure_ascii=False)+'\n')
+semanal['historial']=[json.loads(l) for l in open(SH)][-60:]
+data={'generado':ahora.isoformat(timespec='minutes'),'audiencias':audiencias,'semanal':semanal,'uso_global':uso_global,'fuentes':fuentes,'bots':list(bots.values()),'snapshots':hist}
 raw=json.dumps(data,ensure_ascii=False).encode()
 # cifrado
 pw=(os.environ.get('MANDO_CLAVE') or open(f'{B}/.clave-mando').read()).strip().encode();salt=base64.b64decode(open(f'{B}/.sal-mando').read());IT=310000
 key=PBKDF2HMAC(hashes.SHA256(),32,salt,IT).derive(pw);iv=secrets.token_bytes(12)
 enc={'v':1,'kdf':'PBKDF2-SHA256','iter':IT,'salt':base64.b64encode(salt).decode(),'iv':base64.b64encode(iv).decode(),'ct':base64.b64encode(AESGCM(key).encrypt(iv,raw,None)).decode()}
 out=f'{B}/mando-local/mando.enc';open(out,'w').write(json.dumps(enc));print(f'mando.enc listo ({len(raw)} B en claro, cifrado)')
-if '--no-publicar' in sys.argv:sys.exit()
+if '--no-publicar' in sys.argv:ntfy_oficina.ok('recolectar-mando.py');sys.exit()
 tok=os.environ.get('GITHUB_TOKEN_OFICINA') or sys.exit('Falta GITHUB_TOKEN_OFICINA')
 api='https://api.github.com/repos/josegren2-hub/Oficina-bots/contents/mando.enc';h={'Authorization':'Bearer '+tok,'Accept':'application/vnd.github+json'}
 sha=None
@@ -142,3 +199,4 @@ except Exception:pass
 body={'message':'mando.enc','branch':'gh-pages','content':base64.b64encode(open(out,'rb').read()).decode()}
 if sha:body['sha']=sha
 urllib.request.urlopen(urllib.request.Request(api,data=json.dumps(body).encode(),headers=h,method='PUT'));print('mando.enc publicado')
+ntfy_oficina.ok('recolectar-mando.py')

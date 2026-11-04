@@ -1,4 +1,4 @@
-import {makePersonita,PERSONITAS} from './personitas.js';import {iniciarMando,fichaMando,MANDO} from './mando.js';import {iniciarV1613,extraFicha} from './v1613.js';iniciarMando();
+import {makePersonita,PERSONITAS} from './personitas.js';import {iniciarMando,fichaMando,MANDO} from './mando.js';import {iniciarV1613,extraFicha} from './v1613.js';import {iniciarV1615} from './v1615.js';import {iniciarV1616} from './v1616.js';iniciarMando();
 const PERS_ON=!new URLSearchParams(location.search).has('robots');
 import * as THREE from 'three';import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';import {MeshoptDecoder} from 'three/examples/jsm/libs/meshopt_decoder.module.js';import * as SkU from 'three/examples/jsm/utils/SkeletonUtils.js';import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';import {N8AOPass} from 'n8ao';import './estilo.css';
 const COL={trabajando:'#3B82F6',esperando:'#9CA3AF',pausa:'#4B5563',te:'#F97316'},TXT={trabajando:'Trabajando ahora',esperando:'Disponible',pausa:'En pausa',te:'Te espera'};const TE=id=>window.__vivo?.(id)==='esperando';const EK=b=>TE(b.id)?'te':b.estado,EMO={trabajando:'💻',esperando:'⏳',pausa:'☕'};
@@ -185,6 +185,26 @@ P(new THREE.SphereGeometry(.18,16,12),'luna',-3.9,TOP+.2,8.6);cil(.1,.03,'oro',-
 for(const [x,z] of [[11,7.9],[0,6.2],[0,-7.4],[-1.6,-3.6],[7.2,-7.2],[12.3,-7.2]])lamparaLineal(x,z,2);
 for(const x of [-9,-6.6])for(const z of [-8,-4.4])lamparaLineal(x,z,1.8);lamparaLineal(-13,-8,1.6);
 for(const x of [-9,-5])for(const z of [4.6,8.4])lamparaLineal(x,z,1.8);for(const [x,z] of [[4.4,4.6],[7.3,4.6],[5.4,8.6],[-13.3,5.4]])lamparaLineal(x,z,1.6);for(const x of [-10,0,10])lamparaLineal(x,0,3);
+// v16.16: objeto distintivo por bot sobre su escritorio (low-poly, se combina por material con el resto: sin draw calls extra)
+{const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),Cy=(r,h,r2=r,n=10)=>new THREE.CylinderGeometry(r,r2,h,n);
+ const OBJ={
+  director:(x,z)=>{P(B(.2,.12,.12),'negro',x,TOP+.06,z);P(Cy(.045,.08).rotateX(Math.PI/2),'marco',x,TOP+.06,z+.1);P(B(.04,.03,.12),'negro',x,TOP+.14,z);},
+  julian:(x,z)=>{P(Cy(.035,.14).rotateZ(Math.PI/2),'nogal',x,TOP+.06,z);P(Cy(.012,.2).rotateX(Math.PI/2),'nogal',x,TOP+.06,z+.1);P(Cy(.06,.02,.07),'nogal',x+.12,TOP+.01,z-.05);},
+  mateo:(x,z)=>{P(B(.22,.012,.3),'papel',x,TOP+.006,z,{ry:.3});P(B(.22,.013,.07),'rojo',x,TOP+.007,z-.05,{ry:.3});},
+  'tr-editor':(x,z)=>{P(B(.21,.004,.29),'papel',x,TOP+.002,z);P(Cy(.008,.16).rotateZ(Math.PI/2),'rojo',x+.02,TOP+.012,z-.04,{ry:.6});},
+  'tr-cm':(x,z)=>{P(B(.14,.09,.06),'negro',x,TOP+.045,z);P(Cy(.03,.05).rotateX(Math.PI/2),'marco',x,TOP+.045,z+.05);P(Cy(.08,.008,.08,12),'nogal',x+.03,TOP+.004,z-.15);P(B(.03,.01,.03),'azul',x+.06,TOP+.012,z-.15);P(B(.03,.01,.03),'naranja',x,TOP+.012,z-.18);},
+  tadeo:(x,z)=>{P(B(.3,.015,.2),'gris',x,TOP+.008,z);P(B(.3,.2,.01).rotateX(-.25).translate(0,.1,-.1),'gris',x,TOP+.015,z);P(B(.27,.17,.002).rotateX(-.25).translate(0,.1,-.093),'pantalla',x,TOP+.015,z);},
+  ted:(x,z)=>{P(B(.2,.012,.28),'nogal',x,TOP+.006,z,{ry:-.2});P(B(.17,.004,.22),'papel',x,TOP+.014,z+.01,{ry:-.2});P(B(.08,.02,.03),'oro',x,TOP+.02,z-.12,{ry:-.2});},
+  luna:(x,z)=>{P(new THREE.SphereGeometry(.09,12,8),'morado',x,TOP+.12,z);P(Cy(.06,.04,.08),'oro',x,TOP+.02,z);},
+  vale:(x,z)=>{P(B(.07,.14,.008).rotateX(-.3),'negro',x,TOP+.07,z);P(B(.06,.12,.002).rotateX(-.3).translate(0,0,.005),'pantalla',x,TOP+.07,z);P(B(.1,.01,.06),'marco',x,TOP+.005,z-.02);},
+  emiliano:(x,z)=>{P(Cy(.012,.22).rotateZ(Math.PI/2),'marco',x,TOP+.045,z);for(const s of [-.09,.09])P(Cy(.045,.05).rotateZ(Math.PI/2),'negro',x+s,TOP+.045,z);},
+  ines:(x,z)=>{P(B(.12,.02,.18),'gris',x,TOP+.01,z);P(B(.09,.004,.04),'pantalla',x,TOP+.022,z-.05);P(B(.09,.004,.08),'negro',x,TOP+.022,z+.03);},
+  ceo:(x,z)=>{P(B(.32,.22,.09),'nogal',x,TOP+.11,z);P(new THREE.TorusGeometry(.04,.008,6,12,Math.PI),'oro',x,TOP+.22,z);},
+  apps:(x,z)=>{P(B(.07,.14,.008).rotateX(-.3),'negro',x,TOP+.07,z);['azul','naranja','verde','rojo'].forEach((c,i)=>P(B(.02,.02,.004).rotateX(-.3).translate(0,0,.006),c,x-.015+(i%2)*.03,TOP+.085-Math.floor(i/2)*.03,z));P(B(.1,.01,.06),'marco',x,TOP+.005,z-.02);},
+  libro:(x,z)=>{P(B(.16,.05,.22),'papel',x,TOP+.025,z,{ry:.4});P(B(.17,.012,.23),'rojo',x,TOP+.056,z,{ry:.4});P(B(.17,.012,.23),'rojo',x,TOP+.002,z,{ry:.4});},
+  rulo:(x,z)=>{P(Cy(.06,.015),'negro',x,TOP+.008,z);P(Cy(.01,.2),'marco',x,TOP+.11,z);P(new THREE.CapsuleGeometry(.04,.07,3,8),'negro',x,TOP+.25,z);P(Cy(.043,.012),'oro',x,TOP+.21,z);},
+  luca:(x,z)=>{P(B(.2,.012,.03),'marco',x,TOP+.008,z,{ry:.5});P(new THREE.TorusGeometry(.035,.012,6,10,Math.PI*1.6).rotateX(Math.PI/2),'marco',x+.1*Math.cos(.5),TOP+.008,z-.1*Math.sin(.5));}};
+ for(const [id,f] of Object.entries(OBJ)){const p=PUESTOS[id];if(!p)continue;f(p.x-(p.w||1.5)/2+.24,p.z-.12);}}
 flush();
 const LP=[];for(const [x,z,c,i] of [[-10,-6],[0,-6],[7.5,-6],[12.5,-6],[-13,6,'#ffc2a8',5],[-7,6],[0,7],[6,6],[12,7]]){const l=new THREE.PointLight(c||'#ffd9a8',(i||6)*1.3,10,1.5);l.position.set(x,2.6,z);S.add(l);LP.push(l);}
 // letreros
@@ -268,7 +288,7 @@ function abrirListaEstado(k){let d=$('lestado');if(!d){d=document.createElement(
  const L=[...bots.values()].map(o=>o.data).filter(b=>EK(b)===k);
  const det=b=>{const m=MANDO?.bots?.find(x=>x.id===b.id);if(!m)return esc(b.frase||'');if(k==='te')return '⏳ '+esc((m.ok||[])[0]||m.pendiente||m.tarea||'');if(k==='trabajando')return esc(m.tarea||b.frase||'');return esc(m.pendiente?('Pendiente: '+m.pendiente):(m.tarea||b.frase||''));};
  d.innerHTML=`<div class="lt"><b>${LTIT[k]} · ${L.length}</b><button class="lcerrar" aria-label="Cerrar">✕ Cerrar</button></div>`+(L.length?L.map(b=>`<div class="f" data-id="${b.id}">${avHTML(b)}<span class="d e-${k}" style="margin:0"></span><div class="lx"><b>${esc(b.nombre)}</b><div class="s">${det(b)}</div></div><span class="lir">›</span></div>`).join(''):'<p class="s">No hay bots en este estado ahora.</p>')+'<p class="s" style="margin-top:6px">Toca un bot para ver su ficha.</p>';d.hidden=false;d.scrollTop=0;}
-window.__abrirListaEstado=abrirListaEstado;window.__abrirFicha=abrirFicha;window.__datos=()=>[...bots.values()].map(o=>({...o.data,areaN:AR[o.seat.a].n}));iniciarV1613();$('pisos').style.display='none';$('bedif').style.display='none';
+window.__abrirListaEstado=abrirListaEstado;window.__abrirFicha=abrirFicha;window.__datos=()=>[...bots.values()].map(o=>({...o.data,areaN:AR[o.seat.a].n}));iniciarV1613();iniciarV1615();iniciarV1616('3d');$('pisos').style.display='none';$('bedif').style.display='none';
 $('ult').textContent='Cargando muebles y personajes…';
 // ---------- tap vs arrastre (la cámara la maneja OrbitControls) ----------
 const ptrs=new Map();let st=null,moved=false;
@@ -330,7 +350,14 @@ const NL=[],NE=[];{const mE=()=>new THREE.MeshStandardMaterial({color:0x2a2018,e
 const _pl0=LP.map(l=>[l.intensity,l.color.clone()]);let _lum=null;
 function nocheAhora(){const h=+new Intl.DateTimeFormat('en-US',{timeZone:'America/Chihuahua',hour:'numeric',hourCycle:'h23'}).format(new Date());return h>=19||h<7;}
 let PREF=localStorage.getItem('oficinaModo')||'auto';
-function aplicarModo(){const n=PREF==='noche'||(PREF==='auto'&&nocheAhora());const m=n?MD.noche:MD.dia;
+// v16.16: luz según la hora real (America/Chihuahua) en modo Auto: mañana cálida/clara, mediodía neutra, tarde dorada; noche = modo noche
+const LUZH=[[7,{dc:'#ffd6a8',hc:'#ffe7cc',dl:2.4,hl:.72,bg:'#E4D8C8',exp:1.12}],[11,{dc:'#fff0da',hc:'#fff4e6',dl:2.85,hl:.75,bg:'#D9D4CC',exp:1.1}],[15,{dc:'#fff0da',hc:'#fff4e6',dl:2.85,hl:.75,bg:'#D9D4CC',exp:1.1}],[17.5,{dc:'#ffbf70',hc:'#ffd9a6',dl:2.55,hl:.72,bg:'#DCC4A2',exp:1.08}],[19,{dc:'#ffb060',hc:'#ffd29c',dl:2.3,hl:.7,bg:'#D6BC98',exp:1.06}]];
+function horaCh(){const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Chihuahua',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(new Date());const g=t=>+p.find(x=>x.type===t).value;return g('hour')+g('minute')/60;}
+const _c1=new THREE.Color(),_c2=new THREE.Color();
+function luzHora(h){let i=0;while(i<LUZH.length-1&&h>=LUZH[i+1][0])i++;const [h0,a]=LUZH[i],[h1,b]=LUZH[Math.min(i+1,LUZH.length-1)];const t=h1>h0?Math.min(1,Math.max(0,(h-h0)/(h1-h0))):0;
+ const c=k=>'#'+_c1.set(a[k]).lerp(_c2.set(b[k]),t).getHexString(),l=k=>a[k]+(b[k]-a[k])*t;return {dc:c('dc'),hc:c('hc'),bg:c('bg'),dl:l('dl'),hl:l('hl'),exp:l('exp'),fase:h<11?'mañana':h<15?'mediodía':'tarde'};}
+window.__luz=()=>({hora:+horaCh().toFixed(2),...(PREF==='auto'&&!nocheAhora()?luzHora(horaCh()):{fase:nocheAhora()&&PREF!=='dia'?'noche':'fija'})});
+function aplicarModo(){const n=PREF==='noche'||(PREF==='auto'&&nocheAhora());const m=n?MD.noche:PREF==='auto'?{...MD.dia,...luzHora(horaCh())}:MD.dia;
  R.toneMappingExposure=m.exp;S.environmentIntensity=m.env;HL.intensity=m.hl;HL.color.set(m.hc);HL.groundColor.set(m.hg);dl.intensity=m.dl;dl.color.set(m.dc);
  S.background.set(m.bg);S.fog.color.set(m.bg);LP.forEach(l=>l.visible=!n);NL.forEach(l=>l.visible=n);NE.forEach(e=>e.emissiveIntensity=n?1.6:0);LP.forEach((l,i)=>{l.intensity=_pl0[i][0]*m.pl;if(m.pc)l.color.set(m.pc);else l.color.copy(_pl0[i][1]);});
  try{ao.configuration.intensity=m.ao;}catch(e){}

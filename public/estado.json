@@ -1,19 +1,19 @@
 {
- "actualizado": "2026-11-03T22:56:13-06:00",
+ "actualizado": "2026-11-04T00:53:06-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "mateo",
@@ -78,7 +78,7 @@
    "area": "Desarrollo móvil",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-03T22:28:06.348-06:00"
+   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
   },
   {
    "id": "ceo",
@@ -107,7 +107,7 @@
    "area": "Coordinación",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-03T22:28:14.664-06:00"
+   "esperando_desde": "2026-11-04T00:26:02.953-06:00"
   },
   {
    "id": "luca",
@@ -116,5 +116,16 @@
    "estado": "pausa",
    "frase": "Descansando"
   }
- ]
+ ],
+ "racha": {
+  "dias": 0,
+  "hoy_cero": false
+ },
+ "salud": {
+  "latido": "2026-11-04T00:28:02-06:00",
+  "mando": "2026-11-04T00:23:31-06:00",
+  "avisos_ok": null,
+  "avisos_error": null,
+  "avisos_config": true
+ }
 }

@@ -6,8 +6,8 @@
 <div id="term" class="glass"><span class="acc">&gt;</span> <span id="ult">Cargando oficina…</span></div>
 <div id="ctrl"><button id="bpaneles" class="glass">☰ Paneles</button><div id="pisos" class="glass"></div><button id="bedif" class="glass">🏢 Ver edificio</button></div>
 <div id="ficha" class="glass"></div>
-<script type="module" src="./src/main.js"></script><button id="bact" class="glass" title="Actualizar la oficina">↻ Actualizar</button><div id="avisoNueva" class="glass" hidden>Hay versión nueva · <b>Actualizar</b></div>
-<script>(()=>{const V='v16.13',sw=navigator.serviceWorker;let pedido=false;
+<script type="module" src="./src/entrada.js"></script><button id="bact" class="glass" title="Actualizar la oficina">↻ Actualizar</button><div id="avisoNueva" class="glass" hidden>Hay versión nueva · <b>Actualizar</b></div>
+<script>(()=>{const V='v16.16',sw=navigator.serviceWorker;let pedido=false;
 const aviso=document.getElementById('avisoNueva');
 async function forzar(){try{if(window.caches){for(const k of await caches.keys())await caches.delete(k);}if(sw){for(const r of await sw.getRegistrations()){try{await r.update()}catch(e){}await r.unregister();}}}catch(e){}
  location.replace(location.pathname+'?v='+Date.now());}
