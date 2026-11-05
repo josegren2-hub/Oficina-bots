@@ -117,12 +117,12 @@
  ],
  "racha": {
   "dias": 1,
-  "hoy_cero": true
+  "hoy_cero": false
  },
  "salud": {
-  "latido": "2026-11-04T23:09:38-06:00",
+  "latido": "2026-11-05T07:37:13-06:00",
   "mando": "2026-11-04T20:16:20-06:00",
-  "avisos_ok": null,
+  "avisos_ok": "2026-11-05T07:37:13-06:00",
   "avisos_error": null,
   "avisos_config": true
  }
