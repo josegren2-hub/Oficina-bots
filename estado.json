@@ -1,12 +1,12 @@
 {
- "actualizado": "2026-11-05T09:23:29-06:00",
+ "actualizado": "2026-11-05T09:24:08-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Revisando suscripción"
   },
   {
    "id": "tadeo",
@@ -47,8 +47,8 @@
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Proyecto en pausa"
   },
   {
    "id": "emiliano",
