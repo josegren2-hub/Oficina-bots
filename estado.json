@@ -1,12 +1,12 @@
 {
- "actualizado": "2026-11-05T08:29:00-06:00",
+ "actualizado": "2026-11-05T09:07:15-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Organizando agenda"
   },
   {
    "id": "tadeo",
@@ -19,8 +19,8 @@
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Planeando publicaciones"
   },
   {
    "id": "julian",
@@ -120,7 +120,7 @@
   "hoy_cero": false
  },
  "salud": {
-  "latido": "2026-11-05T08:15:25-06:00",
+  "latido": "2026-11-05T09:07:15-06:00",
   "mando": "2026-11-04T20:16:20-06:00",
   "avisos_ok": "2026-11-05T07:37:13-06:00",
   "avisos_error": null,
