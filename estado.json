@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-05T09:24:08-06:00",
+ "actualizado": "2026-11-05T09:25:33-06:00",
  "bots": [
   {
    "id": "ted",
@@ -47,8 +47,8 @@
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "pausa",
-   "frase": "Proyecto en pausa"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "emiliano",
@@ -119,8 +119,8 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-05T09:23:29-06:00",
-  "mando": "2026-11-05T09:21:04-06:00",
+  "latido": "2026-11-05T09:25:33-06:00",
+  "mando": "2026-11-05T09:24:11-06:00",
   "avisos_ok": "2026-11-05T07:37:13-06:00",
   "avisos_error": null,
   "avisos_config": true
