@@ -114,5 +114,16 @@
    "estado": "pausa",
    "frase": "Descansando"
   }
- ]
+ ],
+ "racha": {
+  "dias": 1,
+  "hoy_cero": true
+ },
+ "salud": {
+  "latido": "2026-11-04T20:16:25-06:00",
+  "mando": "2026-11-04T20:16:20-06:00",
+  "avisos_ok": null,
+  "avisos_error": null,
+  "avisos_config": true
+ }
 }
