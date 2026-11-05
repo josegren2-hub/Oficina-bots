@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-05T15:57:24-06:00",
+ "actualizado": "2026-11-05T16:54:21-06:00",
  "bots": [
   {
    "id": "ted",
@@ -19,9 +19,8 @@
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "esperando",
-   "frase": "Esperando a Rob",
-   "esperando_desde": "2026-11-05T11:28:14.125-06:00"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "julian",
@@ -90,8 +89,8 @@
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tr-cm",
