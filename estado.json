@@ -1,128 +1,119 @@
 {
- "actualizado": "2026-11-05T13:57:15-06:00",
+ "actualizado": "2026-11-05T14:12:18-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
    "estado": "trabajando",
-   "frase": "Revisando suscripción"
+   "frase": "Organizando pendientes"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "esperando",
+   "frase": "Esperando a Rob",
+   "esperando_desde": "2026-11-05T11:28:14.125-06:00"
   },
   {
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "esperando",
+   "frase": "Esperando a Rob",
+   "esperando_desde": "2026-11-05T11:41:52.555-06:00"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "vale",
    "nombre": "Valery",
    "area": "Redes personales",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "En pausa"
   },
   {
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Pensando ideas"
   },
   {
    "id": "apps",
    "nombre": "Charly",
    "area": "Desarrollo móvil",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Pensando ideas"
   },
   {
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "tr-cm",
    "nombre": "Dany",
    "area": "Tinta Rosa · redes",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "director",
    "nombre": "Joss",
    "area": "Coordinación",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   },
   {
    "id": "luca",
    "nombre": "Luca",
    "area": "Proyectos",
    "estado": "pausa",
-   "frase": "Descansando"
+   "frase": "Tomando un café"
   }
- ],
- "racha": {
-  "dias": 2,
-  "hoy_cero": true
- },
- "salud": {
-  "latido": "2026-11-05T13:57:15-06:00",
-  "mando": "2026-11-05T09:24:11-06:00",
-  "avisos_ok": "2026-11-05T07:37:13-06:00",
-  "avisos_error": null,
-  "avisos_config": true
- }
+ ]
 }
