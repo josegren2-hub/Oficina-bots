@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-06T09:29:59-06:00",
+ "actualizado": "2026-11-06T09:30:42-06:00",
  "bots": [
   {
    "id": "ted",
@@ -14,7 +14,7 @@
    "area": "Web y sitio",
    "estado": "esperando",
    "frase": "Revisando diseño",
-   "esperando_desde": "2026-11-04T12:21:00-06:00"
+   "esperando_desde": "2026-11-04T12:21:04.478-06:00"
   },
   {
    "id": "mateo",
@@ -71,7 +71,7 @@
    "area": "Redacción y edición",
    "estado": "esperando",
    "frase": "Pensando ideas",
-   "esperando_desde": "2026-11-04T02:08:00-06:00"
+   "esperando_desde": "2026-11-04T02:08:32.091-06:00"
   },
   {
    "id": "apps",
@@ -79,7 +79,7 @@
    "area": "Desarrollo móvil",
    "estado": "esperando",
    "frase": "Listo para prueba",
-   "esperando_desde": "2026-11-03T23:13:00-06:00"
+   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
   },
   {
    "id": "ceo",
@@ -116,5 +116,16 @@
    "estado": "pausa",
    "frase": "Descansando"
   }
- ]
+ ],
+ "racha": {
+  "dias": 3,
+  "hoy_cero": true
+ },
+ "salud": {
+  "latido": "2026-11-06T09:30:42-06:00",
+  "mando": "2026-11-06T09:30:37-06:00",
+  "avisos_ok": "2026-11-06T09:30:42-06:00",
+  "avisos_error": null,
+  "avisos_config": true
+ }
 }
