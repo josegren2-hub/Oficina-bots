@@ -1,12 +1,12 @@
 {
- "actualizado": "2026-11-05T20:22:45-06:00",
+ "actualizado": "2026-11-06T01:01:20-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Actualizando oficina"
   },
   {
    "id": "tadeo",
@@ -115,11 +115,11 @@
   }
  ],
  "racha": {
-  "dias": 2,
+  "dias": 3,
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-05T22:09:59-06:00",
+  "latido": "2026-11-06T01:01:20-06:00",
   "mando": "2026-11-05T20:21:54-06:00",
   "avisos_ok": "2026-11-05T07:37:13-06:00",
   "avisos_error": null,
