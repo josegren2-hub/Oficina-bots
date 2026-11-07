@@ -1,26 +1,27 @@
 {
- "actualizado": "2026-11-07T09:14:10-06:00",
+ "actualizado": "2026-11-07T10:09:34-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Actualizando oficina"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "esperando",
+   "frase": "Revisando diseño",
+   "esperando_desde": "2026-11-04T12:21:04.478-06:00"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "julian",
@@ -68,15 +69,17 @@
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "esperando",
+   "frase": "Pensando ideas",
+   "esperando_desde": "2026-11-04T02:08:32.091-06:00"
   },
   {
    "id": "apps",
    "nombre": "Charly",
    "area": "Desarrollo móvil",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "esperando",
+   "frase": "Listo para prueba",
+   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
   },
   {
    "id": "ceo",
@@ -89,8 +92,9 @@
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "esperando",
+   "frase": "Listo para revisión",
+   "esperando_desde": "2026-11-06T16:45:45.572-06:00"
   },
   {
    "id": "tr-cm",
