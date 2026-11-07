@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-06T18:18:59-06:00",
+ "actualizado": "2026-11-06T20:06:53-06:00",
  "bots": [
   {
    "id": "ted",
@@ -20,8 +20,8 @@
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "julian",
