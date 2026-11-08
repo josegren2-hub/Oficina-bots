@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-07T22:13:51-06:00",
+ "actualizado": "2026-11-08T00:14:59-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,119 +12,114 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "esperando",
-   "frase": "Revisando diseño",
-   "esperando_desde": "2026-11-04T12:21:04.478-06:00"
+   "estado": "trabajando",
+   "frase": "Revisando diseño"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "esperando",
-   "frase": "Publicación lista",
-   "esperando_desde": "2026-11-07T22:12:27.373-06:00"
+   "estado": "trabajando",
+   "frase": "Publicación lista"
   },
   {
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "vale",
    "nombre": "Valery",
    "area": "Redes personales",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "esperando",
-   "frase": "Pensando ideas",
-   "esperando_desde": "2026-11-04T02:08:32.091-06:00"
+   "estado": "trabajando",
+   "frase": "Pensando ideas"
   },
   {
    "id": "apps",
    "nombre": "Charly",
    "area": "Desarrollo móvil",
-   "estado": "esperando",
-   "frase": "Listo para prueba",
-   "esperando_desde": "2026-11-03T23:13:18.609-06:00"
+   "estado": "trabajando",
+   "frase": "Listo para prueba"
   },
   {
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "esperando",
-   "frase": "Listo para revisión",
-   "esperando_desde": "2026-11-07T16:56:30.736-06:00"
+   "estado": "trabajando",
+   "frase": "Listo para revisión"
   },
   {
    "id": "tr-cm",
    "nombre": "Dany",
    "area": "Tinta Rosa · redes",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "director",
    "nombre": "Joss",
    "area": "Video",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "luca",
    "nombre": "Luca",
    "area": "Proyectos",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   }
  ],
  "racha": {
-  "dias": 4,
+  "dias": 5,
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-07T23:06:02-06:00",
+  "latido": "2026-11-08T00:14:59-06:00",
   "mando": "2026-11-07T20:25:01-06:00",
   "avisos_ok": "2026-11-07T16:51:28-06:00",
   "avisos_error": null,
