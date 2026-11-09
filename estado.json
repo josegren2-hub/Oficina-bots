@@ -1,19 +1,19 @@
 {
- "actualizado": "2026-11-09T16:06:21-06:00",
+ "actualizado": "2026-11-09T16:24:53-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "trabajando",
-   "frase": "Actualizando oficina"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Revisando diseño"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "mateo",
