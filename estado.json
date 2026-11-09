@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-09T10:04:48-06:00",
+ "actualizado": "2026-11-09T10:10:55-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,15 +12,15 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Revisando diseño"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "mateo",
    "nombre": "Mateo",
    "area": "Dirección Tinta Rosa",
-   "estado": "trabajando",
-   "frase": "Publicación lista"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "julian",
@@ -33,43 +33,43 @@
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "vale",
    "nombre": "Valery",
    "area": "Redes personales",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "rulo",
    "nombre": "Rulo",
    "area": "Podcast",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "emiliano",
    "nombre": "Emiliano",
    "area": "Entrenamiento",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "trabajando",
-   "frase": "Pensando ideas"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "apps",
@@ -82,36 +82,36 @@
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "trabajando",
-   "frase": "Listo para revisión"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-cm",
    "nombre": "Dany",
    "area": "Tinta Rosa · redes",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "director",
    "nombre": "Joss",
    "area": "Video",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luca",
    "nombre": "Luca",
    "area": "Proyectos",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   }
  ],
  "racha": {
