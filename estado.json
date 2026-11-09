@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-08T22:02:51-06:00",
+ "actualizado": "2026-11-09T01:20:36-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,8 +12,8 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Revisando diseño"
   },
   {
    "id": "mateo",
