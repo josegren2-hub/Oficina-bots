@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-09T22:32:25-06:00",
+ "actualizado": "2026-11-10T07:11:32-06:00",
  "bots": [
   {
    "id": "ted",
@@ -12,8 +12,8 @@
    "id": "tadeo",
    "nombre": "Tadeo",
    "area": "Web y sitio",
-   "estado": "trabajando",
-   "frase": "Revisando diseño"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "mateo",
@@ -115,11 +115,11 @@
   }
  ],
  "racha": {
-  "dias": 6,
+  "dias": 7,
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-09T23:46:29-06:00",
+  "latido": "2026-11-10T07:11:32-06:00",
   "mando": "2026-11-09T20:09:34-06:00",
   "avisos_ok": "2026-11-07T16:51:28-06:00",
   "avisos_error": null,
