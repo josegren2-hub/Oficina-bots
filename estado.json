@@ -119,8 +119,8 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-10T20:15:25-06:00",
-  "mando": "2026-11-09T20:09:34-06:00",
+  "latido": "2026-11-10T20:17:27-06:00",
+  "mando": "2026-11-10T20:16:14-06:00",
   "avisos_ok": "2026-11-07T16:51:28-06:00",
   "avisos_error": null,
   "avisos_config": true
