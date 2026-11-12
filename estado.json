@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-12T06:37:12-06:00",
+ "actualizado": "2026-11-12T10:10:32-06:00",
  "bots": [
   {
    "id": "ted",
@@ -26,15 +26,15 @@
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "vale",
@@ -61,8 +61,8 @@
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "libro",
