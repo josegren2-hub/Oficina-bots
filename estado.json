@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-11T23:51:00-06:00",
+ "actualizado": "2026-11-11T23:59:08-06:00",
  "bots": [
   {
    "id": "ted",
@@ -33,9 +33,8 @@
    "id": "ines",
    "nombre": "Inés",
    "area": "Finanzas",
-   "estado": "esperando",
-   "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-11T10:05:04.896-06:00"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "vale",
