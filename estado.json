@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-11T19:23:57-06:00",
+ "actualizado": "2026-11-11T19:32:01-06:00",
  "bots": [
   {
    "id": "ted",
@@ -26,8 +26,8 @@
    "id": "julian",
    "nombre": "Julián",
    "area": "Jurídico",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "ines",
