@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-11T19:34:03-06:00",
+ "actualizado": "2026-11-11T19:50:10-06:00",
  "bots": [
   {
    "id": "ted",
@@ -61,8 +61,8 @@
    "id": "luna",
    "nombre": "Luna",
    "area": "Asistente",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "libro",
