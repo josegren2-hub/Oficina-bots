@@ -115,12 +115,12 @@
   }
  ],
  "racha": {
-  "dias": 10,
+  "dias": 11,
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-13T22:04:18-06:00",
-  "mando": "2026-11-13T20:10:10-06:00",
+  "latido": "2026-11-14T06:36:33-06:00",
+  "mando": "2026-11-14T06:36:30-06:00",
   "avisos_ok": "2026-11-07T16:51:28-06:00",
   "avisos_error": null,
   "avisos_config": true
