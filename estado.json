@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-15T20:12:25-06:00",
+ "actualizado": "2026-11-15T20:12:39-06:00",
  "bots": [
   {
    "id": "ted",
@@ -21,7 +21,7 @@
    "area": "Dirección Tinta Rosa",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-14T18:26:57-06:00"
+   "esperando_desde": "2026-11-14T18:26:57.440-06:00"
   },
   {
    "id": "julian",
@@ -64,7 +64,7 @@
    "area": "Asistente",
    "estado": "esperando",
    "frase": "Esperando respuesta",
-   "esperando_desde": "2026-11-12T10:09:41-06:00"
+   "esperando_desde": "2026-11-12T10:09:41.477-06:00"
   },
   {
    "id": "libro",
@@ -121,10 +121,10 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-15T19:27:58-06:00",
-  "mando": "2026-11-15T06:20:51-06:00",
+  "latido": "2026-11-15T20:12:39-06:00",
+  "mando": "2026-11-15T20:12:27-06:00",
   "avisos_ok": "2026-11-07T16:51:28-06:00",
-  "avisos_error": null,
+  "avisos_error": "2026-11-15T20:12:39-06:00",
   "avisos_config": true
  }
 }
