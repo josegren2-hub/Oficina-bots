@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-17T22:19:29-06:00",
+ "actualizado": "2026-11-17T22:21:32-06:00",
  "bots": [
   {
    "id": "ted",
@@ -68,8 +68,8 @@
    "id": "libro",
    "nombre": "Rodrigo",
    "area": "Redacción y edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "apps",
@@ -89,8 +89,8 @@
    "id": "tr-editor",
    "nombre": "Naim",
    "area": "Tinta Rosa · edición",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tr-cm",
@@ -103,15 +103,15 @@
    "id": "director",
    "nombre": "Joss",
    "area": "Video",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "luca",
    "nombre": "Luca",
    "area": "Proyectos",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   }
  ],
  "racha": {
