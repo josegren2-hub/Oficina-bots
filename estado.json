@@ -119,15 +119,15 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-23T04:25:24-06:00",
+  "latido": "2026-11-23T04:31:29-06:00",
   "mando": "2026-11-23T00:44:13-06:00",
   "avisos_ok": "2026-11-07T16:51:28-06:00",
   "avisos_error": "2026-11-15T20:46:20-06:00",
   "avisos_config": true,
   "avisos_codigo": 42908,
   "avisos_motivo": "cupo diario de esta red agotado",
-  "avisos_reintenta": "2026-11-23T23:21:31-06:00",
-  "avisos_cupo_restante": 0,
+  "avisos_reintenta": "2026-11-24T00:20:51-06:00",
+  "avisos_cupo_restante": 236,
   "avisos_cupo_total": 250
  }
 }
