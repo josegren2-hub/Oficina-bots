@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-24T00:54:41-06:00",
+ "actualizado": "2026-11-24T01:25:11-06:00",
  "bots": [
   {
    "id": "ted",
@@ -82,8 +82,8 @@
    "id": "ceo",
    "nombre": "Tommy",
    "area": "Estrategia",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "tr-editor",
