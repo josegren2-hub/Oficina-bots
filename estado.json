@@ -119,15 +119,12 @@
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-23T18:36:58-06:00",
+  "latido": "2026-11-23T18:47:58-06:00",
   "mando": "2026-11-23T06:18:28-06:00",
-  "avisos_ok": "2026-11-07T16:51:28-06:00",
-  "avisos_error": "2026-11-15T20:46:20-06:00",
+  "avisos_telegram": true,
+  "avisos_canal": "telegram",
   "avisos_config": true,
-  "avisos_codigo": 42908,
-  "avisos_motivo": "cupo diario de esta red agotado",
-  "avisos_reintenta": "2026-11-23T23:21:31-06:00",
-  "avisos_cupo_restante": 0,
-  "avisos_cupo_total": 250
+  "avisos_ok": null,
+  "avisos_error": null
  }
 }
