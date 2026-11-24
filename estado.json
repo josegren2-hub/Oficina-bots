@@ -115,11 +115,11 @@
   }
  ],
  "racha": {
-  "dias": 20,
+  "dias": 21,
   "hoy_cero": true
  },
  "salud": {
-  "latido": "2026-11-23T23:49:29-06:00",
+  "latido": "2026-11-24T00:01:44-06:00",
   "mando": "2026-11-23T20:17:09-06:00",
   "avisos_telegram": true,
   "avisos_canal": "telegram",
