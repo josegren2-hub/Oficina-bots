@@ -1,12 +1,12 @@
 {
- "actualizado": "2026-11-25T12:00:35-06:00",
+ "actualizado": "2026-11-25T12:13:56-06:00",
  "bots": [
   {
    "id": "ted",
    "nombre": "Ted",
    "area": "Asistente personal",
-   "estado": "pausa",
-   "frase": "Descansando"
+   "estado": "trabajando",
+   "frase": "Trabajando"
   },
   {
    "id": "tadeo",
