@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-25T03:22:48-06:00",
+ "actualizado": "2026-11-25T03:24:50-06:00",
  "bots": [
   {
    "id": "ted",
@@ -103,8 +103,8 @@
    "id": "director",
    "nombre": "Joss",
    "area": "Video",
-   "estado": "trabajando",
-   "frase": "Trabajando"
+   "estado": "pausa",
+   "frase": "Descansando"
   },
   {
    "id": "luca",
